@@ -16,7 +16,7 @@ void *lexer(char *line, t_elem **elem)
 {
     int i;
     int j;
-    t_elem *head = NULL;
+    // t_elem *head = NULL;
     t_elem *tmp;
 
     i = 0;
@@ -35,140 +35,80 @@ void *lexer(char *line, t_elem **elem)
                 i++;
             }
             word[j] = '\0';
-            if (!(head))
-            {
-                head = lstnew(word);
-                head->token = WORD;
-            }
-            else
-            {
-                tmp = lstnew(word);
-                tmp->token = WORD;
-                lstadd_back(&head, tmp);
-                tmp = NULL;
-            }
-            // tmp = NULL;
+            tmp = lstnew(word);
+            tmp->token = WORD;
+            lstadd_back(elem, tmp);
         }
         else if (line[i] == ' ')
         {
-            char *word = malloc(sizeof(char) * 100);
-            word[0] = ' ';
-            word[1] = '\0';
-            if (!(head))
-                head = lstnew(word);
-            else
-            {
-                tmp = lstnew(word);
-                lstadd_back(&head, tmp);
-                tmp = NULL;
-            }
-            // tmp->token = WHITE_SPACE;
-            while (line[i] == ' ')
-                i++;
+            char *space = malloc(sizeof(char) * 2);
+            space[0] = ' ';
+            space[1] = '\0';
+            tmp = lstnew(space);
+            tmp->token = WHITE_SPACE;
+            lstadd_back(elem, tmp);
+            i++;
         }
         else if (line[i] == '|')
         {
-            char *word = malloc(sizeof(char) * 100);
-            word[0] = '|';
-            word[1] = '\0';
-            if (!(head))
-                head = lstnew(word);
-            else
-            {
-                tmp = lstnew(word);
-                lstadd_back(&head, tmp);
-                tmp = NULL;
-            }
-            // tmp->token = PIPE_LINE;
+            char *pipe = malloc(sizeof(char) * 2);
+            pipe[0] = '|';
+            pipe[1] = '\0';
+            tmp = lstnew(pipe);
+            tmp->token = PIPE_LINE;
+            lstadd_back(elem, tmp);
             i++;
         }
         else if (line[i] == '>')
         {
-            char *word = malloc(sizeof(char) * 100);
-            word[0] = '>';
-            if (line[i + 1] == '>')
-            {
-                word[1] = '>';
-                word[2] = '\0';
-                i++;
-            }
-            else
-                word[1] = '\0';
-            if (!(head))
-                head = lstnew(word);
-            else
-            {
-                tmp = lstnew(word);
-                lstadd_back(&head, tmp);
-                tmp = NULL;
-            }
-            // if (line[i + 1] == '>')
-            //     tmp->token = DREDIR_OUT;
-            // else
-            //     tmp->token = REDIR_OUT;
+            char *redir_out = malloc(sizeof(char) * 2);
+            redir_out[0] = '>';
+            redir_out[1] = '\0';
+            tmp = lstnew(redir_out);
+            tmp->token = REDIR_OUT;
+            lstadd_back(elem, tmp);
             i++;
         }
         else if (line[i] == '<')
         {
-            char *word = malloc(sizeof(char) * 100);
-            word[0] = '<';
-            if (line[1 + i] == '<')
-            {
-                word[1] = '<';
-                word[2] = '\0';
-                i++;
-            }
-            else
-                word[1] = '\0';
-            if (!(head))
-                head = lstnew(word);
-            else
-            {
-                tmp = lstnew(word);
-                lstadd_back(&head, tmp);
-                tmp = NULL;
-            }
-            if (line[i + 1] == '<')
-                tmp->token = HERE_DOC;
-            else
-                tmp->token = REDIR_IN;
+            char *redir_in = malloc(sizeof(char) * 2);
+            redir_in[0] = '<';
+            redir_in[1] = '\0';
+            tmp = lstnew(redir_in);
+            tmp->token = REDIR_IN;
+            lstadd_back(elem, tmp);
             i++;
         }
-        else if (line [i] == '\'')
+        else if (line[i] == '\'')
         {
-            char *quote = malloc(sizeof(char) * 100);
+            char *quote = malloc(sizeof(char) * 2);
             quote[0] = '\'';
             quote[1] = '\0';
-            if (!(head))
-                head = lstnew(quote);
-            else
-            {
-                tmp = lstnew(quote);
-                lstadd_back(&head, tmp);
-                tmp = NULL;
-            }
-            // tmp->token = QOUTE;
+            tmp = lstnew(quote);
+            tmp->token = QOUTE;
+            lstadd_back(elem, tmp);
             i++;
         }
         else if (line[i] == '\"')
         {
-            char *quote = malloc(sizeof(char) * 100);
-            quote[0] = '\"';
-            quote[1] = '\0';
-            if (!(head))
-                head = lstnew(quote);
-            else
-            {
-                tmp = lstnew(quote);
-                lstadd_back(&head, tmp);
-                tmp = NULL;
-            }
-            // tmp->token = DOUBLE_QUOTE;
+            char *dquote = malloc(sizeof(char) * 2);
+            dquote[0] = '\"';
+            dquote[1] = '\0';
+            tmp = lstnew(dquote);
+            tmp->token = DOUBLE_QUOTE;
+            lstadd_back(elem, tmp);
             i++;
         }
-        else
+        else if (line[i] == '\n')
+        {
+            char *newline = malloc(sizeof(char) * 2);
+            newline[0] = '\n';
+            newline[1] = '\0';
+            tmp = lstnew(newline);
+            tmp->token = NEW_LINE;
+            lstadd_back(elem, tmp);
             i++;
+        }
     }
-    *elem = head;
-    return (NULL);
+    return (elem);
 }

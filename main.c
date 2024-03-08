@@ -40,6 +40,7 @@ int print_lex(t_elem *elem)
     {
         char *token = find_token(elem);
         printf("|        '%s'          |    %lu    |            %d          |           %s           |\n", elem->content, strlen(elem->content), 8888, token);
+        printf("-------------------------------------------------------------------------------------\n");
         elem = elem->next;
     }
     return (0);
@@ -49,12 +50,12 @@ int main(int argc, char **argv, char **envp)
 {
     char *line;
     t_elem *pars = NULL;
-
-    (void)argc;
     (void)argv;
     (void)envp;
+    (void)argc;
     while (1)
     {
+        pars = NULL;
         line = readline("\033[0;32m ➜ minishell ~ \033[0m");
         lexer(line, &pars);
         print_lex(pars);
