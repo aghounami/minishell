@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+char *check_state(t_elem *elem)
+{
+    char *state = NULL;
+    if (elem->state == IN_DQUOTE)
+        state = "IN_DOUBLE_QUOTE";
+    else if (elem->state == IN_QUOTE)
+        state = "IN_QUOTE";
+    else if (elem->state == GENERAL)
+        state = "GENERAL";
+    return (state);
+}
+
 char  *find_token(t_elem *elem)
 {
     char *str = NULL;
@@ -39,7 +51,8 @@ int print_lex(t_elem *elem)
     while (elem)
     {
         char *token = find_token(elem);
-        printf("|        '%s'          |    %lu    |            %d          |           %s           |\n", elem->content, strlen(elem->content), 8888, token);
+        char *state = check_state(elem);
+        printf("|   '%s'     |    %lu    |            %s          |           %s            \n", elem->content, strlen(elem->content), state, token);
         printf("-------------------------------------------------------------------------------------\n");
         elem = elem->next;
     }
@@ -58,6 +71,7 @@ int main(int argc, char **argv, char **envp)
         pars = NULL;
         line = readline("\033[0;32m ➜ minishell ~ \033[0m");
         lexer(line, &pars);
+        state(&pars);
         print_lex(pars);
         add_history(line);
     }

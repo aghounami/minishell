@@ -23,15 +23,21 @@ $(LIBFT):
 	@cd libft && make
 
 $(NAME): $(obj)
-	$(CC) $(CFLAGS) -o $(NAME) $(obj) $(LDFLAGS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(obj) $(LDFLAGS)
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "✅$< Compiling "
 
 clean:
-	rm -f $(obj)
+	@rm -f $(obj)
 	@cd libft && make clean
+	@echo "minishell Cleaning 🧹"
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 	@cd libft && make fclean
+	@echo "minishell Full Cleaning 🧹"
 
 re: fclean all
 

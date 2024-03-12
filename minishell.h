@@ -32,7 +32,9 @@ typedef struct s_elem
 	enum e_state	state;
     struct s_elem	*next;
     struct s_elem	*prev;
-	enum e_token	token;	
+	enum e_token	token;
+	char *command;
+	char *option;
 }	t_elem;
 
 # include <stdio.h>
@@ -49,8 +51,9 @@ typedef struct s_elem
 # include "./libft/libft.h"
 
 void *lexer(char *line, t_elem **elem);
-t_elem	*lstnew(void *content);
+t_elem	*lstnew(void *content, int token);
 t_elem    *lstlast(t_elem *lst);
 void	lstadd_back(t_elem **lst, t_elem *new);
+void    state(t_elem **elem);
 
 #endif

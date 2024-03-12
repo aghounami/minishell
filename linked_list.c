@@ -6,13 +6,13 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/04 22:50:19 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/12 13:55:43 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_elem	*lstnew(void *content)
+t_elem	*lstnew(void *content, int token)
 {
 	t_elem	*new;
 
@@ -20,6 +20,7 @@ t_elem	*lstnew(void *content)
 	if (new == NULL)
 		return (NULL);
 	new->content = content;
+	new->token = token;
 	new->next = NULL;
 	return (new);
 }
