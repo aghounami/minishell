@@ -9,7 +9,7 @@ enum e_state
 };
 
 enum e_token
-{
+{ 
 	WORD = -1,
 	WHITE_SPACE = ' ',
 	NEW_LINE = '\n',
@@ -24,6 +24,16 @@ enum e_token
 	DREDIR_OUT,
 };
 
+typedef struct s_command
+{
+	char	*cmd;
+	char	**args;
+	char	*redir_in;
+	char	*redir_out;
+	char	*here_doc;
+	char	*dredir_out;
+}	t_command;
+
 typedef struct s_elem
 {
 	char			    *content;
@@ -33,8 +43,6 @@ typedef struct s_elem
     struct s_elem	*next;
     struct s_elem	*prev;
 	enum e_token	token;
-	char *command;
-	char *option;
 }	t_elem;
 
 # include <stdio.h>
