@@ -74,7 +74,7 @@ int main(int argc, char **argv, char **envp)
         lexer(line, &pars);
         state(&pars);
         syntax_error(&pars);
-        // print_lex(pars);
+        print_lex(pars);
         add_history(line);
     }
     return (0);

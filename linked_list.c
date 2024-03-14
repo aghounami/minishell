@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/14 02:38:18 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/14 15:53:40 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,39 +15,42 @@
 void syntax_error(t_elem **elem)
 {
 	t_elem *tmp;
+	// t_elem *tmp2;
 
 	tmp = *elem;
 	int error = 0;
 	while (tmp)
 	{
-		error = (tmp->token == PIPE_LINE && tmp->next && tmp->next->token == PIPE_LINE);
-		error = (tmp->token == PIPE_LINE && tmp->next && tmp->next->token == PIPE_LINE);
-		error = (tmp->token == REDIR_IN && tmp->next && tmp->next->token == REDIR_IN);
-		error = (tmp->token == REDIR_OUT && tmp->next && tmp->next->token == REDIR_OUT && tmp->next->next && tmp->next->next->token == REDIR_OUT);
-		error = (tmp->token == REDIR_IN && tmp->next && tmp->next->token == REDIR_IN && tmp->next->next && tmp->next->next->token == REDIR_IN);
-		error = (tmp->token == REDIR_OUT && tmp->next && tmp->next->token == REDIR_IN);
-		error = (tmp->token == REDIR_IN && tmp->next && tmp->next->token == REDIR_OUT);
-		if (tmp->token == ESCAPE)
-		{
-			if (tmp->content[1] != '\\')
-			{
-				error = 1;
-				break;
-			}
-		}
-		if (tmp->token == PIPE_LINE)
-		{
-			tmp = tmp->next;
-			while (tmp && tmp->token == WHITE_SPACE)
-				tmp = tmp->next;
-			if (!tmp)
-			{
-				error = 1;
-				break;
-			}
-		}
-		if (error)
-			break;
+		// if (tmp->token == PIPE_LINE || tmp->token == REDIR_IN || tmp->token == REDIR_OUT || tmp->token == HERE_DOC || tmp->token == DREDIR_OUT)
+		// {
+		// 	tmp2 = tmp->next;
+		// 	while (tmp2 && tmp2->token == WHITE_SPACE)
+		// 		tmp2 = tmp2->next;
+		// 	if (!tmp2 || tmp2->token == PIPE_LINE)
+		// 	{
+		// 		error = 1;
+		// 		break;
+		// 	}
+		// }
+		// error = (tmp->token == REDIR_IN && tmp->next->token == REDIR_OUT);
+		// error = (tmp->token == REDIR_OUT && tmp->next->token == REDIR_IN);
+		// error = (tmp->token == HERE_DOC && tmp->next->token == DREDIR_OUT);
+		// error = (tmp->token == DREDIR_OUT && tmp->next->token == HERE_DOC);
+		// error = (tmp->token == REDIR_IN && tmp->next->token == DREDIR_OUT);
+		// error = (tmp->token == REDIR_OUT && tmp->next->token == REDIR_IN);
+		// if (error)
+		// 	break;
+		// else if (tmp->token == ESCAPE && tmp->content[1] == '\0')
+		// {
+		// 	tmp2 = tmp->next;
+		// 	while (tmp2 && tmp2->token == SPACE)
+		// 		tmp2 = tmp2->next;
+		// 	if (!tmp2)
+		// 	{
+		// 		error = 1;
+		// 		break;
+		// 	}
+		// }
 		if (tmp->token == DOUBLE_QUOTE)
 		{
 			tmp = tmp->next;
@@ -55,34 +58,36 @@ void syntax_error(t_elem **elem)
 				tmp = tmp->next;
 			if (!tmp)
 			{
+				printf("syntax erkkkror\n");
 				error = 1;
 				break;
 			}
+			// tmp = tmp->next;
 		}
-		if (tmp->token == QOUTE)
-		{
-			tmp = tmp->next;
-			while (tmp && tmp->token != QOUTE)
-				tmp = tmp->next;
-			if (!tmp)
-			{
-				error = 1;
-				break;
-			}
-		}
+		// else if (tmp->token == QOUTE)
+		// {
+		// 	tmp2 = tmp->next;
+		// 	while (tmp2 && tmp2->token != QOUTE)
+		// 		tmp2 = tmp2->next;
+		// 	if (!tmp2)
+		// 	{
+		// 		error = 1;
+		// 		break;
+		// 	}
+		// }
 		tmp = tmp->next;
 	}
 	if (error)
 	{
-		printf("syntax error\n");
-		return ;
+		// printf("syntax error\n");
+		return;
 	}
 }
 // syntax error in \\ and echo "\n" \n
 
-t_elem	*lstnew(void *content, int token)
+t_elem *lstnew(void *content, int token)
 {
-	t_elem	*new;
+	t_elem *new;
 
 	new = (t_elem *)malloc(sizeof(t_elem));
 	if (new == NULL)
@@ -93,21 +98,21 @@ t_elem	*lstnew(void *content, int token)
 	return (new);
 }
 
-t_elem    *lstlast(t_elem *lst)
+t_elem *lstlast(t_elem *lst)
 {
-    if (!lst)
-        return (NULL);
-    while (lst->next)
-        lst = lst->next;
-    return (lst);
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+		lst = lst->next;
+	return (lst);
 }
 
-void	lstadd_back(t_elem **lst, t_elem *new)
+void lstadd_back(t_elem **lst, t_elem *new)
 {
-	t_elem	*last;
+	t_elem *last;
 
 	if (!lst || !new)
-		return ;
+		return;
 	last = lstlast(*lst);
 	if (*lst)
 	{

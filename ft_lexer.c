@@ -6,50 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/14 02:35:56 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/14 14:11:03 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void state(t_elem **elem)
-{
-	t_elem *tmp;
-	int flag_quote = 1;
-	int flag_d_quote = 1;
-
-	tmp = *elem;
-	t_elem *prev = NULL;
-	while (tmp)
-	{
-		if (prev && prev->token == DOUBLE_QUOTE && tmp->token != DOUBLE_QUOTE && flag_d_quote % 2 == 0)
-		{
-			while (tmp && tmp->token != DOUBLE_QUOTE)
-			{
-				tmp->state = IN_DQUOTE;
-				tmp = tmp->next;
-			}
-		}
-		else if (prev && prev->token == QOUTE && tmp->token != QOUTE && flag_quote % 2 == 0)
-		{
-			while (tmp && tmp->token != QOUTE)
-			{
-				tmp->state = IN_QUOTE;
-				tmp = tmp->next;
-			}
-		}
-		else
-		{
-			tmp->state = GENERAL;
-			prev = tmp;
-			if (prev->token == DOUBLE_QUOTE)
-				flag_d_quote++;
-			if (prev->token == QOUTE)
-				flag_quote++;
-			tmp = tmp->next;
-		}
-	}
-}
 
 void *lexer(char *line, t_elem **elem)
 {
@@ -150,9 +111,9 @@ void *lexer(char *line, t_elem **elem)
 		{
 			char *escape = malloc(sizeof(char) * 3);
 			escape[0] = '\\';
-			if (line[i + 1] == '\\')
+			if (line[i + 1] != '\0' && line[i + 1] != ' ')
 			{
-				escape[1] = '\\';
+				escape[1] = line[i + 1];
 				escape[2] = '\0';
 				i += 2;
 			}

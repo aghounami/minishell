@@ -11,13 +11,13 @@ CFLAGS = -Wall -Wextra -Werror -I$(READLINE_I) -fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sources
-src = main.c split.c ft_lexer.c linked_list.c
+src = main.c ft_lexer.c linked_list.c state.c
 
 # Objects
 obj = $(src:.c=.o)
 
 # Rules
-all: $(LIBFT) $(NAME)
+all: $(LIBFT) $(NAME) 
 
 $(LIBFT):
 	@cd libft && make
