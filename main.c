@@ -52,7 +52,8 @@ int print_lex(t_elem *elem)
     {
         char *token = find_token(elem);
         char *state = check_state(elem);
-        printf("|   '%s'     |    %lu    |            %s          |           %s            \n", elem->content, strlen(elem->content), state, token);
+        elem->len = strlen(elem->content);
+        printf("|   '%s'     |    %d    |            %s          |           %s            \n", elem->content, elem->len, state, token);
         printf("-------------------------------------------------------------------------------------\n");
         elem = elem->next;
     }
@@ -72,7 +73,8 @@ int main(int argc, char **argv, char **envp)
         line = readline("\033[0;32m ➜ minishell ~ \033[0m");
         lexer(line, &pars);
         state(&pars);
-        print_lex(pars);
+        syntax_error(&pars);
+        // print_lex(pars);
         add_history(line);
     }
     return (0);

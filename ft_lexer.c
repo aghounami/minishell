@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/12 17:45:32 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/14 02:35:56 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,11 @@ void *lexer(char *line, t_elem **elem)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<' && line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n' && line[i] != '\t')
+		if (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<' && line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n' && line[i] != '\t' && line[i] != '\\')
 		{
 			char *word = malloc(sizeof(char) * 100);
 			j = 0;
-			while (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<' && line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n' && line[i] != '\t')
+			while (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<' && line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n' && line[i] != '\t' && line[i] != '\\')
 			{
 				word[j] = line[i];
 				j++;
@@ -146,14 +146,25 @@ void *lexer(char *line, t_elem **elem)
 			lstadd_back(elem, lstnew(dquote, DOUBLE_QUOTE));
 			i++;
 		}
-		else if (line[i] == '\n')
+		else if (line[i] == '\\')
 		{
-			char *newline = malloc(sizeof(char) * 2);
-			newline[0] = '\n';
-			newline[1] = '\0';
-			lstadd_back(elem, lstnew(newline, NEW_LINE));
-			i++;
+			char *escape = malloc(sizeof(char) * 3);
+			escape[0] = '\\';
+			if (line[i + 1] == '\\')
+			{
+				escape[1] = '\\';
+				escape[2] = '\0';
+				i += 2;
+			}
+			else
+			{
+				escape[1] = '\0';
+				i++;
+			}
+			lstadd_back(elem, lstnew(escape, ESCAPE));
 		}
+		else
+			i++;
 	}
 	return (elem);
 }

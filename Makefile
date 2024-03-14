@@ -23,7 +23,7 @@ $(LIBFT):
 	@cd libft && make
 
 $(NAME): $(obj)
-	@$(CC) $(CFLAGS) -o $(NAME) $(obj) $(LDFLAGS)
+	@$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME)  $(LDFLAGS)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -40,5 +40,10 @@ fclean: clean
 	@echo "minishell Full Cleaning 🧹"
 
 re: fclean all
+
+push :
+	git add .
+	git commit -m "push"
+	git push
 
 .PHONY: all clean fclean re
