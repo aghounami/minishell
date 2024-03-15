@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/14 14:11:03 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/14 17:15:32 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void *lexer(char *line, t_elem **elem)
 		{
 			char *escape = malloc(sizeof(char) * 3);
 			escape[0] = '\\';
-			if (line[i + 1] != '\0' && line[i + 1] != ' ')
+			if (line[i + 1] != '\0')
 			{
 				escape[1] = line[i + 1];
 				escape[2] = '\0';

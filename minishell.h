@@ -12,7 +12,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-# include "./libft/libft.h"
+// # include "./libft/libft.h"
 
 enum e_state
 {
@@ -56,12 +56,12 @@ typedef struct s_elem
 	enum e_token	token;
 }	t_elem;
 
-
-void *lexer(char *line, t_elem **elem);
-t_elem	*lstnew(void *content, int token);
-t_elem    *lstlast(t_elem *lst);
-void	lstadd_back(t_elem **lst, t_elem *new);
-void    state(t_elem **elem);
-void syntax_error(t_elem **elem);
+void		*lexer(char *line, t_elem **elem);
+t_elem		*lstnew(void *content, int token);
+t_elem		*lstlast(t_elem *lst);
+void		lstadd_back(t_elem **lst, t_elem *new);
+void		state(t_elem **elem);
+void syntax_error(t_elem **elem , int *flag);
+void	stack_command(t_elem *elem, t_command **command);
 
 #endif

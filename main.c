@@ -12,7 +12,7 @@ char *check_state(t_elem *elem)
     return (state);
 }
 
-char  *find_token(t_elem *elem)
+char *find_token(t_elem *elem)
 {
     char *str = NULL;
     if (elem->token == WORD)
@@ -63,48 +63,65 @@ int print_lex(t_elem *elem)
 int main(int argc, char **argv, char **envp)
 {
     char *line;
+    t_command *command;
     t_elem *pars = NULL;
+    int flag = 0;
     (void)argv;
     (void)envp;
     (void)argc;
+    command = malloc(sizeof(t_command));
+    command->args = malloc(sizeof(char *) * 100);
     while (1)
     {
         pars = NULL;
         line = readline("\033[0;32m ➜ minishell ~ \033[0m");
         lexer(line, &pars);
         state(&pars);
-        syntax_error(&pars);
-        print_lex(pars);
+        syntax_error(&pars, &flag);
+        // print_lex(pars);
+        if (flag == 0)
+        {
+            stack_command(pars, &command);
+            printf("command: %s\n", command->cmd);
+            for (int i = 0; command->args[i] != NULL; i++)
+                printf("arg    :[%s]\n", command->args[i]);
+        }
+        // if (strncmp(command->cmd, "echo", 4) == 0)
+        // {
+        //     for (int i = 1; command->args[i] != NULL; i++)
+        //         printf("%s", command->args[i]);
+        //     printf("\n");
+        // }
         add_history(line);
     }
     return (0);
 }
-        // args = ft_split(line, ' ');
-        // if (args[0] != NULL)
-        // {
-        //     if (strcmp(args[0], "exit") == 0)
-        //     {
-        //         free(line);
-        //         free(args);
-        //         exit(0);
-        //     }
-        //     else if (strcmp(args[0], "cd") == 0)
-        //     {
-        //         if (args[1] == NULL)
-        //             chdir(getenv("HOME"));
-        //         else
-        //             chdir(args[1]);
-        //     }
-        //     else
-        //     {
-        //         pid_t pid = fork();
-        //         if (pid == 0)
-        //         {
-        //             execvp(args[0], args);
-        //             perror("minishell");
-        //             exit(1);
-        //         }
-        //         else
-        //             wait(NULL);
-        //     }
-        // }
+// args = ft_split(line, ' ');
+// if (args[0] != NULL)
+// {
+//     if (strcmp(args[0], "exit") == 0)
+//     {
+//         free(line);
+//         free(args);
+//         exit(0);
+//     }
+//     else if (strcmp(args[0], "cd") == 0)
+//     {
+//         if (args[1] == NULL)
+//             chdir(getenv("HOME"));
+//         else
+//             chdir(args[1]);
+//     }
+//     else
+//     {
+//         pid_t pid = fork();
+//         if (pid == 0)
+//         {
+//             execvp(args[0], args);
+//             perror("minishell");
+//             exit(1);
+//         }
+//         else
+//             wait(NULL);
+//     }
+// }
