@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/14 17:15:32 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/15 14:03:34 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void *lexer(char *line, t_elem **elem)
 			else
 				lstadd_back(elem, lstnew(word, WORD));
 		}
-		else if (line[i] == ' ')
+		else if (line[i] == ' ' || line[i] == '\t' || line[i] == '\n')
 		{
 			char *space = malloc(sizeof(char) * 2);
 			space[0] = ' ';

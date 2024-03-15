@@ -85,13 +85,13 @@ int main(int argc, char **argv, char **envp)
             printf("command: %s\n", command->cmd);
             for (int i = 0; command->args[i] != NULL; i++)
                 printf("arg    :[%s]\n", command->args[i]);
+            if (strncmp(command->cmd, "echo", 4) == 0)
+            {
+                for (int i = 0; command->args[i] != NULL; i++)
+                    printf("%s", command->args[i]);
+                printf("\n");
+            }
         }
-        // if (strncmp(command->cmd, "echo", 4) == 0)
-        // {
-        //     for (int i = 1; command->args[i] != NULL; i++)
-        //         printf("%s", command->args[i]);
-        //     printf("\n");
-        // }
         add_history(line);
     }
     return (0);
