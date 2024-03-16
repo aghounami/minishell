@@ -6,20 +6,48 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/15 14:23:34 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/16 01:06:38 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-void	echo_without_quote(t_elem **elem, t_command **command, int *i)
+
+void echo_with_quote(t_elem **elem, t_command **command, int *i)
 {
+	(*elem) = (*elem)->next;
+
+	while ((*elem)->token != '\'')
+	{
+		(*command)->args[*i] = (*elem)->content;
+		*i += 1;
+		(*elem) = (*elem)->next;
+	}
+}
+
+void echo_with_d_quote(t_elem **elem, t_command **command, int *i)
+{
+	(*elem) = (*elem)->next;
+	while (*elem && (*elem)->token != '\"')
+	{
+		(*command)->args[*i] = (*elem)->content;
+		*i += 1;
+		(*elem) = (*elem)->next;
+	}
+	(*elem) = (*elem)->next;
+}
+
+void echo_without_quote(t_elem **elem, t_command **command, int *i)
+{
+	char *tmp;
+	
 	if ((*elem)->token == WHITE_SPACE)
 	{
-		while ((*elem) && (*elem)->next && (*elem)->next->token == WHITE_SPACE)
+		tmp = (*elem)->content;
+		while ((*elem) && (*elem)->token == WHITE_SPACE)
 			(*elem) = (*elem)->next;
-		if ((*elem)->next)
+		if ((*elem))
 		{
-			(*command)->args[*i] = (*elem)->content;
+			(*command)->args[*i] = tmp;
 			*i += 1;
 		}
 	}
@@ -27,11 +55,32 @@ void	echo_without_quote(t_elem **elem, t_command **command, int *i)
 	{
 		(*command)->args[*i] = &(*elem)->content[1];
 		*i += 1;
+		(*elem) = (*elem)->next;
 	}
 	else
 	{
 		(*command)->args[*i] = (*elem)->content;
 		*i += 1;
+		(*elem) = (*elem)->next;
+	}
+}
+
+void command_comand(t_elem **elem, t_command **command)
+{
+	if ((*elem)->token == QOUTE || (*elem)->token == DOUBLE_QUOTE)
+	{
+		(*elem) = (*elem)->next;
+		while ((*elem)->token != DOUBLE_QUOTE && (*elem)->token != QOUTE)
+		{
+			(*command)->cmd = ft_strjoin((*command)->cmd, (*elem)->content);
+			(*elem) = (*elem)->next;
+		}
+		*elem = (*elem)->next;
+	}
+	else
+	{
+		(*command)->cmd = (*elem)->content;
+		(*elem) = (*elem)->next;
 	}
 }
 
@@ -42,57 +91,20 @@ void stack_command(t_elem *elem, t_command **command)
 	i = 0;
 	while (elem->token == WHITE_SPACE)
 		elem = elem->next;
-	(*command)->cmd = elem->content;
-	if (strncmp((*command)->cmd, "echo", 4) == 0)
+	while (elem)
 	{
-		elem = elem->next;
-		if (!elem)
-		{
-			(*command)->args[i] = NULL;
-			return;
-		}
-		while (elem && elem->token == WHITE_SPACE)
-			elem = elem->next;
-		while (elem && elem->token != PIPE_LINE)
-		{
-			if (elem->token == '\'')
-			{
-				elem = elem->next;
-				while (elem->token != '\'')
-				{
-					(*command)->args[i] = elem->content;
-					i++;
-					elem = elem->next;
-				}
-			}
-			else if (elem->token == '\"')
-			{
-				elem = elem->next;
-				while (elem->token != '\"')
-				{
-					(*command)->args[i] = elem->content;
-					i++;
-					elem = elem->next;
-				}
-			}
-			else if (elem->token == WORD || elem->token == WHITE_SPACE || elem->token == ESCAPE)
-				echo_without_quote(&elem, command, &i);
-			elem = elem->next;
-		}
-	}
-	else
-	{
-		(*command)->args[i] = elem->content;
+		command_comand(&elem, command);
+		(*command)->args[i] = (*command)->cmd;
 		i++;
-		elem = elem->next;
 		while (elem && elem->token != PIPE_LINE)
 		{
-			if (elem->token != WHITE_SPACE)
-			{
-				(*command)->args[i] = elem->content;
-				i++;
-			}
-			elem = elem->next;
+			
+			if (elem->token == QOUTE)
+				echo_with_quote(&elem, command, &i);
+			else if (elem->token == DOUBLE_QUOTE)
+				echo_with_d_quote(&elem, command, &i);
+			else
+				echo_without_quote(&elem, command, &i);
 		}
 	}
 	(*command)->args[i] = NULL;

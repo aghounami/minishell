@@ -70,28 +70,35 @@ int main(int argc, char **argv, char **envp)
     (void)envp;
     (void)argc;
     command = malloc(sizeof(t_command));
+    command->cmd = ft_strdup("");
     command->args = malloc(sizeof(char *) * 100);
     while (1)
     {
         pars = NULL;
         line = readline("\033[0;32m ➜ minishell ~ \033[0m");
-        lexer(line, &pars);
-        state(&pars);
-        syntax_error(&pars, &flag);
-        // print_lex(pars);
-        if (flag == 0)
+        if (line && line[0] != '\0')
         {
-            stack_command(pars, &command);
-            printf("command: %s\n", command->cmd);
-            for (int i = 0; command->args[i] != NULL; i++)
-                printf("arg    :[%s]\n", command->args[i]);
-            if (strncmp(command->cmd, "echo", 4) == 0)
+            lexer(line, &pars);
+            state(&pars);
+            syntax_error(&pars, &flag);
+            // print_lex(pars);
+            if (flag == 0)
             {
+                stack_command(pars, &command);
+                printf("command->cmd = [%s]\n", command->cmd);
+                command->cmd = "";
                 for (int i = 0; command->args[i] != NULL; i++)
-                    printf("%s", command->args[i]);
-                printf("\n");
+                    printf("arg      :[%s]\n", command->args[i]);
+                // if (strncmp(command->cmd, "echo", 4) == 0)
+                // {
+                //     for (int i = 0; command->args[i] != NULL; i++)
+                //         printf("%s", command->args[i]);
+                //     printf("\n");
+                // }
             }
         }
+        else if (!line)
+            exit(0);
         add_history(line);
     }
     return (0);

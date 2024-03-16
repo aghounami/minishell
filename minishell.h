@@ -12,7 +12,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-// # include "./libft/libft.h"
+# include "./libft/libft.h"
 
 enum e_state
 {
