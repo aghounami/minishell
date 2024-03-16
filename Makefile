@@ -17,9 +17,14 @@ src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c
 obj = $(src:.c=.o)
 
 # Rules
+RED := \033[0;31m
+NC := \033[0m
+
 all: $(LIBFT) $(NAME) 
 
 $(LIBFT):
+	@echo "$(RED)libft Compiling$(NC)"
+	@echo "$(RED)-----------------$(NC)"
 	@cd libft && make
 
 $(NAME): $(obj)
