@@ -85,17 +85,19 @@ int main(int argc, char **argv, char **envp)
             if (flag == 0)
             {
                 stack_command(pars, &command);
-                printf("command->cmd = [%s]\n", command->cmd);
+                // printf("command->cmd = [%s]\n", command->cmd);
+               
+                // for (int i = 0; command->args[i] != NULL; i++)
+                //     printf("arg      :[%s]\n", command->args[i]);
+                if (strncmp(command->cmd, "echo", 4) == 0)
+                {
+                    for (int i = 1; command->args[i] != NULL; i++)
+                        printf("%s", command->args[i]);
+                    printf("\n");
+                }
                 command->cmd = "";
-                for (int i = 0; command->args[i] != NULL; i++)
-                    printf("arg      :[%s]\n", command->args[i]);
-                // if (strncmp(command->cmd, "echo", 4) == 0)
-                // {
-                //     for (int i = 0; command->args[i] != NULL; i++)
-                //         printf("%s", command->args[i]);
-                //     printf("\n");
-                // }
             }
+            flag = 0;
         }
         else if (!line)
             exit(0);

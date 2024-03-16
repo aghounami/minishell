@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/16 01:06:38 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/16 02:23:09 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 void echo_with_quote(t_elem **elem, t_command **command, int *i)
 {
 	(*elem) = (*elem)->next;
-
 	while ((*elem)->token != '\'')
 	{
 		(*command)->args[*i] = (*elem)->content;
 		*i += 1;
 		(*elem) = (*elem)->next;
 	}
+	(*elem) = (*elem)->next;
 }
 
 void echo_with_d_quote(t_elem **elem, t_command **command, int *i)
