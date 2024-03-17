@@ -12,7 +12,7 @@ LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sourc
 src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c
-
+  
 # Objects
 obj = $(src:.c=.o)
 
