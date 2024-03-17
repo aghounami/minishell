@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/16 02:23:09 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/17 18:09:41 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,17 @@ void echo_with_d_quote(t_elem **elem, t_command **command, int *i)
 	(*elem) = (*elem)->next;
 	while (*elem && (*elem)->token != '\"')
 	{
-		(*command)->args[*i] = (*elem)->content;
-		*i += 1;
+		if ((*elem)->token == ENV)
+		{
+			char *env = getenv((*elem)->content + 1);
+			(*command)->args[*i] = env;
+			*i += 1;
+		}
+		else
+		{
+			(*command)->args[*i] = (*elem)->content;
+			*i += 1;
+		}
 		(*elem) = (*elem)->next;
 	}
 	(*elem) = (*elem)->next;
@@ -59,8 +68,17 @@ void echo_without_quote(t_elem **elem, t_command **command, int *i)
 	}
 	else
 	{
-		(*command)->args[*i] = (*elem)->content;
-		*i += 1;
+		if ((*elem)->token == ENV)
+		{
+			char *env = getenv((*elem)->content + 1);
+			(*command)->args[*i] = env;
+			*i += 1;
+		}
+		else
+		{
+			(*command)->args[*i] = (*elem)->content;
+			*i += 1;
+		}
 		(*elem) = (*elem)->next;
 	}
 }
@@ -72,14 +90,26 @@ void command_comand(t_elem **elem, t_command **command)
 		(*elem) = (*elem)->next;
 		while ((*elem)->token != DOUBLE_QUOTE && (*elem)->token != QOUTE)
 		{
-			(*command)->cmd = ft_strjoin((*command)->cmd, (*elem)->content);
+			if ((*elem)->token == ENV)
+			{
+				char *env = getenv((*elem)->content + 1);
+				(*command)->cmd = ft_strjoin((*command)->cmd, env);
+			}
+			else
+				(*command)->cmd = ft_strjoin((*command)->cmd, (*elem)->content);
 			(*elem) = (*elem)->next;
 		}
 		*elem = (*elem)->next;
 	}
 	else
 	{
-		(*command)->cmd = (*elem)->content;
+		if ((*elem)->token == ENV)
+		{
+			char *env = getenv((*elem)->content + 1);
+			(*command)->cmd = env;
+		}
+		else
+			(*command)->cmd = (*elem)->content;
 		(*elem) = (*elem)->next;
 	}
 }

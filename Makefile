@@ -16,9 +16,11 @@ src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c
 # Objects
 obj = $(src:.c=.o)
 
-# Rules
+# Colors
+GREEN := \033[0;32m
 RED := \033[0;31m
 NC := \033[0m
+
 
 all: $(LIBFT) $(NAME) 
 
@@ -26,13 +28,15 @@ $(LIBFT):
 	@echo "$(RED)libft Compiling$(NC)"
 	@echo "$(RED)-----------------$(NC)"
 	@cd libft && make
+	@echo "$(RED) ----------------$(NC)"
+	@echo "$(RED) minishell Compiling$(NC)"
 
 $(NAME): $(obj)
 	@$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME)  $(LDFLAGS)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "✅$< Compiling "
+	@echo "$(GREEN)✔︎$< Compiling $(NC)"
 
 clean:
 	@rm -f $(obj)
