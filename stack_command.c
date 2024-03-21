@@ -6,13 +6,13 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/17 18:09:41 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/21 00:39:53 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void echo_with_quote(t_elem **elem, t_command **command, int *i)
+void with_quote(t_elem **elem, t_command **command, int *i)
 {
 	(*elem) = (*elem)->next;
 	while ((*elem)->token != '\'')
@@ -24,7 +24,7 @@ void echo_with_quote(t_elem **elem, t_command **command, int *i)
 	(*elem) = (*elem)->next;
 }
 
-void echo_with_d_quote(t_elem **elem, t_command **command, int *i)
+void with_d_quote(t_elem **elem, t_command **command, int *i)
 {
 	(*elem) = (*elem)->next;
 	while (*elem && (*elem)->token != '\"')
@@ -32,8 +32,11 @@ void echo_with_d_quote(t_elem **elem, t_command **command, int *i)
 		if ((*elem)->token == ENV)
 		{
 			char *env = getenv((*elem)->content + 1);
-			(*command)->args[*i] = env;
-			*i += 1;
+			if (env)
+			{
+				(*command)->args[*i] = env;
+				*i += 1;
+			}
 		}
 		else
 		{
@@ -45,7 +48,7 @@ void echo_with_d_quote(t_elem **elem, t_command **command, int *i)
 	(*elem) = (*elem)->next;
 }
 
-void echo_without_quote(t_elem **elem, t_command **command, int *i)
+void without_quote(t_elem **elem, t_command **command, int *i)
 {
 	char *tmp;
 	
@@ -68,11 +71,14 @@ void echo_without_quote(t_elem **elem, t_command **command, int *i)
 	}
 	else
 	{
-		if ((*elem)->token == ENV)
+		if ((*elem)->token == ENV && (*elem)->content[1] != '\0')
 		{
 			char *env = getenv((*elem)->content + 1);
-			(*command)->args[*i] = env;
-			*i += 1;
+			if (env)
+			{
+				(*command)->args[*i] = env;
+				*i += 1;
+			}
 		}
 		else
 		{
@@ -93,7 +99,8 @@ void command_comand(t_elem **elem, t_command **command)
 			if ((*elem)->token == ENV)
 			{
 				char *env = getenv((*elem)->content + 1);
-				(*command)->cmd = ft_strjoin((*command)->cmd, env);
+				if (env)
+					(*command)->cmd = ft_strjoin((*command)->cmd, env);
 			}
 			else
 				(*command)->cmd = ft_strjoin((*command)->cmd, (*elem)->content);
@@ -106,7 +113,8 @@ void command_comand(t_elem **elem, t_command **command)
 		if ((*elem)->token == ENV)
 		{
 			char *env = getenv((*elem)->content + 1);
-			(*command)->cmd = env;
+			if (env)
+				(*command)->cmd = env;
 		}
 		else
 			(*command)->cmd = (*elem)->content;
@@ -114,28 +122,25 @@ void command_comand(t_elem **elem, t_command **command)
 	}
 }
 
-void stack_command(t_elem *elem, t_command **command)
+void stack_command(t_elem *elem, t_command **command, int *i)
 {
-	int i;
-
-	i = 0;
 	while (elem->token == WHITE_SPACE)
 		elem = elem->next;
 	while (elem)
 	{
 		command_comand(&elem, command);
-		(*command)->args[i] = (*command)->cmd;
-		i++;
+		(*command)->args[*i] = (*command)->cmd;
+		*i += 1;
 		while (elem && elem->token != PIPE_LINE)
 		{
 			
 			if (elem->token == QOUTE)
-				echo_with_quote(&elem, command, &i);
+				with_quote(&elem, command, i);
 			else if (elem->token == DOUBLE_QUOTE)
-				echo_with_d_quote(&elem, command, &i);
+				with_d_quote(&elem, command, i);
 			else
-				echo_without_quote(&elem, command, &i);
+				without_quote(&elem, command, i);
 		}
 	}
-	(*command)->args[i] = NULL;
+	(*command)->args[*i] = NULL;
 }

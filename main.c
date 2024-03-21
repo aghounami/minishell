@@ -60,6 +60,17 @@ int print_lex(t_elem *elem)
     return (0);
 }
 
+void sig_handler(int signo)
+{
+    if (signo == SIGINT)
+    {
+        printf("\n");
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+    }
+}
+
 int main(int argc, char **argv, char **envp)
 {
     char *line;
@@ -72,6 +83,8 @@ int main(int argc, char **argv, char **envp)
     command = malloc(sizeof(t_command));
     command->cmd = ft_strdup("");
     command->args = malloc(sizeof(char *) * 100);
+    signal(SIGINT, sig_handler);
+    signal(SIGQUIT, sig_handler);
     while (1)
     {
         pars = NULL;
@@ -84,53 +97,37 @@ int main(int argc, char **argv, char **envp)
             // print_lex(pars);
             if (flag == 0)
             {
-                stack_command(pars, &command);
+                int i = 0;
+                stack_command(pars, &command, &i);
                 // printf("command->cmd = [%s]\n", command->cmd);
-               
+
                 // for (int i = 0; command->args[i] != NULL; i++)
                 //     printf("arg      :[%s]\n", command->args[i]);
                 if (strncmp(command->cmd, "echo", 4) == 0)
                 {
-                    for (int i = 1; command->args[i] != NULL; i++)
-                        printf("%s", command->args[i]);
-                    printf("\n");
+                    if (i > 2 && strncmp(command->args[2], "-n", 2) == 0)
+                    {
+                        for (int i = 3; command->args[i] != NULL; i++)
+                            printf("%s", command->args[i]);
+                        printf("");
+                    }
+                    else
+                    {
+                        for (int i = 1; command->args[i] != NULL; i++)
+                            printf("%s", command->args[i]);
+                        printf("\n");
+                    }
                 }
                 command->cmd = "";
             }
             flag = 0;
         }
         else if (!line)
+        {
+            printf("exit\n");
             exit(0);
+        }
         add_history(line);
     }
     return (0);
 }
-// args = ft_split(line, ' ');
-// if (args[0] != NULL)
-// {
-//     if (strcmp(args[0], "exit") == 0)
-//     {
-//         free(line);
-//         free(args);
-//         exit(0);
-//     }
-//     else if (strcmp(args[0], "cd") == 0)
-//     {
-//         if (args[1] == NULL)
-//             chdir(getenv("HOME"));
-//         else
-//             chdir(args[1]);
-//     }
-//     else
-//     {
-//         pid_t pid = fork();
-//         if (pid == 0)
-//         {
-//             execvp(args[0], args);
-//             perror("minishell");
-//             exit(1);
-//         }
-//         else
-//             wait(NULL);
-//     }
-// }

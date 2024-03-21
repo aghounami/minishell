@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/17 17:44:13 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/20 21:59:33 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void *lexer(char *line, t_elem **elem)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<' && line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n' && line[i] != '\t' && line[i] != '\\')
+		if (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<'
+			&& line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n'
+				&& line[i] != '\t' && line[i] != '\\' && line[i] != '$')
 		{
 			char *word = malloc(sizeof(char) * 100);
 			j = 0;
@@ -31,10 +33,24 @@ void *lexer(char *line, t_elem **elem)
 				i++;
 			}
 			word[j] = '\0';
-			if (word[0] == '$')
-				lstadd_back(elem, lstnew(word, ENV));
-			else
-				lstadd_back(elem, lstnew(word, WORD));
+			lstadd_back(elem, lstnew(word, WORD));
+		}
+		else if (line[i] == '$')
+		{
+			j = 1;
+			char *env = malloc(sizeof(char) * 100);
+			env[0] = '$';
+			i++;
+			while ((line[i] >= 'a' && line[i] <= 'z') || (line[i] >= 'A' && line[i] <= 'Z') || (line[i] >= '0' && line[i] <= '9') || line[i] == '_' || line[i] == '?' || line[i] == '$')
+			{
+				env[j] = line[i];
+				j++;
+				i++;
+				if (j == 2 && (!(env[1] >= 'a' && env[1] <= 'z') && !(env[1] >= 'A' && env[1] <= 'Z')))
+					break;
+			}
+			env[j] = '\0';
+			lstadd_back(elem, lstnew(env, ENV));
 		}
 		else if (line[i] == ' ' || line[i] == '\t')
 		{
