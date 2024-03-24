@@ -71,14 +71,13 @@ void sig_handler(int signo)
     }
 }
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv, char **env)
 {
     char *line;
     t_command *command;
     t_elem *pars = NULL;
     int flag = 0;
     (void)argv;
-    (void)envp;
     (void)argc;
     command = malloc(sizeof(t_command));
     command->cmd = ft_strdup("");
@@ -88,7 +87,7 @@ int main(int argc, char **argv, char **envp)
     while (1)
     {
         pars = NULL;
-        line = readline("\033[0;32m ➜ minishell ~ \033[0m");
+        line = readline("\033[0;32m➜ minishell ~ \033[0m");
         if (line && line[0] != '\0')
         {
             lexer(line, &pars);
@@ -98,29 +97,36 @@ int main(int argc, char **argv, char **envp)
             if (flag == 0)
             {
                 int i = 0;
-                stack_command(pars, &command, &i);
-                // printf("command->cmd = [%s]\n", command->cmd);
+                stack_command(pars, &command, &i, env);
+                printf("command->cmd = [%s]\n", command->cmd);
 
-                // for (int i = 0; command->args[i] != NULL; i++)
-                //     printf("arg      :[%s]\n", command->args[i]);
-                if (strncmp(command->cmd, "echo", 4) == 0)
-                {
-                    if (i > 2 && strncmp(command->args[2], "-n", 2) == 0)
-                    {
-                        for (int i = 3; command->args[i] != NULL; i++)
-                            printf("%s", command->args[i]);
-                        printf("");
-                    }
-                    else
-                    {
-                        for (int i = 1; command->args[i] != NULL; i++)
-                            printf("%s", command->args[i]);
-                        printf("\n");
-                    }
-                }
-                command->cmd = "";
+                for (int i = 0; command->args[i] != NULL; i++)
+                    printf("arg      :[%s]\n", command->args[i]);
+                // if (strncmp(command->cmd, "echo", 4) == 0)
+                // {
+                //     if (i > 2 && strncmp(command->args[2], "-n", 2) == 0)
+                //     {
+                //         int i = 3;
+                //         while (command->args[i] && (strncmp(command->args[i], "-n" , 2) == 0 || strncmp(command->args[i], " " , 2) == 0))
+                //             i++;
+                //         while (command->args[i])
+                //         {
+                //             if (strncmp(command->args[i], "-n", 2) != 0)
+                //                 printf("%s", command->args[i]);
+                //             i++;
+                //         }
+                //         printf("");
+                //     }
+                //     else
+                //     {
+                //         for (int i = 2; command->args[i] != NULL; i++)
+                //             printf("%s", command->args[i]);
+                //         printf("\n");
+                //     }
+                // }
             }
             flag = 0;
+            command->cmd = "";
         }
         else if (!line)
         {
