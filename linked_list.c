@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/25 06:50:10 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/25 17:22:27 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,34 @@ void lstadd_back(t_elem **lst, t_elem *new)
 	}
 	else
 		*lst = new;
+}
+
+t_command *lstnew_command(char **agrs, char *cmd)
+{
+	t_command *new;
+
+	new = malloc(sizeof(t_command));
+	if (!new)
+		return (NULL);
+	new->cmd = cmd;
+	new->args = agrs;
+	new->next = NULL;
+	return (new);
+}
+
+void lstadd_back_command(t_command **lst, t_command *new)
+{
+	t_command *last;
+
+	if (!new)
+		return ;
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	last = *lst;
+	while (last->next)
+		last = last->next;
+	last->next = new;
 }

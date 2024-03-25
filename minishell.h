@@ -67,5 +67,8 @@ void		lstadd_back(t_elem **lst, t_elem *new);
 void		state(t_elem **elem);
 void syntax_error(t_elem **elem , int *flag);
 void	stack_command(t_elem *elem, t_command **command, char **env);
+t_command	*lstnew_command(char **agrs, char *cmd);
+void		lstadd_back_command(t_command **lst, t_command *new);
+void	stack_env(t_elem **elem, char **env);
 
 #endif

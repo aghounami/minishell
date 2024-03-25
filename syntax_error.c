@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:39:14 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/15 02:32:59 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/25 22:16:13 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_if_pipe_line_first(t_elem **elem)
 	tmp = *elem;
 	while (tmp && tmp->token == WHITE_SPACE)
 		tmp = tmp->next;
-	if (tmp->token == PIPE_LINE)
+	if (tmp && tmp->token == PIPE_LINE)
 	{
 		printf("syntax error\n");
 		return 1;

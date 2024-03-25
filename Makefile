@@ -7,7 +7,7 @@ READLINE_L = /Users/aghounam/.brew/opt/readline/lib
 READLINE_I = /Users/aghounam/.brew/opt/readline/include
 
 # Flags 
-CFLAGS = -Wall -Wextra -Werror -I$(READLINE_I) -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sourc
@@ -28,8 +28,7 @@ $(LIBFT):
 	@echo "$(RED)libft Compiling$(NC)"
 	@echo "$(RED)-----------------$(NC)"
 	@cd libft && make
-	@echo "$(RED) ----------------$(NC)"
-	@echo "$(RED) minishell Compiling$(NC)"
+	@echo "$(RED)minishell Compiling$(NC)"
 
 $(NAME): $(obj)
 	@$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME)  $(LDFLAGS)

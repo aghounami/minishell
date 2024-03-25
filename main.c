@@ -75,17 +75,17 @@ int main(int argc, char **argv, char **env)
 {
     char *line;
     t_command *command;
-    t_elem *pars = NULL;
+    t_elem *pars;
     int flag = 0;
     (void)argv;
     (void)argc;
-    command = NULL;
     rl_catch_signals = 0;
     signal(SIGINT, sig_handler);
     signal(SIGQUIT, sig_handler);
     while (1)
     {
         pars = NULL;
+        command = NULL;
         line = readline("\033[0;32m➜ minishell ~ \033[0m");
         if (line && line[0] != '\0')
         {
@@ -95,7 +95,7 @@ int main(int argc, char **argv, char **env)
             // print_lex(pars);
             if (flag == 0)
             {
-                // stack_env(&pars, env);
+                stack_env(&pars, env);
                 stack_command(pars, &command, env);
                 while (command != NULL)
                 {
@@ -105,7 +105,19 @@ int main(int argc, char **argv, char **env)
                     printf ("--\n");
                     command = command->next;
                 }
-                command = NULL;
+            }
+            flag = 0;
+        }
+        else if (!line)
+        {
+            printf("exit\n");
+            exit(0);
+        }
+        add_history(line);
+    }
+    return (0);
+}
+
                 // if (strncmp(command->cmd, "echo", 4) == 0)
                 // {
                 //     if (i > 2 && strncmp(command->args[2], "-n", 2) == 0)
@@ -128,15 +140,3 @@ int main(int argc, char **argv, char **env)
                 //         printf("\n");
                 //     }
                 // }
-            }
-            flag = 0;
-        }
-        else if (!line)
-        {
-            printf("exit\n");
-            exit(0);
-        }
-        add_history(line);
-    }
-    return (0);
-}
