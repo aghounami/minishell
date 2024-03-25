@@ -45,6 +45,9 @@ typedef struct s_command
 	char	*redir_out;
 	char	*here_doc;
 	char	*dredir_out;
+	int		pipe;
+	int		redir;
+	struct s_command	*next;
 }	t_command;
 
 typedef struct s_elem
@@ -54,14 +57,15 @@ typedef struct s_elem
 	enum e_state	state;
     struct s_elem	*next;
 	enum e_token	token;
+	struct s_elem	*prev;
 }	t_elem;
 
 void		*lexer(char *line, t_elem **elem);
-t_elem		*lstnew(void *content, int token);
+t_elem		*lstnew(void *content, int token , t_elem **prev);
 t_elem		*lstlast(t_elem *lst);
 void		lstadd_back(t_elem **lst, t_elem *new);
 void		state(t_elem **elem);
 void syntax_error(t_elem **elem , int *flag);
-void stack_command(t_elem *elem, t_command **command, int *i, char **env);
+void	stack_command(t_elem *elem, t_command **command, char **env);
 
 #endif

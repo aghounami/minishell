@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/20 21:59:33 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/25 06:47:06 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void *lexer(char *line, t_elem **elem)
 {
 	int i;
 	int j;
+	t_elem *prev = NULL;
 
 	i = 0;
 	while (line[i])
@@ -33,7 +34,7 @@ void *lexer(char *line, t_elem **elem)
 				i++;
 			}
 			word[j] = '\0';
-			lstadd_back(elem, lstnew(word, WORD));
+			lstadd_back(elem, lstnew(word, WORD, &prev));
 		}
 		else if (line[i] == '$')
 		{
@@ -50,14 +51,14 @@ void *lexer(char *line, t_elem **elem)
 					break;
 			}
 			env[j] = '\0';
-			lstadd_back(elem, lstnew(env, ENV));
+			lstadd_back(elem, lstnew(env, ENV, &prev));
 		}
 		else if (line[i] == ' ' || line[i] == '\t')
 		{
 			char *space = malloc(sizeof(char) * 2);
 			space[0] = ' ';
 			space[1] = '\0';
-			lstadd_back(elem, lstnew(space, WHITE_SPACE));
+			lstadd_back(elem, lstnew(space, WHITE_SPACE , &prev));
 			i++;
 		}
 		else if (line[i] == '|')
@@ -65,7 +66,7 @@ void *lexer(char *line, t_elem **elem)
 			char *pipe = malloc(sizeof(char) * 2);
 			pipe[0] = '|';
 			pipe[1] = '\0';
-			lstadd_back(elem, lstnew(pipe, PIPE_LINE));
+			lstadd_back(elem, lstnew(pipe, PIPE_LINE , &prev));
 			i++;
 		}
 		else if (line[i] == '>')
@@ -76,7 +77,7 @@ void *lexer(char *line, t_elem **elem)
 				dredir_out[0] = '>';
 				dredir_out[1] = '>';
 				dredir_out[2] = '\0';
-				lstadd_back(elem, lstnew(dredir_out, DREDIR_OUT));
+				lstadd_back(elem, lstnew(dredir_out, DREDIR_OUT , &prev));
 				i += 2;
 			}
 			else
@@ -84,7 +85,7 @@ void *lexer(char *line, t_elem **elem)
 				char *redir_out = malloc(sizeof(char) * 2);
 				redir_out[0] = '>';
 				redir_out[1] = '\0';
-				lstadd_back(elem, lstnew(redir_out, REDIR_OUT));
+				lstadd_back(elem, lstnew(redir_out, REDIR_OUT , &prev));
 				i++;
 			}
 		}
@@ -96,14 +97,14 @@ void *lexer(char *line, t_elem **elem)
 				redir_in[0] = '<';
 				redir_in[1] = '<';
 				redir_in[2] = '\0';
-				lstadd_back(elem, lstnew(redir_in, HERE_DOC));
+				lstadd_back(elem, lstnew(redir_in, HERE_DOC , &prev));
 				i += 2;
 			}
 			else
 			{
 				redir_in[0] = '<';
 				redir_in[1] = '\0';
-				lstadd_back(elem, lstnew(redir_in, REDIR_IN));
+				lstadd_back(elem, lstnew(redir_in, REDIR_IN , &prev));
 				i++;
 			}
 		}
@@ -112,7 +113,7 @@ void *lexer(char *line, t_elem **elem)
 			char *quote = malloc(sizeof(char) * 2);
 			quote[0] = '\'';
 			quote[1] = '\0';
-			lstadd_back(elem, lstnew(quote, QOUTE));
+			lstadd_back(elem, lstnew(quote, QOUTE , &prev));
 			i++;
 		}
 		else if (line[i] == '\"')
@@ -120,7 +121,7 @@ void *lexer(char *line, t_elem **elem)
 			char *dquote = malloc(sizeof(char) * 2);
 			dquote[0] = '\"';
 			dquote[1] = '\0';
-			lstadd_back(elem, lstnew(dquote, DOUBLE_QUOTE));
+			lstadd_back(elem, lstnew(dquote, DOUBLE_QUOTE , &prev));
 			i++;
 		}
 		else if (line[i] == '\\')
@@ -138,7 +139,7 @@ void *lexer(char *line, t_elem **elem)
 				escape[1] = '\0';
 				i++;
 			}
-			lstadd_back(elem, lstnew(escape, ESCAPE));
+			lstadd_back(elem, lstnew(escape, ESCAPE , &prev));
 		}
 		else
 			i++;

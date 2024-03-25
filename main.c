@@ -79,9 +79,8 @@ int main(int argc, char **argv, char **env)
     int flag = 0;
     (void)argv;
     (void)argc;
-    command = malloc(sizeof(t_command));
-    command->cmd = ft_strdup("");
-    command->args = malloc(sizeof(char *) * 100);
+    command = NULL;
+    rl_catch_signals = 0;
     signal(SIGINT, sig_handler);
     signal(SIGQUIT, sig_handler);
     while (1)
@@ -96,12 +95,17 @@ int main(int argc, char **argv, char **env)
             // print_lex(pars);
             if (flag == 0)
             {
-                int i = 0;
-                stack_command(pars, &command, &i, env);
-                printf("command->cmd = [%s]\n", command->cmd);
-
-                for (int i = 0; command->args[i] != NULL; i++)
-                    printf("arg      :[%s]\n", command->args[i]);
+                // stack_env(&pars, env);
+                stack_command(pars, &command, env);
+                while (command != NULL)
+                {
+                    printf("command->cmd = [%s]\n", command->cmd);
+                    for (int i = 0; command->args[i] != NULL; i++)
+                        printf("arg      :[%s]\n", command->args[i]);
+                    printf ("--\n");
+                    command = command->next;
+                }
+                command = NULL;
                 // if (strncmp(command->cmd, "echo", 4) == 0)
                 // {
                 //     if (i > 2 && strncmp(command->args[2], "-n", 2) == 0)
