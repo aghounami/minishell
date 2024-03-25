@@ -6,13 +6,13 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/24 21:55:27 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/25 00:14:03 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	get_env(t_elem **elem, t_command **command, int *i, char **env)
+char	*get_env(t_elem **elem, char **env)
 {
 	int index = 0;
 	int j = 0;
@@ -20,6 +20,7 @@ void	get_env(t_elem **elem, t_command **command, int *i, char **env)
 	char *env_name = malloc(sizeof(char) * 100);
 	char *env_value = malloc(sizeof(char) * 100);
 	env_name = ft_strdup((*elem)->content + 1);
+	env_value = NULL;
 	while (env[index])
 	{
 		if (ft_strncmp(env[index], env_name, ft_strlen(env_name)) == 0 && env[index][ft_strlen(env_name)] == '=')
@@ -27,44 +28,51 @@ void	get_env(t_elem **elem, t_command **command, int *i, char **env)
 			while (env[index][j] != '=')
 				j++;
 			env_value = ft_strdup(env[index] + j + 1);
-			(*command)->args[*i] = env_value;
-			*i += 1;
 			break ;
 		}
 		index++;
 	}
+	return (env_value);
 }
 
 void with_quote(t_elem **elem, t_command **command, int *i)
 {
+	char *str = malloc(sizeof(char) * 100);
+	str = ""; 
 	(*elem) = (*elem)->next;
-	while ((*elem)->token != '\'')
+	while (*elem && (*elem)->token != '\'')
 	{
-		(*command)->args[*i] = (*elem)->content;
-		*i += 1;
+		str = ft_strjoin(str, (*elem)->content);
 		(*elem) = (*elem)->next;
 	}
+	(*command)->args[*i] = str;
+	*i += 1;
 	(*elem) = (*elem)->next;
 }
 
 void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
 {
+	char *str = malloc(sizeof(char) * 100);
+	str = ""; 
 	(*elem) = (*elem)->next;
 	while (*elem && (*elem)->token != '\"')
 	{
 		if ((*elem)->token == ENV)
-			get_env(elem, command, i, env);
-		else
 		{
-			(*command)->args[*i] = (*elem)->content;
-			*i += 1;
+			char *dst = get_env(elem, env);
+			if (str)
+				str = ft_strjoin(str, dst);
 		}
+		else
+			str = ft_strjoin(str, (*elem)->content);
 		(*elem) = (*elem)->next;
 	}
+	(*command)->args[*i] = str;
+	*i += 1;
 	(*elem) = (*elem)->next;
 }
 
-void without_quote(t_elem **elem, t_command **command, int *i)
+void without_quote(t_elem **elem, t_command **command, int *i, char **env)
 {
 	char *tmp;
 
@@ -88,7 +96,14 @@ void without_quote(t_elem **elem, t_command **command, int *i)
 	else
 	{
 		if ((*elem)->token == ENV && (*elem)->content[1] != '\0')
-			get_env(elem, command, i, NULL);
+		{
+			char *str = get_env(elem, env);
+			if (str)
+			{
+				(*command)->args[*i] = str;
+				*i += 1;
+			}
+		}
 		else if ((*elem)->token != WHITE_SPACE)
 		{
 			(*command)->args[*i] = (*elem)->content;
@@ -100,7 +115,8 @@ void without_quote(t_elem **elem, t_command **command, int *i)
 
 void command_comand(t_elem **elem, t_command **command , char **env)
 {
-	(void)env;
+	while ((*elem)->token == WHITE_SPACE)
+		(*elem) = (*elem)->next;
 	if ((*elem)->token == QOUTE || (*elem)->token == DOUBLE_QUOTE)
 	{
 		(*elem) = (*elem)->next;
@@ -108,9 +124,9 @@ void command_comand(t_elem **elem, t_command **command , char **env)
 		{
 			if ((*elem)->token == ENV)
 			{
-				char *env = getenv((*elem)->content + 1);
-				if (env)
-					(*command)->cmd = ft_strjoin((*command)->cmd, env);
+				char *str = get_env(elem, env);
+				if (str)
+					(*command)->cmd = ft_strjoin((*command)->cmd, str);
 			}
 			else
 				(*command)->cmd = ft_strjoin((*command)->cmd, (*elem)->content);
@@ -122,9 +138,11 @@ void command_comand(t_elem **elem, t_command **command , char **env)
 	{
 		if ((*elem)->token == ENV)
 		{
-			char *env = getenv((*elem)->content + 1);
-			if (env)
-				(*command)->cmd = env;
+			char *str = get_env(elem, env);
+			if (str)
+				(*command)->cmd = str;
+			else
+				command_comand(elem, command, env);
 		}
 		else
 			(*command)->cmd = (*elem)->content;
@@ -134,13 +152,11 @@ void command_comand(t_elem **elem, t_command **command , char **env)
 
 void stack_command(t_elem *elem, t_command **command, int *i, char **env)
 {
-	while (elem->token == WHITE_SPACE)
-		elem = elem->next;
 	while (elem)
 	{
-		command_comand(&elem, command, env);
-		(*command)->args[*i] = (*command)->cmd;
-		*i += 1;
+		while (elem && elem->token == WHITE_SPACE)
+			elem = elem->next;
+		(*command)->cmd = "";
 		while (elem && elem->token != PIPE_LINE)
 		{
 			if (elem->token == QOUTE)
@@ -148,7 +164,9 @@ void stack_command(t_elem *elem, t_command **command, int *i, char **env)
 			else if (elem->token == DOUBLE_QUOTE)
 				with_d_quote(&elem, command, i, env);
 			else
-				without_quote(&elem, command, i);
+				without_quote(&elem, command, i, env);
+			if ((*command)->args[0] != NULL)
+				(*command)->cmd = (*command)->args[0];
 		}
 	}
 	(*command)->args[*i] = NULL;

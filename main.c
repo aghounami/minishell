@@ -126,7 +126,6 @@ int main(int argc, char **argv, char **env)
                 // }
             }
             flag = 0;
-            command->cmd = "";
         }
         else if (!line)
         {
