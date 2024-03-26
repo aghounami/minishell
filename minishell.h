@@ -70,5 +70,7 @@ void	stack_command(t_elem *elem, t_command **command, char **env);
 t_command	*lstnew_command(char **agrs, char *cmd);
 void		lstadd_back_command(t_command **lst, t_command *new);
 void	stack_env(t_elem **elem, char **env);
+// hamza
+void exec_check(t_command **command);
 
 #endif

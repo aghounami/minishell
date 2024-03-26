@@ -11,7 +11,7 @@ CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sourc
-src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c
+src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c exec.c
   
 # Objects
 obj = $(src:.c=.o)

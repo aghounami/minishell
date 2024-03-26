@@ -6,14 +6,59 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/25 18:40:27 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/26 17:34:12 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void case_dollar(char *line, int *i, char *str, int *j, t_elem **elem, t_elem *prev)
+{
+	*j = 1;
+	str[0] = '$';
+	*i += 1;
+	while ((line[*i] >= 'a' && line[*i] <= 'z') || (line[*i] >= 'A' \
+		&& line[*i] <= 'Z') || (line[*i] >= '0' && line[*i] <= '9') \
+			|| line[*i] == '_' || line[*i] == '?' || line[*i] == '$')
+	{
+		str[*j] = line[*i];
+		*j += 1;
+		*i += 1;
+		if (*j == 2 && (!(str[1] >= 'a' && str[1] <= 'z') \
+			&& !(str[1] >= 'A' && str[1] <= 'Z')))
+			break;
+	}
+	str[*j] = '\0';
+	lstadd_back(elem, lstnew(ft_strdup(str), ENV, &prev));
+}
+
+void case_one_char(int *i, char *str, char c, int type, t_elem **elem, t_elem *prev)
+{
+	str[0] = c;
+	str[1] = '\0';
+	*i += 1;
+	lstadd_back(elem, lstnew(ft_strdup(str), type, &prev));
+}
+
+void case_word(char *line, int *i, char *str, t_elem **elem, t_elem *prev)
+{
+	int j;
+	j = 0;
+	while (line[*i] != ' ' && line[*i] != '|' && line[*i] != '>'  && line[*i] != '<' \
+		&& line[*i] != '\'' && line[*i] != '\"' && line[*i] != '\0' \
+			&& line[*i] != '\n' && line[*i] != '\t' && line[*i] != '\\')
+	{
+		str[j] = line[*i];
+		j += 1;
+		*i += 1;
+	}
+	str[j] = '\0';
+	lstadd_back(elem, lstnew(ft_strdup(str), WORD, &prev));
+}
+
 void *lexer(char *line, t_elem **elem)
 {
+	char *str;
 	int i;
 	int j;
 	t_elem *prev = NULL;
@@ -21,128 +66,63 @@ void *lexer(char *line, t_elem **elem)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<'
-			&& line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n'
-				&& line[i] != '\t' && line[i] != '\\' && line[i] != '$')
-		{
-			char *word = malloc(sizeof(char) * 100);
-			j = 0;
-			while (line[i] != ' ' && line[i] != '|' && line[i] != '>' && line[i] != '<' && line[i] != '\'' && line[i] != '\"' && line[i] != '\0' && line[i] != '\n' && line[i] != '\t' && line[i] != '\\')
-			{
-				word[j] = line[i];
-				j++;
-				i++;
-			}
-			word[j] = '\0';
-			lstadd_back(elem, lstnew(word, WORD, &prev));
-		}
-		else if (line[i] == '$')
-		{
-			j = 1;
-			char *env = malloc(sizeof(char) * 100);
-			env[0] = '$';
-			i++;
-			while ((line[i] >= 'a' && line[i] <= 'z') || (line[i] >= 'A' && line[i] <= 'Z') || (line[i] >= '0' && line[i] <= '9') || line[i] == '_' || line[i] == '?' || line[i] == '$')
-			{
-				env[j] = line[i];
-				j++;
-				i++;
-				if (j == 2 && (!(env[1] >= 'a' && env[1] <= 'z') && !(env[1] >= 'A' && env[1] <= 'Z')))
-					break;
-			}
-			env[j] = '\0';
-			lstadd_back(elem, lstnew(env, ENV, &prev));
-		}
+		str = malloc(sizeof(char) * 100);
+		if (line[i] == '$')
+			case_dollar(line, &i, str, &j, elem, prev);
 		else if (line[i] == ' ' || line[i] == '\t')
-		{
-			char *space = malloc(sizeof(char) * 2);
-			space[0] = ' ';
-			space[1] = '\0';
-			lstadd_back(elem, lstnew(space, WHITE_SPACE , &prev));
-			i++;
-		}
+			case_one_char(&i, str, ' ', WHITE_SPACE, elem, prev);
 		else if (line[i] == '|')
-		{
-			char *pipe = malloc(sizeof(char) * 2);
-			pipe[0] = '|';
-			pipe[1] = '\0';
-			lstadd_back(elem, lstnew(pipe, PIPE_LINE , &prev));
-			i++;
-		}
+			case_one_char(&i, str, '|', PIPE_LINE, elem, prev);
+
 		else if (line[i] == '>')
 		{
 			if (line[i + 1] == '>')
 			{
-				char *dredir_out = malloc(sizeof(char) * 3);
-				dredir_out[0] = '>';
-				dredir_out[1] = '>';
-				dredir_out[2] = '\0';
-				lstadd_back(elem, lstnew(dredir_out, DREDIR_OUT , &prev));
+				str[0] = '>';
+				str[1] = '>';
+				str[2] = '\0';
 				i += 2;
+				lstadd_back(elem, lstnew(ft_strdup(str), DREDIR_OUT, &prev));
 			}
 			else
-			{
-				char *redir_out = malloc(sizeof(char) * 2);
-				redir_out[0] = '>';
-				redir_out[1] = '\0';
-				lstadd_back(elem, lstnew(redir_out, REDIR_OUT , &prev));
-				i++;
-			}
+				case_one_char(&i, str, '>', REDIR_OUT, elem, prev);
 		}
 		else if (line[i] == '<')
 		{
-			char *redir_in = malloc(sizeof(char) * 3);
 			if (line[i + 1] == '<')
 			{
-				redir_in[0] = '<';
-				redir_in[1] = '<';
-				redir_in[2] = '\0';
-				lstadd_back(elem, lstnew(redir_in, HERE_DOC , &prev));
+				str[0] = '<';
+				str[1] = '<';
+				str[2] = '\0';
 				i += 2;
+				lstadd_back(elem, lstnew(ft_strdup(str), HERE_DOC, &prev));
 			}
 			else
-			{
-				redir_in[0] = '<';
-				redir_in[1] = '\0';
-				lstadd_back(elem, lstnew(redir_in, REDIR_IN , &prev));
-				i++;
-			}
+				case_one_char(&i, str, '<', REDIR_IN, elem, prev);
 		}
 		else if (line[i] == '\'')
-		{
-			char *quote = malloc(sizeof(char) * 2);
-			quote[0] = '\'';
-			quote[1] = '\0';
-			lstadd_back(elem, lstnew(quote, QOUTE , &prev));
-			i++;
-		}
+			case_one_char(&i, str, '\'', QOUTE, elem, prev);
 		else if (line[i] == '\"')
-		{
-			char *dquote = malloc(sizeof(char) * 2);
-			dquote[0] = '\"';
-			dquote[1] = '\0';
-			lstadd_back(elem, lstnew(dquote, DOUBLE_QUOTE , &prev));
-			i++;
-		}
+			case_one_char(&i, str, '\"', DOUBLE_QUOTE, elem, prev);
 		else if (line[i] == '\\')
 		{
-			char *escape = malloc(sizeof(char) * 3);
-			escape[0] = '\\';
+			str[0] = '\\';
 			if (line[i + 1] != '\0')
 			{
-				escape[1] = line[i + 1];
-				escape[2] = '\0';
+				str[1] = line[i + 1];
+				str[2] = '\0';
 				i += 2;
 			}
 			else
 			{
-				escape[1] = '\0';
+				str[1] = '\0';
 				i++;
 			}
-			lstadd_back(elem, lstnew(escape, ESCAPE , &prev));
+			lstadd_back(elem, lstnew(ft_strdup(str), ESCAPE, &prev));
 		}
 		else
-			i++;
+			case_word(line, &i, str, elem, prev);
+		free(str);
 	}
 	return (elem);
 }

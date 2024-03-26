@@ -64,6 +64,11 @@ void sig_handler(int signo)
 {
     if (signo == SIGINT)
     {
+        if (waitpid(-1, 0, WNOHANG) == 0)
+        {
+            printf("\n");
+            return ;
+        }
         printf("\n");
         rl_on_new_line();
         rl_replace_line("", 0);
@@ -92,19 +97,20 @@ int main(int argc, char **argv, char **env)
             lexer(line, &pars);
             state(&pars);
             syntax_error(&pars, &flag);
-            // print_lex(pars);
+            print_lex(pars);
             if (flag == 0)
             {
                 stack_env(&pars, env);
                 stack_command(pars, &command, env);
-                while (command != NULL)
-                {
-                    printf("command->cmd = [%s]\n", command->cmd);
-                    for (int i = 0; command->args[i] != NULL; i++)
-                        printf("arg      :[%s]\n", command->args[i]);
-                    printf ("--\n");
-                    command = command->next;
-                }
+                // while (command != NULL)
+                // {
+                //     printf("command->cmd = [%s]\n", command->cmd);
+                //     for (int i = 0; command->args[i] != NULL; i++)
+                //         printf("arg      :[%s]\n", command->args[i]);
+                //     printf ("--\n");
+                //     command = command->next;
+                // }
+            //  exec_check(&command);
             }
             flag = 0;
         }
