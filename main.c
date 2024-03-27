@@ -19,8 +19,6 @@ char *find_token(t_elem *elem)
         str = "WORD";
     else if (elem->token == WHITE_SPACE)
         str = "WHITE_SPACE";
-    else if (elem->token == NEW_LINE)
-        str = "NEW_LINE";
     else if (elem->token == QOUTE)
         str = "QOUTE";
     else if (elem->token == DOUBLE_QUOTE)
@@ -97,19 +95,19 @@ int main(int argc, char **argv, char **env)
             lexer(line, &pars);
             state(&pars);
             syntax_error(&pars, &flag);
-            print_lex(pars);
+            // print_lex(pars);
             if (flag == 0)
             {
                 stack_env(&pars, env);
                 stack_command(pars, &command, env);
-                // while (command != NULL)
-                // {
-                //     printf("command->cmd = [%s]\n", command->cmd);
-                //     for (int i = 0; command->args[i] != NULL; i++)
-                //         printf("arg      :[%s]\n", command->args[i]);
-                //     printf ("--\n");
-                //     command = command->next;
-                // }
+                while (command != NULL)
+                {
+                    printf("command->cmd = [%s]\n", command->cmd);
+                    for (int i = 0; command->args[i] != NULL; i++)
+                        printf("arg      :[%s]\n", command->args[i]);
+                    printf ("--\n");
+                    command = command->next;
+                }
             //  exec_check(&command);
             }
             flag = 0;

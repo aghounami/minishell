@@ -10,9 +10,12 @@ READLINE_I = /Users/aghounam/.brew/opt/readline/include
 CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
-# Sourc
-src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c exec.c
-  
+# Sourc parser
+src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c ft_lexer_utils.c
+
+# sourece exec
+src += exec.c 
+
 # Objects
 obj = $(src:.c=.o)
 

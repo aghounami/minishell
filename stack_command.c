@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/25 18:33:09 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/27 01:51:41 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,8 @@ void stack_command(t_elem *elem, t_command **command, char **env)
 				with_d_quote(&elem, &new, &i, env);
 			else
 				without_quote(&elem, &new, &i, env);
+			// if (i > 2 && new->args[i - 1][0] == '>' || new->args[i - 1][0] == '<' )
+			// 	new->cmd = new->args[i - 2];
 			if (i > 0)
 				new->cmd = new->args[0];
 			if (!elem || elem->token == PIPE_LINE)
