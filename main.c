@@ -100,15 +100,15 @@ int main(int argc, char **argv, char **env)
             {
                 stack_env(&pars, env);
                 stack_command(pars, &command, env);
-                while (command != NULL)
-                {
-                    printf("command->cmd = [%s]\n", command->cmd);
-                    for (int i = 0; command->args[i] != NULL; i++)
-                        printf("arg      :[%s]\n", command->args[i]);
-                    printf ("--\n");
-                    command = command->next;
-                }
-            //  exec_check(&command);
+                // while (command != NULL)
+                // {
+                //     printf("command->cmd = [%s]\n", command->cmd);
+                //     for (int i = 0; command->args[i] != NULL; i++)
+                //         printf("arg      :[%s]\n", command->args[i]);
+                //     printf ("--\n");
+                //     command = command->next;
+                // }
+             exec_check(&command);
             }
             flag = 0;
         }

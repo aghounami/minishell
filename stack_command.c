@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/27 01:51:41 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:05:48 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ void stack_command(t_elem *elem, t_command **command, char **env)
 				new->cmd = new->args[0];
 			if (!elem || elem->token == PIPE_LINE)
 			{
+				new->env = env;
 				new->args[i] = NULL;
 				lstadd_back_command(command, lstnew_command(new->args, new->cmd));
 				new = NULL;

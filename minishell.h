@@ -47,6 +47,7 @@ typedef struct s_command
 	char	*dredir_out;
 	int		pipe;
 	int		redir;
+	char	**env;
 	struct s_command	*next;
 }	t_command;
 
