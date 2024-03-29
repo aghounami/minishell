@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/27 01:36:05 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/28 21:30:42 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type)
 	lstadd_back(elem, lstnew(ft_strdup(lexer->str), type, &lexer->prev));
 }
 
-void	*lexer(char *line, t_elem **elem)
+void	*lexer(char *line, t_elem **elem, char **env)
 {
 	t_lexer	*lexer;
 
@@ -30,7 +30,7 @@ void	*lexer(char *line, t_elem **elem)
 	{
 		lexer->str = ft_calloc(1000, sizeof(char));
 		if (line[lexer->i] == '$')
-			case_dollar(lexer, elem, line);
+			case_dollar(lexer, elem, line, env);
 		else if (line[lexer->i] == ' ' || line[lexer->i] == '\t')
 			case_one_char(lexer, elem, line, WHITE_SPACE);
 		else if (line[lexer->i] == '|')
@@ -51,5 +51,6 @@ void	*lexer(char *line, t_elem **elem)
 			case_word(line, elem, lexer);
 		free(lexer->str);
 	}
+	free(lexer);
 	return (elem);
 }

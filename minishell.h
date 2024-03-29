@@ -70,14 +70,14 @@ typedef struct s_lexer
 }	t_lexer;
 
 // lexer
-void		*lexer(char *line, t_elem **elem);
+void		*lexer(char *line, t_elem **elem, char **env);
 void		case_escape(char *line, t_elem **elem, t_lexer *lexer);
 void		case_herdoc_or_redir(char *line, t_elem **elem, t_lexer *lexer);
 void		case_word(char *line, t_elem **elem, t_lexer *lexer);
 void		case_redirect(char *line, t_elem **elem, t_lexer *lexer);
-void		case_dollar(t_lexer *lexer, t_elem **elem, char *line);
+void		case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env);
 void		case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type);
-void		state(t_elem **elem);
+void		state(t_elem **elem, char **env);
 // utils
 t_elem		*lstnew(void *content, int token , t_elem **prev);
 t_elem		*lstlast(t_elem *lst);
@@ -86,7 +86,8 @@ void		syntax_error(t_elem **elem , int *flag);
 void		stack_command(t_elem *elem, t_command **command, char **env);
 t_command	*lstnew_command(char **agrs, char *cmd);
 void		lstadd_back_command(t_command **lst, t_command *new);
-void		stack_env(t_elem **elem, char **env);
+void		stack_env(t_elem *elem, char **env);
+char		*get_env(char *str, char **env);
 // --------------------------------
 
 

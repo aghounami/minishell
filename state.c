@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:09:08 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/14 14:40:29 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/28 18:30:49 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@ void	case_2(t_elem **tmp)
 	}	
 }
 
-void	state(t_elem **elem)
+void	state(t_elem **elem, char **env)
 {
 	t_elem	*tmp;
 	int		flag_quote;
 	int		flag_d_quote;
 	t_elem	*prev;
+
 
 	(1) && (flag_quote = 1, flag_d_quote = 1, tmp = *elem, prev = NULL);
 	while (tmp)
@@ -55,4 +56,5 @@ void	state(t_elem **elem)
 			tmp = tmp->next;
 		}
 	}
+    stack_env(*elem, env);
 }

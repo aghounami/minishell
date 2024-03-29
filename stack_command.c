@@ -6,20 +6,19 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/27 16:05:48 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/29 00:41:17 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_env(t_elem **elem, char **env)
+char *get_env(char *str, char **env)
 {
 	int index = 0;
 	int j = 0;
-
-	char *env_name = malloc(sizeof(char) * 100);
-	char *env_value = malloc(sizeof(char) * 100);
-	env_name = ft_strdup((*elem)->content + 1);
+	char *env_name;
+	char *env_value;
+	env_name = ft_strdup(str);
 	env_value = NULL;
 	while (env[index])
 	{
@@ -32,41 +31,29 @@ char *get_env(t_elem **elem, char **env)
 		}
 		index++;
 	}
+	free(env_name);
+	if (env_value == NULL)
+		env_value = ft_strdup("");
 	return (env_value);
 }
 
-void	stack_env(t_elem **elem, char **env)
+void stack_env(t_elem *elem, char **env)
 {
-	t_elem *tmp;
-	t_elem *tmp2;
-
-	tmp = *elem;
-	while (tmp)
+	// t_elem *tmp2;
+	t_elem *prev;
+	prev = NULL;
+	while (elem)
 	{
-		if ((tmp)->token == ENV)
+		if ((elem)->token == ENV && (elem->state == GENERAL || elem->state == IN_DQUOTE))
 		{
-			char *str = get_env(&tmp, env);
-			// printf("content = %s\n", (*elem)->content);
-			// printf("str = %s\n", str);
-			if (str)
-			{
-				(tmp)->content = str;
-				(tmp)->token = WORD;
-				tmp = tmp->next;
-			}
-			else
-			{
-				tmp2 = tmp->next;
-				if(tmp->next)
-					tmp->next->prev = tmp->prev;
-				if(tmp->prev)
-					tmp->prev->next = tmp->next;
-				free(tmp);
-				tmp = tmp2;
-			}
+			char *str = get_env(elem->content + 1, env);
+			free((elem)->content);
+			(elem)->content = str;
+			(elem)->token = WORD;
+			elem = elem->next;
 		}
 		else
-			tmp = tmp->next;
+			elem = elem->next;
 	}
 }
 
@@ -83,6 +70,7 @@ void with_quote(t_elem **elem, t_command **command, int *i)
 	(*command)->args[*i] = str;
 	*i += 1;
 	(*elem) = (*elem)->next;
+	// free(str);
 }
 
 void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
@@ -91,7 +79,7 @@ void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
 	char *str = malloc(sizeof(char) * 100);
 	str = "";
 	(*elem) = (*elem)->next;
-	while (*elem && (*elem)->token != '\"')
+	while (*elem != NULL && (*elem)->token != '\"')
 	{
 		str = ft_strjoin(str, (*elem)->content);
 		(*elem) = (*elem)->next;
@@ -99,6 +87,7 @@ void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
 	(*command)->args[*i] = str;
 	*i += 1;
 	(*elem) = (*elem)->next;
+	// free(str);
 }
 
 void without_quote(t_elem **elem, t_command **command, int *i, char **env)
@@ -106,7 +95,7 @@ void without_quote(t_elem **elem, t_command **command, int *i, char **env)
 	(void)env;
 	char *tmp;
 
-	if ((*elem)->token == WHITE_SPACE && strncmp((*command)->cmd, "echo", 4) == 0 && *i > 1)
+	if ((*elem)->token == WHITE_SPACE && *i > 1 && strncmp((*command)->cmd, "echo", 4) == 0 )
 	{
 		tmp = (*elem)->content;
 		while ((*elem) && (*elem)->token == WHITE_SPACE)
@@ -143,7 +132,6 @@ void stack_command(t_elem *elem, t_command **command, char **env)
 	{
 		i = 0;
 		new = malloc(sizeof(t_command));
-		new->cmd = ft_strdup("");
 		new->args = malloc(sizeof(char *) * 100);
 		if (elem->token == PIPE_LINE)
 		{
@@ -160,15 +148,14 @@ void stack_command(t_elem *elem, t_command **command, char **env)
 				with_d_quote(&elem, &new, &i, env);
 			else
 				without_quote(&elem, &new, &i, env);
-			// if (i > 2 && new->args[i - 1][0] == '>' || new->args[i - 1][0] == '<' )
-			// 	new->cmd = new->args[i - 2];
 			if (i > 0)
-				new->cmd = new->args[0];
+				new->cmd = ft_strdup(new->args[0]);
 			if (!elem || elem->token == PIPE_LINE)
 			{
 				new->env = env;
 				new->args[i] = NULL;
 				lstadd_back_command(command, lstnew_command(new->args, new->cmd));
+				free(new);
 				new = NULL;
 				break;
 			}

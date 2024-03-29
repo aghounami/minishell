@@ -78,13 +78,16 @@ int main(int argc, char **argv, char **env)
 {
     char *line;
     t_command *command;
+    t_command *tmp = NULL;
     t_elem *pars;
+    // t_elem *tmp2 = NULL;
     int flag = 0;
     (void)argv;
     (void)argc;
     rl_catch_signals = 0;
     signal(SIGINT, sig_handler);
     signal(SIGQUIT, sig_handler);
+
     while (1)
     {
         pars = NULL;
@@ -92,23 +95,23 @@ int main(int argc, char **argv, char **env)
         line = readline("\033[0;32m➜ minishell ~ \033[0m");
         if (line && line[0] != '\0')
         {
-            lexer(line, &pars);
-            state(&pars);
+            lexer(line, &pars, env);
+            state(&pars, env);
             syntax_error(&pars, &flag);
             // print_lex(pars);
             if (flag == 0)
             {
-                stack_env(&pars, env);
                 stack_command(pars, &command, env);
-                // while (command != NULL)
-                // {
-                //     printf("command->cmd = [%s]\n", command->cmd);
-                //     for (int i = 0; command->args[i] != NULL; i++)
-                //         printf("arg      :[%s]\n", command->args[i]);
-                //     printf ("--\n");
-                //     command = command->next;
-                // }
-             exec_check(&command);
+                tmp = command;
+                while (tmp != NULL)
+                {
+                    printf("command->cmd = [%s]\n", tmp->cmd);
+                    for (int i = 0; tmp->args[i] != NULL; i++)
+                        printf("arg      :[%s]\n", tmp->args[i]);
+                    printf ("----\n");
+                    tmp = tmp->next;
+                }
+            //  exec_check(&command);
             }
             flag = 0;
         }
@@ -118,9 +121,35 @@ int main(int argc, char **argv, char **env)
             exit(0);
         }
         add_history(line);
+        free(line);
+        // while (pars)
+        // {
+        //     printf("content = [%s]\n", pars->content);
+        //     pars = pars->next;
+        // }
     }
     return (0);
 }
+
+        // while(pars)
+        // {
+        //     tmp2 = pars->next;
+        //     free(pars->content);
+        //     free(pars);
+        //     pars = tmp2;
+        // }
+        // while(command)
+        // {
+        //     free(command->cmd);
+        //     free(command->args);
+        //     // for (int i = 0; command->args[i] != NULL; i++)
+        //     //     free(command->args[i]);
+        //     // free(command->args);
+        //     tmp = command->next;
+        //     free(command);
+        //     command = tmp;
+        // }
+        // free(tmp);
 
                 // if (strncmp(command->cmd, "echo", 4) == 0)
                 // {

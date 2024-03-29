@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/25 17:22:27 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/28 17:43:08 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void lstadd_back(t_elem **lst, t_elem *new)
 	if (!lst || !new)
 		return;
 	last = lstlast(*lst);
-	new->prev = last;
+	new->prev = NULL;
 	if (*lst)
 	{
 		last->next = new;
