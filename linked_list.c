@@ -43,7 +43,7 @@ void lstadd_back(t_elem **lst, t_elem *new)
 	if (!lst || !new)
 		return;
 	last = lstlast(*lst);
-	new->prev = NULL;
+	new->prev = last;
 	if (*lst)
 	{
 		last->next = new;

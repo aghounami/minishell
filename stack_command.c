@@ -40,17 +40,31 @@ char *get_env(char *str, char **env)
 void stack_env(t_elem *elem, char **env)
 {
 	// t_elem *tmp2;
-	t_elem *prev;
-	prev = NULL;
+
 	while (elem)
 	{
 		if ((elem)->token == ENV && (elem->state == GENERAL || elem->state == IN_DQUOTE))
 		{
 			char *str = get_env(elem->content + 1, env);
-			free((elem)->content);
-			(elem)->content = str;
-			(elem)->token = WORD;
-			elem = elem->next;
+			// if (str[0] != '\0')
+			// {
+				free((elem)->content);
+				(elem)->content = str;
+				(elem)->token = WORD;
+				elem = elem->next;
+			// }
+			// else
+			// {
+				// if (elem->prev)
+				// 	elem->prev->next = elem->next;
+				// if (elem->next)
+				// 	elem->prev = elem->next;
+				// tmp2 = elem;
+				// elem = elem->next;
+				// free(tmp2->content);
+				// free(tmp2);
+				// tmp2 = NULL;
+			// }
 		}
 		else
 			elem = elem->next;
