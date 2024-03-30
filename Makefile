@@ -16,7 +16,7 @@ src = parsing/main.c parsing/ft_lexer.c parsing/linked_list.c parsing/state.c pa
 
 # sourece exec
 src += execution/exec.c execution/ft_cd.c execution/exec_utils.c \
-	execution/ft_pwd.c execution/ft_exit.c execution/ft_env.c 
+	execution/ft_pwd.c execution/ft_exit.c execution/ft_env.c execution/echo.c \
 
 # Objects
 obj = $(src:.c=.o)

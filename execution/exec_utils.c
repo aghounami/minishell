@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/03/30 04:59:40 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 05:32:10 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	command_check(t_command **command)
 		return (cd_checker(command), 0);
 	else if (!ft_strncmp("echo", exec->args[0], 5)
 		|| !ft_strncmp("ECHO", exec->args[0], 5))
-		return (printf("it's echo\n"), 0);
+		return (ft_echo(command), 0);
 	// else if (!ft_strncmp("export", exec->args[0], 7)
 	// 	|| !ft_strncmp("EXPORT", exec->args[0], 7))
 	// 	return (ft_export(command), 0);

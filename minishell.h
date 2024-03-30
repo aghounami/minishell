@@ -126,6 +126,7 @@ int command_check(t_command **command);
 void	ft_pwd(void);
 void	ft_exit_mini(t_command **command);
 void ft_env(t_command **command);
+void	ft_echo(t_command **command);
 // void ft_export(t_command **command);
 
 #endif
