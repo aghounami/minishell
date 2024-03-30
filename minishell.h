@@ -14,7 +14,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 #include <dirent.h>
-# include "./libft/libft.h"
+# include "./libf/libft.h"
 
 enum e_state
 {

@@ -1,5 +1,5 @@
 NAME = minishell
-LIBFT = libft/libft.a
+LIBF = libf/libft.a
 CC = gcc
 
 # Explicitly specify the paths to Readline library and include directory
@@ -27,16 +27,16 @@ BLUE := \033[0;34m
 NC := \033[0m
 
 
-all: $(LIBFT) $(NAME) 
+all: $(LIBF) $(NAME) 
 
-$(LIBFT):
-	@echo "$(RED)libft Compiling$(NC)"
+$(LIBF):
+	@echo "$(RED)libf Compiling$(NC)"
 	@echo "$(RED)-----------------$(NC)"
-	@cd libft && make
+	@cd libf && make
 	@echo "$(RED)minishell Compiling$(NC)"
 
 $(NAME): $(obj)
-	@$(CC) $(CFLAGS) $(obj) $(LIBFT) -o $(NAME)  $(LDFLAGS)
+	@$(CC) $(CFLAGS) $(obj) $(LIBF) -o $(NAME)  $(LDFLAGS)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -44,12 +44,12 @@ $(NAME): $(obj)
 
 clean:
 	@rm -f $(obj)
-	@cd libft && make clean
+	@cd libf && make clean
 	@echo "minishell Cleaning 🧹"
 
 fclean: clean
 	@rm -f $(NAME)
-	@cd libft && make fclean
+	@cd libf && make fclean
 	@echo "minishell Full Cleaning 🧹"
 
 re: fclean all
