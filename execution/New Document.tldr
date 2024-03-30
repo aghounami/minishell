@@ -290,7 +290,7 @@
 				"color": "black",
 				"size": "m",
 				"w": 806.6760283559604,
-				"text": "-readline will read a line from the terminal and return it, using\n       prompt as a prompt.  If prompt is NULL or the empty string, no\n       prompt is issued.  The line returned is allocated with malloc(3);\n       the caller must free it when finished.  The line returned has the\n       final newline removed, so only the text of the line remains.",
+				"text": "-readline will read a line from the terminal and return it, using\n       prompt as a prompt.  If prompt is NULL or the empty string, no\n       prompt is issued.  The line returned is allocated with malloc(3);\n       the caller must //free it when finished.  The line returned has the\n       final newline removed, so only the text of the line remains.",
 				"font": "draw",
 				"align": "middle",
 				"autoSize": true,

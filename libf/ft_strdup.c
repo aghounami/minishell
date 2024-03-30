@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 21:11:28 by aghounam          #+#    #+#             */
-/*   Updated: 2023/11/03 23:04:20 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 05:16:38 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*ft_strdup(const char *s1)
 	int		len;
 
 	i = 0;
+	if (!s1)
+		return (NULL);
 	len = ft_strlen(s1);
 	res = (char *)malloc(len + 1);
 	if (res == NULL)

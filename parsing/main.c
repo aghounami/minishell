@@ -43,11 +43,33 @@ char *find_token(t_elem *elem)
 void    print_comand(t_command *command)
 {
     t_command *tmp = command;
+    int i;
+    int j;
     while (tmp)
     {
-        printf("cmd = [%s]\n", tmp->cmd);
-        for (int i = 0; tmp->args[i] != NULL; i++)
-            printf("args = [%s]\n", tmp->args[i]);
+        i = 0;
+        j = 1;
+        if (tmp->cmd)
+            printf("cmd     = [%s]\n", tmp->cmd);
+        while(tmp->args[i] != NULL)
+        {
+            printf("arg[%d] = [%s]\n", j, tmp->args[i]);
+            i++;
+            j++;
+        }
+        printf("----------\n");
+        tmp = tmp->next;
+    }
+}
+
+void    printf_pars(t_elem *pars)
+{
+    t_elem *tmp = pars;
+    while (tmp)
+    {
+        printf("content = [%s]\n", tmp->content);
+        if (tmp->token == ENV)
+            printf("env\n");
         tmp = tmp->next;
     }
 }
@@ -112,9 +134,10 @@ int main(int argc, char **argv, char **env)
             // print_lex(pars);
             if (flag == 0)
             {
+                // printf_pars(pars);
                 stack_command(pars, &command, env);
                 // print_comand(command);
-                if (command)
+                if (command && command->cmd)
                     exec_check(&command, env);
             }
             flag = 0;
@@ -127,7 +150,7 @@ int main(int argc, char **argv, char **env)
         add_history(line);
         free(line);
         ft_free_lexer(&pars);
-        // ft_free_command(&command);
+        ft_free_command(&command);
     }
     return (0);
 }
