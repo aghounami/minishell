@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 05:58:08 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 16:07:30 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,26 @@ void stack_env(t_elem *elem, char **env)
 	{
 		if ((elem)->token == ENV && (elem->state == GENERAL || elem->state == IN_DQUOTE))
 		{
-			char *str = get_env(elem->content + 1, env);
-			free((elem)->content);
-			(elem)->content = ft_strdup(str);
-			(elem)->token = WORD;
-			elem = elem->next;
-			free(str);
+			if (elem->content[1] && elem->content[1] == '0')
+			{
+				free((elem)->content);
+				char *dst = ft_strdup("minishell");
+				elem->content = dst;
+				elem->token = WORD;
+				elem = elem->next;
+				dst = NULL;
+				// free(dst);
+			}
+			else
+			{
+				char *str = get_env(elem->content + 1, env);
+				free((elem)->content);
+				(elem)->content = ft_strdup(str);
+				(elem)->token = WORD;
+				elem = elem->next;
+				str = NULL;
+				// free(str);
+			}
 		}
 		else
 			elem = elem->next;
@@ -70,7 +84,7 @@ void with_quote(t_elem **elem, t_command **command, int *i)
 	(*command)->args[*i] = ft_strdup(str);
 	*i += 1;
 	(*elem) = (*elem)->next;
-	free(str);
+	str = NULL;
 }
 
 void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
@@ -87,7 +101,7 @@ void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
 	(*command)->args[*i] = ft_strdup(str);
 	*i += 1;
 	(*elem) = (*elem)->next;
-	free(str);
+	str = NULL;
 }
 
 void without_quote(t_elem **elem, t_command **command, int *i, char **env)

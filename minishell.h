@@ -30,6 +30,7 @@ enum e_token
 	QOUTE = '\'',
 	DOUBLE_QUOTE = '\"',
 	ESCAPE = '\\',
+	SLASH = '/',
 	ENV = '$',
 	PIPE_LINE = '|',
 	REDIR_IN = '<',

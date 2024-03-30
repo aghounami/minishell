@@ -137,8 +137,8 @@ int main(int argc, char **argv, char **env)
                 // printf_pars(pars);
                 stack_command(pars, &command, env);
                 // print_comand(command);
-            //     if (command && command->cmd)
-            //         exec_check(&command, env);
+                if (command && command->cmd)
+                    exec_check(&command, env);
             }
             flag = 0;
         }
@@ -150,7 +150,7 @@ int main(int argc, char **argv, char **env)
         add_history(line);
         free(line);
         ft_free_lexer(&pars);
-        ft_free_command(&command);
+        // ft_free_command(&command);
     }
     return (0);
 }
