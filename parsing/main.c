@@ -137,8 +137,8 @@ int main(int argc, char **argv, char **env)
                 // printf_pars(pars);
                 stack_command(pars, &command, env);
                 // print_comand(command);
-                if (command && command->cmd)
-                    exec_check(&command, env);
+            //     if (command && command->cmd)
+            //         exec_check(&command, env);
             }
             flag = 0;
         }
