@@ -6,11 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:09:08 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/28 18:30:49 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 02:48:07 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	case_1(t_elem **tmp)
 {

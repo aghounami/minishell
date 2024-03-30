@@ -6,11 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:24:42 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 01:04:48 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 02:47:50 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	case_escape(char *line, t_elem **elem, t_lexer *lexer)
 {

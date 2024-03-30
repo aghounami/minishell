@@ -6,11 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 01:04:34 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 02:47:52 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type)
 {

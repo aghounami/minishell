@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 char *check_state(t_elem *elem)
 {
@@ -113,8 +113,9 @@ int main(int argc, char **argv, char **env)
             if (flag == 0)
             {
                 stack_command(pars, &command, env);
-                print_comand(command);
-                // exec_check(&command, env);
+                // print_comand(command);
+                if (command)
+                    exec_check(&command, env);
             }
             flag = 0;
         }
@@ -130,51 +131,3 @@ int main(int argc, char **argv, char **env)
     }
     return (0);
 }
-
-        // while (pars)
-        // {
-        //     printf("content = [%s]\n", pars->content);
-        //     pars = pars->next;
-        // }
-        // while(pars)
-        // {
-        //     tmp2 = pars->next;
-        //     free(pars->content);
-        //     free(pars);
-        //     pars = tmp2;
-        // }
-        // while(command)
-        // {
-        //     free(command->cmd);
-        //     free(command->args);
-        //     // for (int i = 0; command->args[i] != NULL; i++)
-        //     //     free(command->args[i]);
-        //     // free(command->args);
-        //     tmp = command->next;
-        //     free(command);
-        //     command = tmp;
-        // }
-        // free(tmp);
-
-                // if (strncmp(command->cmd, "echo", 4) == 0)
-                // {
-                //     if (i > 2 && strncmp(command->args[2], "-n", 2) == 0)
-                //     {
-                //         int i = 3;
-                //         while (command->args[i] && (strncmp(command->args[i], "-n" , 2) == 0 || strncmp(command->args[i], " " , 2) == 0))
-                //             i++;
-                //         while (command->args[i])
-                //         {
-                //             if (strncmp(command->args[i], "-n", 2) != 0)
-                //                 printf("%s", command->args[i]);
-                //             i++;
-                //         }
-                //         printf("");
-                //     }
-                //     else
-                //     {
-                //         for (int i = 2; command->args[i] != NULL; i++)
-                //             printf("%s", command->args[i]);
-                //         printf("\n");
-                //     }
-                // }

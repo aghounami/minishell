@@ -11,7 +11,8 @@ CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sourc parser
-src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c ft_lexer_utils.c ft_free.c
+src = parsing/main.c parsing/ft_lexer.c parsing/linked_list.c parsing/state.c parsing/syntax_error.c \
+	parsing/stack_command.c parsing/ft_lexer_utils.c parsing/ft_free.c
 
 # sourece exec
 src += execution/exec.c execution/ft_cd.c execution/exec_utils.c \
@@ -21,7 +22,6 @@ src += execution/exec.c execution/ft_cd.c execution/exec_utils.c \
 obj = $(src:.c=.o)
 
 # Colors
-GREEN := \033[0;32m
 RED := \033[0;31m
 BLUE := \033[0;34m
 NC := \033[0m
