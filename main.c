@@ -40,6 +40,18 @@ char *find_token(t_elem *elem)
     return (str);
 }
 
+void    print_comand(t_command *command)
+{
+    t_command *tmp = command;
+    while (tmp)
+    {
+        printf("cmd = [%s]\n", tmp->cmd);
+        for (int i = 0; tmp->args[i] != NULL; i++)
+            printf("args = [%s]\n", tmp->args[i]);
+        tmp = tmp->next;
+    }
+}
+
 int print_lex(t_elem *elem)
 {
     printf("|                                         LEXER                                     |\n");
@@ -77,8 +89,7 @@ void sig_handler(int signo)
 int main(int argc, char **argv, char **env)
 {
     char *line;
-    // t_command *command;
-    // t_command *tmp = NULL;
+    t_command *command;
     t_elem *pars;
     // t_elem *tmp2 = NULL;
     int flag = 0;
@@ -91,7 +102,7 @@ int main(int argc, char **argv, char **env)
     while (1)
     {
         pars = NULL;
-        // command = NULL;
+        command = NULL;
         line = readline("\033[0;32m➜ minishell ~ \033[0m");
         if (line && line[0] != '\0')
         {
@@ -101,17 +112,9 @@ int main(int argc, char **argv, char **env)
             // print_lex(pars);
             if (flag == 0)
             {
-                // stack_command(pars, &command, env);
-                // tmp = command;
-                // while (tmp != NULL)
-                // {
-                //     printf("command->cmd = [%s]\n", tmp->cmd);
-                //     for (int i = 0; tmp->args[i] != NULL; i++)
-                //         printf("arg      :[%s]\n", tmp->args[i]);
-                //     printf ("----\n");
-                //     tmp = tmp->next;
-                // }
-            //  exec_check(&command);
+                stack_command(pars, &command, env);
+                print_comand(command);
+                // exec_check(&command, env);
             }
             flag = 0;
         }
@@ -122,15 +125,17 @@ int main(int argc, char **argv, char **env)
         }
         add_history(line);
         free(line);
-        while (pars)
-        {
-            printf("content = [%s]\n", pars->content);
-            pars = pars->next;
-        }
+        ft_free_lexer(&pars);
+        // ft_free_command(&command);
     }
     return (0);
 }
 
+        // while (pars)
+        // {
+        //     printf("content = [%s]\n", pars->content);
+        //     pars = pars->next;
+        // }
         // while(pars)
         // {
         //     tmp2 = pars->next;

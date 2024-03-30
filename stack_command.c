@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/29 00:41:17 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 00:26:15 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,11 @@ void stack_env(t_elem *elem, char **env)
 		if ((elem)->token == ENV && (elem->state == GENERAL || elem->state == IN_DQUOTE))
 		{
 			char *str = get_env(elem->content + 1, env);
-			// if (str[0] != '\0')
-			// {
-				free((elem)->content);
-				(elem)->content = str;
-				(elem)->token = WORD;
-				elem = elem->next;
-			// }
-			// else
-			// {
-				// if (elem->prev)
-				// 	elem->prev->next = elem->next;
-				// if (elem->next)
-				// 	elem->prev = elem->next;
-				// tmp2 = elem;
-				// elem = elem->next;
-				// free(tmp2->content);
-				// free(tmp2);
-				// tmp2 = NULL;
-			// }
+			free((elem)->content);
+			(elem)->content = ft_strdup(str);
+			(elem)->token = WORD;
+			elem = elem->next;
+			free(str);
 		}
 		else
 			elem = elem->next;
@@ -81,10 +67,10 @@ void with_quote(t_elem **elem, t_command **command, int *i)
 		str = ft_strjoin(str, (*elem)->content);
 		(*elem) = (*elem)->next;
 	}
-	(*command)->args[*i] = str;
+	(*command)->args[*i] = ft_strdup(str);
 	*i += 1;
 	(*elem) = (*elem)->next;
-	// free(str);
+	free(str);
 }
 
 void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
@@ -98,43 +84,56 @@ void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
 		str = ft_strjoin(str, (*elem)->content);
 		(*elem) = (*elem)->next;
 	}
-	(*command)->args[*i] = str;
+	(*command)->args[*i] = ft_strdup(str);
 	*i += 1;
 	(*elem) = (*elem)->next;
-	// free(str);
+	free(str);
 }
 
 void without_quote(t_elem **elem, t_command **command, int *i, char **env)
 {
 	(void)env;
 	char *tmp;
-
-	if ((*elem)->token == WHITE_SPACE && *i > 1 && strncmp((*command)->cmd, "echo", 4) == 0 )
+	if ((*elem) && ((*elem)->token == WHITE_SPACE && *i > 1 && strncmp((*command)->cmd, "echo", 4) == 0))
 	{
-		tmp = (*elem)->content;
-		while ((*elem) && (*elem)->token == WHITE_SPACE)
+		tmp = ft_strdup((*elem)->content);
+		while ((*elem) && ((*elem)->token == WHITE_SPACE || (*elem)->content[0] == '\0'))
 			(*elem) = (*elem)->next;
-		if ((*elem))
+		if ((*elem) && (*elem)->token != PIPE_LINE)
 		{
 			(*command)->args[*i] = tmp;
 			*i += 1;
 		}
 	}
-	else if ((*elem)->token == ESCAPE)
+	else if ((*elem) && (*elem)->token == ESCAPE)
 	{
-		(*command)->args[*i] = &(*elem)->content[1];
+		(*command)->args[*i] = ft_strdup(&(*elem)->content[1]);
 		*i += 1;
 		(*elem) = (*elem)->next;
 	}
 	else
 	{
-		if ((*elem)->token != WHITE_SPACE)
+		if ((*elem) && (*elem)->token != WHITE_SPACE && (*elem)->content[0] != '\0')
 		{
-			(*command)->args[*i] = (*elem)->content;
+			(*command)->args[*i] = ft_strdup((*elem)->content);
 			*i += 1;
 		}
 		(*elem) = (*elem)->next;
 	}
+}
+
+void	ft_free_2d(char **str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
+	str = NULL;
 }
 
 void stack_command(t_elem *elem, t_command **command, char **env)
@@ -164,11 +163,15 @@ void stack_command(t_elem *elem, t_command **command, char **env)
 				without_quote(&elem, &new, &i, env);
 			if (i > 0)
 				new->cmd = ft_strdup(new->args[0]);
+			else
+				new->cmd = NULL;
 			if (!elem || elem->token == PIPE_LINE)
 			{
 				new->env = env;
 				new->args[i] = NULL;
 				lstadd_back_command(command, lstnew_command(new->args, new->cmd));
+				ft_free_2d(new->args);
+				free(new->cmd);
 				free(new);
 				new = NULL;
 				break;

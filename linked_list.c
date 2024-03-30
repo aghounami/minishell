@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/28 17:43:08 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 00:25:00 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,27 @@ void lstadd_back(t_elem **lst, t_elem *new)
 		*lst = new;
 }
 
+char **ft_strdup_2d(char **str)
+{
+	int i;
+	char **new;
+
+	i = 0;
+	while (str[i])
+		i++;
+	new = malloc(sizeof(char *) * (i + 1));
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		new[i] = ft_strdup(str[i]);
+		i++;
+	}
+	new[i] = NULL;
+	return (new);
+}
+
 t_command *lstnew_command(char **agrs, char *cmd)
 {
 	t_command *new;
@@ -59,8 +80,8 @@ t_command *lstnew_command(char **agrs, char *cmd)
 	new = malloc(sizeof(t_command));
 	if (!new)
 		return (NULL);
-	new->cmd = cmd;
-	new->args = agrs;
+	new->cmd = ft_strdup(cmd);
+	new->args = ft_strdup_2d(agrs);
 	new->next = NULL;
 	return (new);
 }

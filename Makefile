@@ -11,10 +11,11 @@ CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sourc parser
-src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c ft_lexer_utils.c
+src = main.c ft_lexer.c linked_list.c state.c syntax_error.c stack_command.c ft_lexer_utils.c ft_free.c
 
 # sourece exec
-src += exec.c 
+src += execution/exec.c execution/ft_cd.c execution/exec_utils.c \
+	execution/ft_pwd.c execution/ft_exit.c execution/ft_env.c 
 
 # Objects
 obj = $(src:.c=.o)
@@ -22,6 +23,7 @@ obj = $(src:.c=.o)
 # Colors
 GREEN := \033[0;32m
 RED := \033[0;31m
+BLUE := \033[0;34m
 NC := \033[0m
 
 
@@ -38,7 +40,7 @@ $(NAME): $(obj)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "$(GREEN)✔︎$< Compiling $(NC)"
+	@echo "$(BLUE)✔︎$< Compiling $(NC)"
 
 clean:
 	@rm -f $(obj)

@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/28 21:30:42 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 01:04:34 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	*lexer(char *line, t_elem **elem, char **env)
 	while (line[lexer->i])
 	{
 		lexer->str = ft_calloc(1000, sizeof(char));
-		if (line[lexer->i] == '$')
+		if (line[lexer->i] == '$' && line[lexer->i + 1] != '\0' && line[lexer->i + 1] != ' ' && line[lexer->i + 1] != '\t')
 			case_dollar(lexer, elem, line, env);
 		else if (line[lexer->i] == ' ' || line[lexer->i] == '\t')
 			case_one_char(lexer, elem, line, WHITE_SPACE);
@@ -45,8 +45,8 @@ void	*lexer(char *line, t_elem **elem, char **env)
 			case_one_char(lexer, elem, line, DOUBLE_QUOTE);
 		else if (line[lexer->i] == '\\')
 			case_escape(line, elem, lexer);
-		else if (line[lexer->i] == '=')
-			case_one_char(lexer, elem, line, WORD);
+		// else if (line[lexer->i] == '=')
+		// 	case_one_char(lexer, elem, line, WORD);
 		else
 			case_word(line, elem, lexer);
 		free(lexer->str);

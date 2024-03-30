@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:24:42 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/28 23:57:45 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/03/30 01:04:48 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,7 @@ void	case_word(char *line, t_elem **elem, t_lexer *lexer)
 		&& line[lexer->i] != '>' && line[lexer->i] != '<' \
 			&& line[lexer->i] != '\'' && line[lexer->i] != '\"' \
 				&& line[lexer->i] != '\0' && line[lexer->i] != '\n' \
-					&& line[lexer->i] != '\t' && line[lexer->i] != '\\' \
-						&& line[lexer->i] != '=')
+					&& line[lexer->i] != '\t' && line[lexer->i] != '\\')
 	{
 		lexer->str[lexer->j] = line[lexer->i];
 		lexer->j += 1;

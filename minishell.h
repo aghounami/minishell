@@ -7,11 +7,13 @@
 # include <stdlib.h>
 # include <string.h>
 # include <signal.h>
+# include <limits.h>
 # include <unistd.h>
 # include <sys/wait.h>
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+#include <dirent.h>
 # include "./libft/libft.h"
 
 enum e_state
@@ -48,8 +50,26 @@ typedef struct s_command
 	int		pipe;
 	int		redir;
 	char	**env;
+	char	*content;
 	struct s_command	*next;
 }	t_command;
+
+
+typedef struct s_exec
+{
+	int index;
+	int i;
+	int j;
+	char *name;
+	char *value;
+	char *path_in;
+    char **path_split;
+    char *current_dir;
+    char *path;
+    char *exec_path;
+
+} t_exec;
+
 
 typedef struct s_elem
 {
@@ -88,11 +108,24 @@ t_command	*lstnew_command(char **agrs, char *cmd);
 void		lstadd_back_command(t_command **lst, t_command *new);
 void		stack_env(t_elem *elem, char **env);
 char		*get_env(char *str, char **env);
+void		ft_free_lexer(t_elem **pars);
+void		ft_free_command(t_command **command);
 // --------------------------------
 
 
 
 // executers
-void		exec_check(t_command **command);
+void exec_check(t_command **command, char **av);
+void exec_path(t_command **command);
+void cd_checker(t_command **command);
+void ft_exit_fail(char *str);
+char *get_env_exec(t_command **command);
+void	ft_free_double(char **str);
+void	ft_exit_fail(char *str);
+int command_check(t_command **command);
+void	ft_pwd(void);
+void	ft_exit_mini(t_command **command);
+void ft_env(t_command **command);
+// void ft_export(t_command **command);
 
 #endif
