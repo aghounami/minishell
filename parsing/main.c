@@ -68,8 +68,8 @@ void    printf_pars(t_elem *pars)
     while (tmp)
     {
         printf("content = [%s]\n", tmp->content);
-        if (tmp->token == ENV)
-            printf("env\n");
+        // if (tmp->token == ENV)
+        //     printf("env\n");
         tmp = tmp->next;
     }
 }
@@ -113,7 +113,7 @@ int main(int argc, char **argv, char **env)
     char *line;
     t_command *command;
     t_elem *pars;
-    // t_elem *tmp2 = NULL;
+    t_elem *list = NULL;
     int flag = 0;
     (void)argv;
     (void)argc;
@@ -125,18 +125,22 @@ int main(int argc, char **argv, char **env)
     {
         pars = NULL;
         command = NULL;
+        list = NULL;
         line = readline("\033[0;32m➜ minishell ~ \033[0m");
         if (line && line[0] != '\0')
         {
             lexer(line, &pars, env);
             state(&pars, env);
             syntax_error(&pars, &flag);
-            // print_lex(pars);
-            if (flag == 0)
+            new_linked_list(&pars, &list);
+            printf_pars(list);
+            // exit (0);
+           // print_lex(pars);
+            if (flag == 1)
             {
                 // printf_pars(pars);
                 stack_command(pars, &command, env);
-                print_comand(command);
+                // print_comand(command);
                 // if (command && command->cmd)
                 //     exec_check(&command, env);
             }

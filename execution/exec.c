@@ -68,11 +68,11 @@ void	exec_path_extention(t_command **command, t_exec *execution)
 
 void	exec_path(t_command **command)
 {
-	t_command	*exec;
+	// t_command	*exec;
 	t_exec		p_exec;
 
 	ft_memset(&p_exec, 0, sizeof(p_exec));
-	exec = *command;
+	// exec = *command;
 	(*command)->content = "PATH";
 	p_exec.path_in = get_env_exec(command);
 	p_exec.current_dir = (char *)malloc(PATH_MAX);

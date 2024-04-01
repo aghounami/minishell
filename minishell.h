@@ -99,6 +99,7 @@ void		case_redirect(char *line, t_elem **elem, t_lexer *lexer);
 void		case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env);
 void		case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type);
 void		state(t_elem **elem, char **env);
+void		new_linked_list(t_elem **pars, t_elem **list);
 // utils
 t_elem		*lstnew(void *content, int token , t_elem **prev);
 t_elem		*lstlast(t_elem *lst);
