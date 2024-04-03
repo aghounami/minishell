@@ -6,139 +6,15 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 16:07:30 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:19:04 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char *get_env(char *str, char **env)
-{
-	int index = 0;
-	int j = 0;
-	char *env_name;
-	char *env_value;
-	env_name = ft_strdup(str);
-	env_value = NULL;
-	while (env[index])
-	{
-		if (ft_strncmp(env[index], env_name, ft_strlen(env_name)) == 0 && env[index][ft_strlen(env_name)] == '=')
-		{
-			while (env[index][j] != '=')
-				j++;
-			env_value = ft_strdup(env[index] + j + 1);
-			break;
-		}
-		index++;
-	}
-	free(env_name);
-	if (env_value == NULL)
-		env_value = ft_strdup("");
-	return (env_value);
-}
-
-void stack_env(t_elem *elem, char **env)
-{
-	// t_elem *tmp2;
-
-	while (elem)
-	{
-		if ((elem)->token == ENV && (elem->state == GENERAL || elem->state == IN_DQUOTE))
-		{
-			if (elem->content[1] && elem->content[1] == '0')
-			{
-				free((elem)->content);
-				char *dst = ft_strdup("minishell");
-				elem->content = dst;
-				elem->token = WORD;
-				elem = elem->next;
-				dst = NULL;
-				// free(dst);
-			}
-			else
-			{
-				char *str = get_env(elem->content + 1, env);
-				free((elem)->content);
-				(elem)->content = ft_strdup(str);
-				(elem)->token = WORD;
-				elem = elem->next;
-				str = NULL;
-				// free(str);
-			}
-		}
-		else
-			elem = elem->next;
-	}
-}
-
-void with_quote(t_elem **elem, t_command **command, int *i)
-{
-	char *str = malloc(sizeof(char) * 100);
-	str = "";
-	(*elem) = (*elem)->next;
-	while (*elem && (*elem)->token != '\'')
-	{
-		str = ft_strjoin(str, (*elem)->content);
-		(*elem) = (*elem)->next;
-	}
-	(*command)->args[*i] = ft_strdup(str);
-	*i += 1;
-	(*elem) = (*elem)->next;
-	str = NULL;
-}
-
-void with_d_quote(t_elem **elem, t_command **command, int *i, char **env)
-{
-	(void)env;
-	char *str = malloc(sizeof(char) * 100);
-	str = "";
-	(*elem) = (*elem)->next;
-	while (*elem != NULL && (*elem)->token != '\"')
-	{
-		str = ft_strjoin(str, (*elem)->content);
-		(*elem) = (*elem)->next;
-	}
-	(*command)->args[*i] = ft_strdup(str);
-	*i += 1;
-	(*elem) = (*elem)->next;
-	str = NULL;
-}
-
-void without_quote(t_elem **elem, t_command **command, int *i, char **env)
-{
-	(void)env;
-	char *tmp;
-	if ((*elem) && ((*elem)->token == WHITE_SPACE && *i > 1 && strncmp((*command)->cmd, "echo", 4) == 0))
-	{
-		tmp = ft_strdup((*elem)->content);
-		while ((*elem) && ((*elem)->token == WHITE_SPACE || (*elem)->content[0] == '\0'))
-			(*elem) = (*elem)->next;
-		if ((*elem) && (*elem)->token != PIPE_LINE)
-		{
-			(*command)->args[*i] = tmp;
-			*i += 1;
-		}
-	}
-	else if ((*elem) && (*elem)->token == ESCAPE)
-	{
-		(*command)->args[*i] = ft_strdup(&(*elem)->content[1]);
-		*i += 1;
-		(*elem) = (*elem)->next;
-	}
-	else
-	{
-		if ((*elem) && (*elem)->token != WHITE_SPACE && (*elem)->content[0] != '\0')
-		{
-			(*command)->args[*i] = ft_strdup((*elem)->content);
-			*i += 1;
-		}
-		(*elem) = (*elem)->next;
-	}
-}
-
 void	ft_free_2d(char **str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -150,23 +26,38 @@ void	ft_free_2d(char **str)
 	str = NULL;
 }
 
-void stack_command(t_elem *elem, t_command **command, char **env)
+void	param_init(t_command **new, int *i, t_elem **elem)
 {
-	int i;
-	t_command *new;
+	(1) && (*i = 0, *new = malloc(sizeof(t_command)), \
+			(*new)->args = malloc(sizeof(char *) * 100));
+	if ((*elem)->token == PIPE_LINE)
+		(1) && ((*new)->pipe += 1, (*elem) = (*elem)->next);
+	while ((*elem) && (*elem)->token == WHITE_SPACE)
+		(*elem) = (*elem)->next;
+}
+
+void	command_add_back(t_command **command, t_command *new, int i, char **env)
+{
+	if (i > 0)
+	{
+		(1) && (new->env = env, new->args[i] = NULL);
+		lstadd_back_command(command, \
+		lstnew_command(new->args, new->cmd));
+		ft_free_2d(new->args);
+		free(new->cmd);
+		free(new);
+		new = NULL;
+	}
+}
+
+void	stack_command(t_elem *elem, t_command **command, char **env)
+{
+	int			i;
+	t_command	*new;
 
 	while (elem)
 	{
-		i = 0;
-		new = malloc(sizeof(t_command));
-		new->args = malloc(sizeof(char *) * 100);
-		if (elem->token == PIPE_LINE)
-		{
-			new->pipe = 1;
-			elem = elem->next;
-		}
-		while (elem && elem->token == WHITE_SPACE)
-			elem = elem->next;
+		param_init(&new, &i, &elem);
 		while (elem && elem->token != PIPE_LINE)
 		{
 			if (elem->token == QOUTE)
@@ -179,17 +70,7 @@ void stack_command(t_elem *elem, t_command **command, char **env)
 				new->cmd = ft_strdup(new->args[0]);
 			else
 				new->cmd = NULL;
-			if (!elem || elem->token == PIPE_LINE)
-			{
-				new->env = env;
-				new->args[i] = NULL;
-				lstadd_back_command(command, lstnew_command(new->args, new->cmd));
-				ft_free_2d(new->args);
-				free(new->cmd);
-				free(new);
-				new = NULL;
-				break;
-			}
 		}
+		command_add_back(command, new, i, env);
 	}
 }

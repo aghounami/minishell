@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/03/30 05:32:10 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:14:30 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ int	command_check(t_command **command)
 	else if (!ft_strncmp("pwd", exec->args[0], 4)
 		|| !ft_strncmp("PWD", exec->args[0], 4))
 		return (ft_pwd(), 0);
-	else if (!ft_strncmp("unset", exec->args[0], 6)
-		|| !ft_strncmp("UNSET", exec->args[0], 6))
-		return (printf("it's unset\n"), 0);
+	// else if (!ft_strncmp("unset", exec->args[0], 6)
+	// 	|| !ft_strncmp("UNSET", exec->args[0], 6))
+	// 	return (printf("it's unset\n"), 0);
 	else if (!ft_strncmp("env", exec->args[0], 4)
 		|| !ft_strncmp("ENV", exec->args[0], 4))
 		return (ft_env(command), 0);

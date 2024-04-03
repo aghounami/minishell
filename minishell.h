@@ -101,20 +101,27 @@ void		case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type);
 void		state(t_elem **elem, char **env);
 void		new_linked_list(t_elem **pars, t_elem **list);
 // utils
-t_elem		*lstnew(void *content, int token , t_elem **prev);
-t_elem		*lstlast(t_elem *lst);
-void		lstadd_back(t_elem **lst, t_elem *new);
 void		syntax_error(t_elem **elem , int *flag);
 void		stack_command(t_elem *elem, t_command **command, char **env);
-t_command	*lstnew_command(char **agrs, char *cmd);
-void		lstadd_back_command(t_command **lst, t_command *new);
+void		without_quote(t_elem **elem, t_command **command, int *i, char **env);
+void		with_d_quote(t_elem **elem, t_command **command, int *i, char **env);
+void		with_quote(t_elem **elem, t_command **command, int *i);
 void		stack_env(t_elem *elem, char **env);
 char		*get_env(char *str, char **env);
 void		ft_free_lexer(t_elem **pars);
 void		ft_free_command(t_command **command);
+void		case_single_quote(t_elem **tmp, char *str, t_elem **list);
+void		case_double_quote(t_elem **tmp, char *str, t_elem **list);
 // --------------------------------
 
-
+// linked_list
+t_command	*lstnew_command(char **agrs, char *cmd);
+void		lstadd_back_command(t_command **lst, t_command *new);
+t_elem		*lstnew(void *content, int token , t_elem **prev);
+void		lstadd_back(t_elem **lst, t_elem *new);
+t_elem		*lst_new(char *content, int token, int state);
+void		ft_lstadd_back_new_list(t_elem **alst, t_elem *new);
+t_elem		*lstlast(t_elem *lst);
 
 // executers
 void exec_check(t_command **command, char **av);

@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:09:08 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 02:48:07 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:27:42 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	case_2(t_elem **tmp)
 	{
 		(*tmp)->state = IN_QUOTE;
 		(*tmp) = (*tmp)->next;
-	}	
+	}
 }
 
 void	state(t_elem **elem, char **env)
@@ -37,18 +37,18 @@ void	state(t_elem **elem, char **env)
 	int		flag_d_quote;
 	t_elem	*prev;
 
-
 	(1) && (flag_quote = 1, flag_d_quote = 1, tmp = *elem, prev = NULL);
 	while (tmp)
 	{
-		if (prev && prev->token == DOUBLE_QUOTE && tmp->token != DOUBLE_QUOTE && flag_d_quote % 2 == 0)
+		if (prev && prev->token == DOUBLE_QUOTE \
+			&& tmp->token != DOUBLE_QUOTE && flag_d_quote % 2 == 0)
 			case_1(&tmp);
-		else if (prev && prev->token == QOUTE && tmp->token != QOUTE && flag_quote % 2 == 0)
+		else if (prev && prev->token == QOUTE \
+			&& tmp->token != QOUTE && flag_quote % 2 == 0)
 			case_2(&tmp);
 		else
 		{
-			tmp->state = GENERAL;
-			prev = tmp;
+			(1) && (tmp->state = GENERAL, prev = tmp);
 			if (prev->token == DOUBLE_QUOTE)
 				flag_d_quote++;
 			if (prev->token == QOUTE)
@@ -56,5 +56,5 @@ void	state(t_elem **elem, char **env)
 			tmp = tmp->next;
 		}
 	}
-    stack_env(*elem, env);
+	stack_env(*elem, env);
 }

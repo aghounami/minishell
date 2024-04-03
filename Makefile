@@ -10,13 +10,14 @@ READLINE_I = /Users/aghounam/.brew/opt/readline/include
 CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
-# Sourc parser
+# Source parser
 src = parsing/main.c parsing/ft_lexer.c parsing/linked_list.c parsing/state.c parsing/syntax_error.c \
-	parsing/stack_command.c parsing/ft_lexer_utils.c parsing/ft_free.c
+	parsing/stack_command.c parsing/ft_lexer_utils.c parsing/ft_free.c parsing/new_list.c \
+	parsing/env_value.c parsing/command_utils.c parsing/new_list_utils.c \
 
-# sourece exec
+# source exec
 src += execution/exec.c execution/ft_cd.c execution/exec_utils.c \
-	execution/ft_pwd.c execution/ft_exit.c execution/ft_env.c execution/echo.c \
+		execution/ft_pwd.c execution/ft_exit.c execution/ft_env.c execution/echo.c \
 
 # Objects
 obj = $(src:.c=.o)
@@ -59,4 +60,4 @@ push :
 	@git commit -m "update"
 	@git push
 
-.PHONY: all clean fclean re
+.PHONY: clean

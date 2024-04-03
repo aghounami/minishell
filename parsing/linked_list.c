@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 05:17:16 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/03 15:52:47 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,6 @@ void lstadd_back_command(t_command **lst, t_command *new)
 	}
 	last = *lst;
 	while (last->next)
-		last = last->next;
+		last = last->next;  
 	last->next = new;
 }

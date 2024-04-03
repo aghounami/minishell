@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 01:24:42 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 14:06:41 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:06:56 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ void	case_word(char *line, t_elem **elem, t_lexer *lexer)
 		&& line[lexer->i] != '>' && line[lexer->i] != '<' \
 			&& line[lexer->i] != '\'' && line[lexer->i] != '\"' \
 				&& line[lexer->i] != '\0' && line[lexer->i] != '\n' \
-					&& line[lexer->i] != '\t' && line[lexer->i] != '\\')
+					&& line[lexer->i] != '\t' && line[lexer->i] != '\\' \
+						&& line[lexer->i] != '$')
 	{
 		lexer->str[lexer->j] = line[lexer->i];
 		lexer->j += 1;
@@ -83,11 +84,18 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 	lexer->j = 1;
 	lexer->str[0] = '$';
 	lexer->i += 1;
+	if (line[lexer->i] && line[lexer->i] == '$')
+	{
+		lexer->str[1] = '$';
+		lexer->str[2] = '\0';
+		lexer->i += 1;
+		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV, &lexer->prev));
+		return ;
+	}
 	while ((line[lexer->i] >= 'a' && line[lexer->i] <= 'z') \
 		|| (line[lexer->i] >= 'A' && line[lexer->i] <= 'Z') \
 			|| (line[lexer->i] >= '0' && line[lexer->i] <= '9') \
-				|| line[lexer->i] == '_' || line[lexer->i] == '?' \
-					|| line[lexer->i] == '$')
+				|| line[lexer->i] == '_' || line[lexer->i] == '?')
 	{
 		lexer->str[lexer->j] = line[lexer->i];
 		lexer->j += 1;
@@ -96,6 +104,7 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 			&& !(lexer->str[1] >= 'A' && lexer->str[1] <= 'Z')))
 			break ;
 	}
+	// if (lexer->str[0] == '$
 	lexer->str[lexer->j] = '\0';
 	// value = get_env(lexer->str + 1, env);
 	// if (value)

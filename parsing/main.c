@@ -113,14 +113,13 @@ int main(int argc, char **argv, char **env)
     char *line;
     t_command *command;
     t_elem *pars;
-    t_elem *list = NULL;
+    t_elem *list;
     int flag = 0;
     (void)argv;
     (void)argc;
     rl_catch_signals = 0;
     signal(SIGINT, sig_handler);
     signal(SIGQUIT, sig_handler);
-
     while (1)
     {
         pars = NULL;
@@ -131,18 +130,16 @@ int main(int argc, char **argv, char **env)
         {
             lexer(line, &pars, env);
             state(&pars, env);
+            // print_lex(pars);
             syntax_error(&pars, &flag);
-            new_linked_list(&pars, &list);
-            printf_pars(list);
-            // exit (0);
-           // print_lex(pars);
-            if (flag == 1)
+            if (flag == 0)
             {
-                // printf_pars(pars);
-                stack_command(pars, &command, env);
-                // print_comand(command);
-                // if (command && command->cmd)
-                //     exec_check(&command, env);
+                new_linked_list(&pars, &list);
+                // printf_pars(list);
+                stack_command(list, &command, env);
+                print_comand(command);
+            // if (command && command->cmd)
+            //         exec_check(&command, env);
             }
             flag = 0;
         }
@@ -153,7 +150,7 @@ int main(int argc, char **argv, char **env)
         }
         add_history(line);
         free(line);
-        ft_free_lexer(&pars);
+        // ft_free_lexer(&pars);
         // ft_free_command(&command);
     }
     return (0);
