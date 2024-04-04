@@ -21,8 +21,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (s1 == NULL && s2 == NULL)
 		return (NULL);
-	if (s1 == NULL)
+	else if (s1 == NULL)
 		return (ft_strdup(s2));
+	else if (s2 == NULL)
+		return (ft_strdup(s1));
 	lens1 = ft_strlen(s1);
 	lens2 = ft_strlen(s2);
 	total = lens1 + lens2 + 1;

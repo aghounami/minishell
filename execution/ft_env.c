@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:36:47 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/03/30 01:09:24 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/02 14:05:10 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	ft_env(t_command **command)
 	i = 0;
 	if (env->args[1] == NULL)
 	{
-		while (env->env[i] != NULL)
+		while (env->evr[i] != NULL )
 		{
-			printf("%s\n", env->env[i]);
+				printf("%s\n", env->evr[i]);
 			i++;
 		}
 	}

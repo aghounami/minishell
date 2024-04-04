@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/03 15:19:04 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/04 02:55:40 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,25 +28,30 @@ void	ft_free_2d(char **str)
 
 void	param_init(t_command **new, int *i, t_elem **elem)
 {
-	(1) && (*i = 0, *new = malloc(sizeof(t_command)), \
-			(*new)->args = malloc(sizeof(char *) * 100));
-	if ((*elem)->token == PIPE_LINE)
-		(1) && ((*new)->pipe += 1, (*elem) = (*elem)->next);
+	*i = 0;
+	*new = malloc(sizeof(t_command));
+	(*new)->args = malloc(sizeof(char *) * 100);
+	(*new)->pipe = 0;
 	while ((*elem) && (*elem)->token == WHITE_SPACE)
 		(*elem) = (*elem)->next;
 }
 
-void	command_add_back(t_command **command, t_command *new, int i, char **env)
+void	command_add_back(t_command **command, t_command **new, int i, char **env)
 {
+	int pipe;
+
+	pipe = 0;
 	if (i > 0)
 	{
-		(1) && (new->env = env, new->args[i] = NULL);
+		(1) && ((*new)->evr = env, (*new)->args[i] = NULL);
+		if ((*new)->pipe == 1)
+			pipe = 1;
 		lstadd_back_command(command, \
-		lstnew_command(new->args, new->cmd));
-		ft_free_2d(new->args);
-		free(new->cmd);
-		free(new);
-		new = NULL;
+		lstnew_command((*new)->args, (*new)->cmd, pipe));
+		ft_free_2d((*new)->args);
+		free((*new)->cmd);
+		free((*new));
+		(*new) = NULL;
 	}
 }
 
@@ -71,6 +76,8 @@ void	stack_command(t_elem *elem, t_command **command, char **env)
 			else
 				new->cmd = NULL;
 		}
-		command_add_back(command, new, i, env);
+		if ((elem) && (elem)->token == PIPE_LINE)
+			(1) && (new->pipe = 1, (elem) = (elem)->next);
+		command_add_back(command, &new, i, env);
 	}
 }

@@ -28,9 +28,9 @@ enum e_token
 	WORD = -1,
 	WHITE_SPACE = ' ',
 	QOUTE = '\'',
+	SLASH = '/',
 	DOUBLE_QUOTE = '\"',
 	ESCAPE = '\\',
-	SLASH = '/',
 	ENV = '$',
 	PIPE_LINE = '|',
 	REDIR_IN = '<',
@@ -50,10 +50,20 @@ typedef struct s_command
 	char	*dredir_out;
 	int		pipe;
 	int		redir;
-	char	**env;
+	char	**evr;
+	char *exec_path;
 	char	*content;
 	struct s_command	*next;
 }	t_command;
+
+typedef struct s_env
+{
+	struct s_env	*next;
+	char *value;
+	char *variable;
+	int	i;
+
+}	t_env;
 
 
 typedef struct s_exec
@@ -61,8 +71,11 @@ typedef struct s_exec
 	int index;
 	int i;
 	int j;
+	int len;
 	char *name;
 	char *value;
+	char *variable;
+	char **spl;
 	char *path_in;
     char **path_split;
     char *current_dir;
@@ -112,16 +125,19 @@ void		ft_free_lexer(t_elem **pars);
 void		ft_free_command(t_command **command);
 void		case_single_quote(t_elem **tmp, char *str, t_elem **list);
 void		case_double_quote(t_elem **tmp, char *str, t_elem **list);
+void		execution_cmd(t_command **command, char **env);
 // --------------------------------
 
 // linked_list
-t_command	*lstnew_command(char **agrs, char *cmd);
+t_command	*lstnew_command(char **agrs, char *cmd, int pipe);
 void		lstadd_back_command(t_command **lst, t_command *new);
 t_elem		*lstnew(void *content, int token , t_elem **prev);
 void		lstadd_back(t_elem **lst, t_elem *new);
 t_elem		*lst_new(char *content, int token, int state);
 void		ft_lstadd_back_new_list(t_elem **alst, t_elem *new);
 t_elem		*lstlast(t_elem *lst);
+
+
 
 // executers
 void exec_check(t_command **command, char **av);
@@ -136,6 +152,11 @@ void	ft_pwd(void);
 void	ft_exit_mini(t_command **command);
 void ft_env(t_command **command);
 void	ft_echo(t_command **command);
-// void ft_export(t_command **command);
-
+void ft_export(t_command **command);
+int ft_equal_finder(char *str);
+t_env	*ft_lstnew_exec(char *value, char *variable);
+void	ft_lstadd_back_exec(t_env **lst, t_env *neww);
+t_env	*ft_lstlast_exec(t_env *lst);
+void	ft_lstdelone_exec(t_env *lst);
+char	*ft_strstr(const char *s1, const char *s2);
 #endif

@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/03 15:52:47 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/04 02:56:21 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ char **ft_strdup_2d(char **str)
 	return (new);
 }
 
-t_command *lstnew_command(char **agrs, char *cmd)
+t_command *lstnew_command(char **agrs, char *cmd, int pipe)
 {
 	t_command *new;
 
@@ -82,6 +82,7 @@ t_command *lstnew_command(char **agrs, char *cmd)
 		return (NULL);
 	new->cmd = ft_strdup(cmd);
 	new->args = ft_strdup_2d(agrs);
+	new->pipe = pipe;
 	new->next = NULL;
 	return (new);
 }

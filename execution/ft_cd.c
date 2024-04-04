@@ -49,11 +49,10 @@ int	path_cheker_cd(char *path)
 
 int	getcwd_check(t_command **command, t_exec *dir_cd, char *path)
 {
-	// t_command	*exec;
+	t_command	*exec;
 	t_exec		*cd;
 
-	// exec = *command;
-	(void)command;
+	exec = *command;
 	cd = dir_cd;
 	if (getcwd(cd->current_dir, PATH_MAX) == NULL)
 	{

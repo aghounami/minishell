@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/04/03 14:58:06 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/04 02:29:18 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	exec_extention(const char *p, char *const *ag, t_command **s)
 	t_command	*exec;
 
 	exec = *s;
-	if (execve(p, ag, exec->env) == -1)
+	if (execve(p, ag, exec->evr) == -1)
 	{
 		printf("Error: %s: command not found\n", exec->args[0]);
 		exit(EXIT_FAILURE);
@@ -68,11 +68,11 @@ void	exec_path_extention(t_command **command, t_exec *execution)
 
 void	exec_path(t_command **command)
 {
-	// t_command	*exec;
+	t_command	*exec;
 	t_exec		p_exec;
 
 	ft_memset(&p_exec, 0, sizeof(p_exec));
-	// exec = *command;
+	exec = *command;
 	(*command)->content = "PATH";
 	p_exec.path_in = get_env_exec(command);
 	p_exec.current_dir = (char *)malloc(PATH_MAX);
@@ -95,7 +95,7 @@ void	exec_check(t_command **command, char **env)
 	int		state;
 	pid_t	pid;
 
-	(*command)->env = env;
+	(*command)->evr = env;
 	if (command_check(command) == 1)
 	{
 		pid = fork();
