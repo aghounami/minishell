@@ -139,10 +139,9 @@ int main(int argc, char **argv, char **env)
 				new_linked_list(&pars, &list);
 				// printf_pars(list);
 				stack_command(list, &command, env);
-				// execution_cmd(&command, env);
-				print_comand(command);
-				// if (command && command->cmd)
-				// 	exec_check(&command, env);
+				// print_comand(command);
+				if (command && command->cmd)
+					exec_check(&command, env);
 			}
 			flag = 0;
 		}

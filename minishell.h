@@ -125,7 +125,7 @@ void		ft_free_lexer(t_elem **pars);
 void		ft_free_command(t_command **command);
 void		case_single_quote(t_elem **tmp, char *str, t_elem **list);
 void		case_double_quote(t_elem **tmp, char *str, t_elem **list);
-void		execution_cmd(t_command **command, char **env);
+void    execution_cmd(t_command **commands, char **env);
 // --------------------------------
 
 // linked_list

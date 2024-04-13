@@ -50,28 +50,66 @@ void	search_exec_2(t_command **command, char **env)
     free(p_exec);
 }
 
-void	execution_cmd(t_command **command, char **env)
-{
-    int    fd[2];
-    
+void	execution_cmd(t_command **commands, char **env) {
+    int prev_pipe_fd[2], curr_pipe_fd[2], status;
+    pid_t pid;
 
-    while (*command)
-    {
-        if ((*command)->next)
-        {
-            pipe(fd);
-            if (fork() == 0)
-            {
-                search_exec_2(command, env);
-                execve((*command)->exec_path, (*command)->args, env);
+    prev_pipe_fd[0] = -1; // Initialize to invalid file descriptors
+    prev_pipe_fd[1] = -1;
+
+    while (*commands != NULL) {
+        if (pipe(curr_pipe_fd) == -1) {
+            perror("pipe");
+            exit(EXIT_FAILURE);
+        }
+        pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+        else if (pid == 0) {
+            // Child process
+            if (prev_pipe_fd[0] != -1) {
+                // Redirect stdin from the previous pipe
+                dup2(prev_pipe_fd[0], 0);
+                close(prev_pipe_fd[0]);
+                close(prev_pipe_fd[1]);
             }
-                (*command) = (*command)->next;
+
+            if ((*commands)->next != NULL) {
+                // Redirect stdout to the current pipe
+                dup2(curr_pipe_fd[1], 1);
+                close(curr_pipe_fd[1]);
+                close(curr_pipe_fd[0]);
+            }
+
+            // Execute the command
+            search_exec_2(commands, env);
+            if (execve((*commands)->exec_path, (*commands)->args, env) == -1) {
+                perror("execve");
+                exit(EXIT_FAILURE);
+            }
         }
-        else
-        {
-            search_exec_2(command, env);
-            execve((*command)->exec_path, (*command)->args, env);
+        else {
+            // Parent process
+            if (prev_pipe_fd[0] != -1) {
+                close(prev_pipe_fd[0]);
+                close(prev_pipe_fd[1]);
+            }
+            prev_pipe_fd[0] = curr_pipe_fd[0];
+            prev_pipe_fd[1] = curr_pipe_fd[1];
+
+            // Move to the next command
+            *commands = (*commands)->next;
         }
-        *command = (*command)->next;
     }
+
+    // Close the last pipe
+    if (prev_pipe_fd[0] != -1) {
+        close(prev_pipe_fd[0]);
+        close(prev_pipe_fd[1]);
+    }
+
+    // Wait for all child processes to finish
+    while (wait(&status) > 0);
 }

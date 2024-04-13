@@ -96,19 +96,25 @@ void	exec_check(t_command **command, char **env)
 	pid_t	pid;
 
 	(*command)->evr = env;
-	if (command_check(command) == 1)
+	while (*command)
 	{
-		pid = fork();
-		if (pid == 0)
-			exec_path(command);
-		else if (pid > 0)
+		if ((*command)->pipe == 1)
+			execution_cmd(command, env);
+		else if (command_check(command) == 1)
 		{
-			if (waitpid(0, &state, 0) == -1)
-				perror("waitpid");
+			pid = fork();
+			if (pid == 0)
+				exec_path(command);
+			else if (pid > 0)
+			{
+				if (waitpid(0, &state, 0) == -1)
+					perror("waitpid");
+			}
+			else
+				perror("fork");
+			(*command) = (*command)->next;
 		}
 		else
-			perror("fork");
+			(*command) = (*command)->next;
 	}
-	else
-		return ;
 }
