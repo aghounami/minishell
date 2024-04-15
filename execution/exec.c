@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/04/04 02:29:18 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/14 22:59:02 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,25 +96,5 @@ void	exec_check(t_command **command, char **env)
 	pid_t	pid;
 
 	(*command)->evr = env;
-	while (*command)
-	{
-		if ((*command)->pipe == 1)
-			execution_cmd(command, env);
-		else if (command_check(command) == 1)
-		{
-			pid = fork();
-			if (pid == 0)
-				exec_path(command);
-			else if (pid > 0)
-			{
-				if (waitpid(0, &state, 0) == -1)
-					perror("waitpid");
-			}
-			else
-				perror("fork");
-			(*command) = (*command)->next;
-		}
-		else
-			(*command) = (*command)->next;
-	}
+	execution_cmd(command, env);
 }
