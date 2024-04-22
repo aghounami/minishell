@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/02 18:07:01 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/19 22:47:24 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	*lexer(char *line, t_elem **elem, char **env)
 	t_lexer	*lexer;
 
 	(1) && (lexer = malloc(sizeof(t_lexer)), lexer->i = 0, \
-		lexer->j = 0, lexer->prev = NULL);
+		lexer->j = 0, lexer->prev = NULL, lexer->quote = 0);
 	while (line[lexer->i])
 	{
 		lexer->str = ft_calloc(1000, sizeof(char));
@@ -57,7 +57,7 @@ void	*lexer(char *line, t_elem **elem, char **env)
 		else if (line[lexer->i] == '<')
 			case_herdoc_or_redir(line, elem, lexer);
 		else if (line[lexer->i] == '\'')
-			case_one_char(lexer, elem, line, QOUTE);
+			case_one_char(lexer, elem, line, QOUTE), lexer->quote += 1;
 		else if (line[lexer->i] == '\"')
 			case_one_char(lexer, elem, line, DOUBLE_QUOTE);
 		else if (line[lexer->i] == '\\')

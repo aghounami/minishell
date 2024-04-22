@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:47:12 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/03 15:55:48 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/19 23:17:17 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,12 @@ void	case_single_quote(t_elem **tmp, char *str, t_elem **list)
 		if ((*tmp)->token == WHITE_SPACE || (*tmp)->token == PIPE_LINE)
 		{
 			if ((*tmp)->state == GENERAL)
-				break ;
+			{
+				ft_lstadd_back_new_list(list, lst_new((*tmp)->content, \
+					(*tmp)->token, (*tmp)->state));
+				(*tmp) = (*tmp)->next;
+				return ;
+			}
 			else
 				(1) && (str = ft_strjoin(str, (*tmp)->content), \
 					(*tmp) = (*tmp)->next);
@@ -65,6 +70,8 @@ void	case_single_quote(t_elem **tmp, char *str, t_elem **list)
 		else
 			(1) && (str = ft_strjoin(str, (*tmp)->content), \
 				(*tmp) = (*tmp)->next);
+		if ((*tmp)->token == WHITE_SPACE)
+			break ;
 	}
 	ft_lstadd_back_new_list(list, lst_new("\'", QOUTE, GENERAL));
 	if (str)
@@ -85,7 +92,13 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 		if ((*tmp)->token == WHITE_SPACE || (*tmp)->token == PIPE_LINE)
 		{
 			if ((*tmp)->state == GENERAL)
-				break ;
+			{
+				ft_lstadd_back_new_list(list, lst_new((*tmp)->content, \
+					(*tmp)->token, (*tmp)->state));
+				(*tmp) = (*tmp)->next;
+				printf("im here\n");
+				return ;
+			}
 			else
 				(1) && (str = ft_strjoin(str, (*tmp)->content), \
 					(*tmp) = (*tmp)->next);
@@ -99,6 +112,8 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 		else
 			(1) && (str = ft_strjoin(str, (*tmp)->content), \
 				(*tmp) = (*tmp)->next);
+		if ((*tmp)->token == WHITE_SPACE)
+			break ;
 	}
 	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL));
 	if (str)
@@ -106,6 +121,7 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 	else
 		ft_lstadd_back_new_list(list, lst_new("", WORD, IN_DQUOTE));
 	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL));
+	// printf("str = %s\n", str);
 	str = NULL;
 }
 

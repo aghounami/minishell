@@ -87,8 +87,8 @@ typedef struct s_exec
 
 typedef struct s_elem
 {
-	char			    *content;
-	int				    len;
+	char			*content;
+	int				len;
 	enum e_state	state;
     struct s_elem	*next;
 	enum e_token	token;
@@ -100,6 +100,7 @@ typedef struct s_lexer
 	int i;
 	int j;
 	char *str;
+	int				quote;
 	t_elem *prev;
 }	t_lexer;
 
@@ -159,4 +160,6 @@ void	ft_lstadd_back_exec(t_env **lst, t_env *neww);
 t_env	*ft_lstlast_exec(t_env *lst);
 void	ft_lstdelone_exec(t_env *lst);
 char	*ft_strstr(const char *s1, const char *s2);
+void search_exec(t_command **command, t_exec *execution);
+void one_cmd(t_command **commands, char **env, int pid, int status);
 #endif

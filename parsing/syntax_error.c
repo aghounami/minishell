@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:39:14 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 02:48:09 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/19 23:20:51 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void syntax_error(t_elem **elem , int *flag)
 	}
 	while (tmp)
 	{
-		if (tmp->token == PIPE_LINE || tmp->token == REDIR_IN || tmp->token == REDIR_OUT \
+		if (/*tmp->token == PIPE_LINE*/ tmp->token == REDIR_IN || tmp->token == REDIR_OUT \
 			|| tmp->token == HERE_DOC || tmp->token == DREDIR_OUT)
 		{
 			tmp2 = tmp->next;
@@ -51,6 +51,7 @@ void syntax_error(t_elem **elem , int *flag)
 				|| tmp2->token == HERE_DOC || tmp2->token == DREDIR_OUT)
 			{
 				error = 1;
+				printf("im here\n");
 				break;
 			}
 		}
@@ -61,7 +62,10 @@ void syntax_error(t_elem **elem , int *flag)
 		error = (tmp->token == REDIR_IN && tmp->next->token == DREDIR_OUT);
 		error = (tmp->token == REDIR_OUT && tmp->next->token == REDIR_IN);
 		if (error)
+		{
 			break;
+			printf("im here1\n");
+		}
 		else if (tmp->token == ESCAPE && tmp->content[1] == '\0')
 		{
 			tmp = tmp->next;
@@ -70,6 +74,7 @@ void syntax_error(t_elem **elem , int *flag)
 			if (!tmp)
 			{
 				error = 1;
+				printf("im here2\n");
 				break;
 			}
 		}
@@ -81,6 +86,7 @@ void syntax_error(t_elem **elem , int *flag)
 			if (!tmp)
 			{
 				error = 1;
+				printf("im here3\n");
 				break;
 			}
 		}
@@ -92,6 +98,7 @@ void syntax_error(t_elem **elem , int *flag)
 			if (!tmp)
 			{
 				error = 1;
+				printf("im here4\n");
 				break;
 			}
 		}

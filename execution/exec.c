@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/04/14 22:59:02 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/04/19 10:26:16 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,11 @@ void	exec_path(t_command **command)
 
 void	exec_check(t_command **command, char **env)
 {
-	int		state;
-	pid_t	pid;
-
 	(*command)->evr = env;
+	if ((*command)->next == NULL)
+	{
+		one_cmd(command, env, 0, 0);
+		return;
+	}
 	execution_cmd(command, env);
 }
