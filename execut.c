@@ -86,53 +86,53 @@ void one_cmd(t_command **commands, char **env, int pid, int status)
 }
 void execution_cmd(t_command **commands, char **env)
 {
-	int prev_pipe[2];
-	int next_pipe[2];
-	int status;
-	int pid;
+    int prev_pipe[2], next_pipe[2], status, pid;
 
-	while (*commands != NULL)
+    prev_pipe[0] = -1;
+    prev_pipe[1] = -1;
+
+    while (*commands != NULL)
 	{
-		if (pipe(next_pipe) == -1)
+        if (pipe(next_pipe) == -1)
 		{
-			perror("pipe");
-			return;
-		}
-		pid = fork();
-		if (pid == -1)
+            perror("pipe");
+            return;
+        }
+        pid = fork();
+        if (pid == -1)
 		{
-			perror("fork");
-			return;
-		}
-		if (pid == 0)
+            perror("fork");
+            return;
+        }
+        if (pid == 0)
 		{
-			if ((*commands)->next != NULL)
-				(1) && (dup2(next_pipe[1], STDOUT_FILENO), close(next_pipe[0]));
-			if (prev_pipe[0] != -1)
-				(1) && (dup2(prev_pipe[0], STDIN_FILENO), close(prev_pipe[0]));
-			(1) && (close(prev_pipe[1]), close(next_pipe[1]));
-			if (strncmp("exit", (*commands)->args[0], 4) != 0 && command_check(commands) == 1)
+            if ((*commands)->next != NULL)
+                (1) && (dup2(next_pipe[1], STDOUT_FILENO), close(next_pipe[0]));
+            if (prev_pipe[0] != -1)
+				(1) && (dup2(prev_pipe[0], STDIN_FILENO), close(prev_pipe[1]));
+			(1) && (close(prev_pipe[0]), close(prev_pipe[1]));
+            if (strncmp("exit", (*commands)->args[0], 4) != 0 && command_check(commands) == 1)
 			{
-				search_exec_2(commands, env);
-				if (execve((*commands)->exec_path, (*commands)->args, env) == -1)
+                search_exec_2(commands, env);
+                if (execve((*commands)->exec_path, (*commands)->args, env) == -1)
 				{
 					perror("execve");
 					exit(EXIT_FAILURE);
 				}
-			}
-			else
-				exit(0);
-		}
-		else
+            }
+            else
+                exit(0);
+        }
+        else
 		{
-			if (prev_pipe[0] != -1)
+            if (prev_pipe[0] != -1)
 				(1) && (close(prev_pipe[0]), close(prev_pipe[1]));
 			(1) && (prev_pipe[0] = next_pipe[0], prev_pipe[1] = next_pipe[1]);
-			*commands = (*commands)->next;
-		}
-	}
-	while (wait(&status) > 0)
-		;
+            *commands = (*commands)->next;
+        }
+    }
+
+    while (wait(&status) > 0);
 }
 
 /*

@@ -51,7 +51,7 @@ void syntax_error(t_elem **elem , int *flag)
 				|| tmp2->token == HERE_DOC || tmp2->token == DREDIR_OUT)
 			{
 				error = 1;
-				printf("im here\n");
+				// printf("im here\n");
 				break;
 			}
 		}
@@ -64,7 +64,7 @@ void syntax_error(t_elem **elem , int *flag)
 		if (error)
 		{
 			break;
-			printf("im here1\n");
+			// printf("im here1\n");
 		}
 		else if (tmp->token == ESCAPE && tmp->content[1] == '\0')
 		{
@@ -74,7 +74,7 @@ void syntax_error(t_elem **elem , int *flag)
 			if (!tmp)
 			{
 				error = 1;
-				printf("im here2\n");
+				// printf("im here2\n");
 				break;
 			}
 		}
@@ -86,7 +86,7 @@ void syntax_error(t_elem **elem , int *flag)
 			if (!tmp)
 			{
 				error = 1;
-				printf("im here3\n");
+				// printf("im here3\n");
 				break;
 			}
 		}
@@ -98,7 +98,7 @@ void syntax_error(t_elem **elem , int *flag)
 			if (!tmp)
 			{
 				error = 1;
-				printf("im here4\n");
+				// printf("im here4\n");
 				break;
 			}
 		}

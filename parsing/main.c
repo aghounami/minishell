@@ -137,15 +137,15 @@ int main(int argc, char **argv, char **env)
 		{
 			lexer(line, &pars, env);
 			state(&pars, env);
-			syntax_error(&pars, &flag);
+			// syntax_error(&pars, &flag);
 			if (flag == 0)
 			{
-				// print_lex(pars);
 				new_linked_list(&pars, &list);
+				// printf_pars(list);
 				stack_command(list, &command, env);
-				// print_comand(command);
-				if (command && command->cmd)
-					exec_check(&command, env);
+				print_comand(command);
+				// if (command && command->cmd)
+				// 	exec_check(&command, env);
 			}
 			flag = 0;
 		}

@@ -52,10 +52,15 @@ void	case_single_quote(t_elem **tmp, char *str, t_elem **list)
 		{
 			if ((*tmp)->state == GENERAL)
 			{
-				ft_lstadd_back_new_list(list, lst_new((*tmp)->content, \
-					(*tmp)->token, (*tmp)->state));
-				(*tmp) = (*tmp)->next;
-				return ;
+				if (i == 0)
+				{
+					ft_lstadd_back_new_list(list, lst_new(" ", WHITE_SPACE, \
+						GENERAL));
+					(*tmp) = (*tmp)->next;
+					return;
+				}
+				else
+					break ;
 			}
 			else
 				(1) && (str = ft_strjoin(str, (*tmp)->content), \
@@ -70,8 +75,6 @@ void	case_single_quote(t_elem **tmp, char *str, t_elem **list)
 		else
 			(1) && (str = ft_strjoin(str, (*tmp)->content), \
 				(*tmp) = (*tmp)->next);
-		if ((*tmp)->token == WHITE_SPACE)
-			break ;
 	}
 	ft_lstadd_back_new_list(list, lst_new("\'", QOUTE, GENERAL));
 	if (str)
@@ -93,11 +96,15 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 		{
 			if ((*tmp)->state == GENERAL)
 			{
-				ft_lstadd_back_new_list(list, lst_new((*tmp)->content, \
-					(*tmp)->token, (*tmp)->state));
-				(*tmp) = (*tmp)->next;
-				printf("im here\n");
-				return ;
+				if (i == 0)
+				{
+					ft_lstadd_back_new_list(list, lst_new(" ", WHITE_SPACE, \
+						GENERAL));
+					(*tmp) = (*tmp)->next;
+					return;
+				}
+				else
+					break ;
 			}
 			else
 				(1) && (str = ft_strjoin(str, (*tmp)->content), \
@@ -112,8 +119,6 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 		else
 			(1) && (str = ft_strjoin(str, (*tmp)->content), \
 				(*tmp) = (*tmp)->next);
-		if ((*tmp)->token == WHITE_SPACE)
-			break ;
 	}
 	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL));
 	if (str)
@@ -121,7 +126,5 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 	else
 		ft_lstadd_back_new_list(list, lst_new("", WORD, IN_DQUOTE));
 	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL));
-	// printf("str = %s\n", str);
 	str = NULL;
 }
-
