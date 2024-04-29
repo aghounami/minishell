@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-t_elem	*lst_new(char *content, int token, int state)
+t_elem	*lst_new(char *content, int token, int state, int flag_env)
 {
 	t_elem	*new;
 
@@ -21,6 +21,7 @@ t_elem	*lst_new(char *content, int token, int state)
 		return (NULL);
 	new->content = ft_strdup(content);
 	new->token = token;
+	new->flag_env = flag_env;
 	new->state = state;
 	new->next = NULL;
 	return (new);
@@ -55,7 +56,7 @@ void	case_single_quote(t_elem **tmp, char *str, t_elem **list)
 				if (i == 0)
 				{
 					ft_lstadd_back_new_list(list, lst_new(" ", WHITE_SPACE, \
-						GENERAL));
+						GENERAL, NO));
 					(*tmp) = (*tmp)->next;
 					return;
 				}
@@ -76,12 +77,12 @@ void	case_single_quote(t_elem **tmp, char *str, t_elem **list)
 			(1) && (str = ft_strjoin(str, (*tmp)->content), \
 				(*tmp) = (*tmp)->next);
 	}
-	ft_lstadd_back_new_list(list, lst_new("\'", QOUTE, GENERAL));
+	ft_lstadd_back_new_list(list, lst_new("\'", QOUTE, GENERAL, NO));
 	if (str)
-		ft_lstadd_back_new_list(list, lst_new(str, WORD, IN_QUOTE));
+		ft_lstadd_back_new_list(list, lst_new(str, WORD, IN_QUOTE, NO));
 	else
-		ft_lstadd_back_new_list(list, lst_new("", WORD, IN_QUOTE));
-	ft_lstadd_back_new_list(list, lst_new("\'", QOUTE, GENERAL));
+		ft_lstadd_back_new_list(list, lst_new("", WORD, IN_QUOTE, NO));
+	ft_lstadd_back_new_list(list, lst_new("\'", QOUTE, GENERAL, NO));
 	str = NULL;
 }
 
@@ -99,7 +100,7 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 				if (i == 0)
 				{
 					ft_lstadd_back_new_list(list, lst_new(" ", WHITE_SPACE, \
-						GENERAL));
+						GENERAL, NO));
 					(*tmp) = (*tmp)->next;
 					return;
 				}
@@ -120,11 +121,11 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list)
 			(1) && (str = ft_strjoin(str, (*tmp)->content), \
 				(*tmp) = (*tmp)->next);
 	}
-	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL));
+	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL, NO));
 	if (str)
-		ft_lstadd_back_new_list(list, lst_new(str, WORD, IN_DQUOTE));
+		ft_lstadd_back_new_list(list, lst_new(str, WORD, IN_DQUOTE, NO));
 	else
-		ft_lstadd_back_new_list(list, lst_new("", WORD, IN_DQUOTE));
-	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL));
+		ft_lstadd_back_new_list(list, lst_new("", WORD, IN_DQUOTE, NO));
+	ft_lstadd_back_new_list(list, lst_new("\"", DOUBLE_QUOTE, GENERAL, NO));
 	str = NULL;
 }

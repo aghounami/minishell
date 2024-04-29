@@ -59,5 +59,11 @@ void	without_quote(t_elem **elem, t_command **command, int *i, char **env)
 			(1) && ((*command)->args[*i] = ft_strdup((*elem)->content), \
 				*i += 1);
 		(*elem) = (*elem)->next;
+		int j = ft_strlen((*command)->args[*i - 1]);
+		if ((*elem) && (*elem)->flag_env == 1 && (*command)->args[*i - 1][j - 1] == '=')
+		{
+			(*command)->args[*i - 1] = ft_strjoin((*command)->args[*i - 1], (*elem)->content);
+			(*elem) = (*elem)->next;
+		}
 	}
 }

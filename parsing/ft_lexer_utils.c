@@ -48,7 +48,6 @@ void	case_word(char *line, t_elem **elem, t_lexer *lexer)
 {
 	lexer->j = 0;
 	while (line[lexer->i] != ' ' && line[lexer->i] != '|' \
-		&& line[lexer->i] != '>' && line[lexer->i] != '<' \
 			&& line[lexer->i] != '\'' && line[lexer->i] != '\"' \
 				&& line[lexer->i] != '\0' && line[lexer->i] != '\n' \
 					&& line[lexer->i] != '\t' && line[lexer->i] != '\\' \
@@ -152,5 +151,4 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 	}
 	else
 		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV, &lexer->prev));
-	// free (value);
 }

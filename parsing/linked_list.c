@@ -22,6 +22,10 @@ t_elem *lstnew(void *content, int token , t_elem **prev)
 		return (NULL);
 	new->content = content;
 	new->token = token;
+	if (token == ENV)
+		new->flag_env = YES;
+	else
+		new->flag_env = NO;
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);

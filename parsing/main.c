@@ -144,8 +144,8 @@ int main(int argc, char **argv, char **env)
 				// printf_pars(list);
 				stack_command(list, &command, env);
 				print_comand(command);
-				// if (command && command->cmd)
-				// 	exec_check(&command, env);
+				if (command && command->cmd)
+					exec_check(&command, env);
 			}
 			flag = 0;
 		}

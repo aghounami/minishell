@@ -39,6 +39,11 @@ enum e_token
 	DREDIR_OUT,
 };
 
+enum e_new_token
+{
+	YES = 1,
+	NO = 0,
+};
 
 typedef struct s_command
 {
@@ -93,6 +98,7 @@ typedef struct s_elem
     struct s_elem	*next;
 	enum e_token	token;
 	struct s_elem	*prev;
+	enum e_new_token	flag_env;
 }	t_elem;
 
 typedef struct s_lexer
@@ -134,7 +140,7 @@ t_command	*lstnew_command(char **agrs, char *cmd, int pipe);
 void		lstadd_back_command(t_command **lst, t_command *new);
 t_elem		*lstnew(void *content, int token , t_elem **prev);
 void		lstadd_back(t_elem **lst, t_elem *new);
-t_elem		*lst_new(char *content, int token, int state);
+t_elem		*lst_new(char *content, int token, int state, int flag_env);
 void		ft_lstadd_back_new_list(t_elem **alst, t_elem *new);
 t_elem		*lstlast(t_elem *lst);
 

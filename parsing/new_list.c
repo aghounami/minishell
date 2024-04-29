@@ -21,14 +21,14 @@ void	all_condition(char *str, t_elem *tmp, t_elem **list)
 				&& tmp->next->token != DOUBLE_QUOTE)) || !tmp->next))
 		{
 			str = ft_strdup(tmp->content);
-			ft_lstadd_back_new_list(list, lst_new(str, tmp->token, tmp->state));
+			ft_lstadd_back_new_list(list, lst_new(str, tmp->token, tmp->state, tmp->flag_env));
 			str = NULL;
 			tmp = tmp->next;
 		}
 		else if (tmp->token == WHITE_SPACE)
 		{
 			str = ft_strdup(tmp->content);
-			ft_lstadd_back_new_list(list, lst_new(str, tmp->token, tmp->state));
+			ft_lstadd_back_new_list(list, lst_new(str, tmp->token, tmp->state, tmp->flag_env));
 			str = NULL;
 			tmp = tmp->next;
 		}
