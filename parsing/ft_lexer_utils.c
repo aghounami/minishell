@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zaki <zaki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:02:41 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/19 22:48:06 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/02 10:38:04 by zaki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ void	case_word(char *line, t_elem **elem, t_lexer *lexer)
 		lexer->str[lexer->j] = line[lexer->i];
 		lexer->j += 1;
 		lexer->i += 1;
+		if ((line[lexer->i] == '>' || line[lexer->i] == '<') \
+			&& (line[lexer->i - 1] != '='  && line[lexer->i + 1] != '='))
+			break ;
 	}
 	lexer->str[lexer->j] = '\0';
 	lstadd_back(elem, lstnew(ft_strdup(lexer->str), WORD, &lexer->prev));

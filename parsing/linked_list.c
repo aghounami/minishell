@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/18 18:48:07 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/07 10:49:07 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ char **ft_strdup_2d(char **str)
 	char **new;
 
 	i = 0;
+	if (str == NULL)
+		return NULL;
 	while (str[i])
 		i++;
 	new = malloc(sizeof(char *) * (i + 1));
@@ -71,22 +73,30 @@ char **ft_strdup_2d(char **str)
 	while (str[i])
 	{
 		new[i] = ft_strdup(str[i]);
+		// free (str[i]);
 		i++;
 	}
 	new[i] = NULL;
+	// free(str);
 	return (new);
 }
 
-t_command *lstnew_command(char **agrs, char *cmd, int pipe)
+t_command *lstnew_command(t_command **node, int pipe, t_redirection *redir)
 {
 	t_command *new;
 
 	new = malloc(sizeof(t_command));
 	if (!new)
 		return (NULL);
-	new->cmd = ft_strdup(cmd);
-	new->args = ft_strdup_2d(agrs);
+	new->cmd = ft_strdup((*node)->cmd);
+	new->args = ft_strdup_2d((*node)->args);
+	new->rd_in = ft_strdup_2d((*node)->rd_in);
+	new->rd_out = ft_strdup_2d((*node)->rd_out);
 	new->pipe = pipe;
+	new->redir_in = redir->redir_in;
+	new->dredir_out = redir->dredir_out;
+	new->here_doc = redir->here_doc;
+	new->redir_out = redir->redir_out;
 	new->next = NULL;
 	return (new);
 }

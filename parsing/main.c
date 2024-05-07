@@ -48,18 +48,33 @@ void print_comand(t_command *command)
 	while (tmp)
 	{
 		i = 0;
-		j = 1;
+		j = 0;
 		if (tmp->cmd)
 			printf("cmd     = [%s]\n", tmp->cmd);
-		while (tmp->args[i] != NULL)
+		while (tmp->args && tmp->args[i] != NULL)
 		{
 			printf("arg[%d] = [%s]\n", j, tmp->args[i]);
 			i++;
 			j++;
 		}
-		printf("----------\n");
+		if ((tmp->redir_in == 1) || (tmp->here_doc == 1))
+			printf("\033[0;32m---rd_in----\033[0m \n");
+		int k = 0;
+		while (tmp->rd_in && tmp->rd_in[k] != NULL)
+		{
+			printf("rd_in[%d] = [%s]\n", k, tmp->rd_in[k]);
+			k++;
+		}
+		if ((tmp->redir_out == 1 || tmp->dredir_out == 1))
+			printf("\033[0;32m---rd_out----\033[0m \n");
+		k = 0;
+		while (tmp->rd_out && tmp->rd_out[k] != NULL)
+		{
+			printf("rd_out[%d] = [%s]\n", k, tmp->rd_out[k]);
+			k++;
+		}
 		if (tmp->pipe == 1)
-			printf("pipe\n");
+			printf("\033[0;36m------pipe-------\033[0m \n");
 		tmp = tmp->next;
 	}
 }
@@ -112,7 +127,23 @@ void	f()
 {
 	system("lsof -c minishell");
 }
-
+char **strdup_deuble_araay(char **env)
+{
+	int i;
+	char **new;
+	i = 0;
+	while (env[i])
+		i++;
+	new = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (env[i])
+	{
+		new[i] = strdup(env[i]);
+		i++;
+	}
+	new[i] = NULL;
+	return (new);
+}
 int main(int argc, char **argv, char **env)
 {
 	// atexit(f);
@@ -127,25 +158,27 @@ int main(int argc, char **argv, char **env)
 	rl_catch_signals = 0;
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
+	if (isatty(0) == 0)
+		return (0);
+	char **envp = strdup_deuble_araay(env);
 	while (1)
 	{
-		pars = NULL;
-		command = NULL;
-		list = NULL;
+		(1) && (pars = NULL, command = NULL, list = NULL);
 		line = readline("\033[0;30m➜ minishell : \033[0m");
 		if (line && line[0] != '\0')
 		{
-			lexer(line, &pars, env);
-			state(&pars, env);
-			// syntax_error(&pars, &flag);
+			
+			lexer(line, &pars, envp);
+			state(&pars, envp);
+			syntax_error(&pars, &flag);
 			if (flag == 0)
 			{
 				new_linked_list(&pars, &list);
 				// printf_pars(list);
-				stack_command(list, &command, env);
+				stack_command(list, &command, envp);
 				print_comand(command);
-				if (command && command->cmd)
-					exec_check(&command, env);
+				// if (command && command->cmd)
+				// 	exec_check(&command, envp);
 			}
 			flag = 0;
 		}
@@ -156,6 +189,12 @@ int main(int argc, char **argv, char **env)
 		}
 		add_history(line);
 		free(line);
+	// int i =0;
+	// while(envp[i])
+	// {
+	// 	printf("%s\n", envp[i]);
+	// 	i++;
+	// }
 		// ft_free_lexer(&pars);
 		// ft_free_command(&command);
 	}

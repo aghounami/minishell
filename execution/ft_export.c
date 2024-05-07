@@ -3,187 +3,273 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zaki <zaki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:52:51 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/04/03 17:58:33 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:52:58 by zaki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-// khass ikon awal 7aref alpaghbet tab3o alpha numerikm or '_'
-// kha ikon = awla +=
-// ila knet += kan9alab wax kayen ila kan kandir lih join ila makanex kandzido;
 
-// void ft_check_exist(t_command **command, t_)
-// {
-	
-// }
-int plus_equal(char c)
+int	terrible(char c)
 {
-	return( c == '+' || c == '=');
+	return (c == '_' );
 }
 
-int string_chcker(char *str)
+int	equal(char c)
 {
-	int i;
-	
-	i =0;
-	if(ft_isalpha(str[0]) )
+	return (c == '=');
+}
+
+int	plus(char c)
+{
+	return (c == '+');
+}
+
+int	string_chcker(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (ft_isalpha(str[i]) || terrible(str[i]))
 	{
-		while(str[i])
+		while (str[i])
 		{
-			if (ft_isalpha(str[i]) || ft_isdigit(str[i]) || plus_equal(str[i]))
+			if ((str[i + 1] != '\0' && plus(str[i])
+					&& !equal(str[i + 1])))
+				return(0);
+			else if (ft_isalpha(str[i]) || ft_isdigit(str[i])
+				|| plus(str[i]) || equal(str[i])
+				|| terrible(str[i]))
 				i++;
 			else
 				return (0);
 		}
-		
 	}
 	else
 		return (0);
 	return (1);
 }
-int list_vcheck(t_env **envex, char *str)
+
+void	ft_adder(t_env **envex, char *str, char *value)
 {
-    t_env *check;
-    check = *envex;
-    int i = ft_strlen(str);
-    while (check)
-    {
-        if (check->variable && ft_strncmp(check->variable, str, i) == 0)
-			 return (1);
-        check = check->next;
-    }
-    return (0);
+	t_env	*adder;
+
+	adder = *envex;
+	while (adder)
+	{
+		if (ft_strncmp(str, adder->vari, ft_strlen(adder->vari)) == 0)
+		{
+			adder->q = 1;
+			free(adder->value);
+			adder->value = ft_strdup(value);
+		}
+		adder = adder->next;
+	}
 }
 
-char *list_check(t_env **envex, char *str)
+char	*list_check(t_env **envex, char *str)
 {
-    t_env *check;
-    check = *envex;
-    int i = ft_strlen(str);
-    while (check)
-    {
-        if (check->variable && ft_strncmp(check->variable, str, i) == 0)
-			 return (check->value);
-        check = check->next;
-    }
-    return (NULL);
+	t_env	*check;
+	int		i;
+
+	check = *envex;
+	i = ft_strlen(check->vari);
+	while (check)
+	{
+		if (check->vari && ft_strncmp(check->vari, str, i) == 0)
+			return ("yes");
+		check = check->next;
+	}
+	return (NULL);
 }
 
-void ft_export(t_command **command)
+int	double_check(char *str)
+{
+	int	i;
+	int	pos;
+
+	i = 0;
+	pos = 0;
+	while (str[i])
+	{
+		if (str[i] == '=')
+			break ;
+		if (str[i] == '+')
+			pos++;
+		if (pos > 1)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	ps(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '>' || str[i] == '<')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	export_printer(t_env **env)
+{
+	t_env	*p;
+
+	p = *env;
+	while (p)
+	{
+		if (p->q == 1 && p->value != NULL)
+			printf("declare -x %s=\"%s\"\n", p->vari, p->value);
+		else
+			printf("declare -x %s\n", p->vari);
+		p = p->next;
+	}
+}
+
+int	cheking(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (plus(str[i]))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void	problem(char *str)
+{
+	printf("export: `%s': not a valid identifier\n", str);
+}
+
+void fc(char **value, char **vari, int *len, char *str)
+{
+	(*value) = ft_strstr(str, "=") + 1;
+	(*len) =  ft_strlen(str) - ft_strlen((*value)) - 1;
+	(*vari) = ft_substr(str, 0, (*len));
+}
+int	v_check(char *str)
+{
+	t_exec	var;
+	int		i;
+
+	i =0;
+	ft_memset(&var, 0, sizeof(var));
+	if (ft_strchr(str, '='))
+	{
+		i = 1;
+		var.value = ft_strstr(str, "=") + 1;
+		var.len = ft_strlen(str) - ft_strlen(var.value) - 1;
+		var.vari = ft_substr(str, 0, var.len);
+	}
+	else
+		var.vari = ft_strdup(str);
+	if ((string_chcker(var.vari) && double_check(var.vari)) 
+		|| !ps(var.vari))
+	{
+		if (i)
+			free(var.vari);
+		return (1);
+	}
+	free(var.vari);
+	return (problem(str), 0);
+}
+char *value_add(char *str)
+{
+	int i;
+	int j;
+	char *d;
+
+	(1) && (i = -1, j = 0);
+	while(str[++i])
+	{
+		if (str[i] == '"')
+			j++;
+	}
+	d = malloc(sizeof(char) * (i+j+1));
+	if (!d)
+		return(NULL);
+	(1) && (i = -1, j = 0);
+	while(str[++i])
+	{
+		if (str[i] == '"')
+			d[j++] ='\\';
+		d[j++] = str[i];
+	}
+	d[j] = '\0';
+	return(d);
+}
+void	ft_ex_filler(char *str, t_exec *var, t_env **ev)
+{
+	if (ft_strchr(str, '='))
+	{
+		fc(&var->value, &var->vari, &var->len, str);
+		var->value = value_add(ft_strstr(str, "=") + 1);
+		if (var->vari[ft_strlen(var->vari) - 1] == '+')
+		{
+			var->vari = ft_substr(str, 0, ft_strlen(var->vari) - 1);
+			if (list_check(ev, var->vari))
+				var->value = ft_strjoin(list_check(ev, var->vari), var->value);
+		}
+		if (!list_check(ev, var->vari))
+			ft_lstadd_back_exec(ev, ft_lstnew_exec(var->value, var->vari, 1));
+		else
+			ft_adder(ev, str, var->value);
+	}
+	else
+	{
+		if (cheking(str))
+			return (problem(str));
+		var->vari = ft_strdup(str);
+		if (!list_check(ev, var->vari))
+			ft_lstadd_back_exec(ev, ft_lstnew_exec("", var->vari, 0));
+	}
+		(free(var->value), free(var->vari));
+}
+void ft_ps_fill(char *str, t_exec *var, t_env **ev)
+{
+	char *tmp;
+
+	tmp = ft_strstr(str, ">") + 1;
+	int len = ft_strlen(str) - ft_strlen((tmp)) - 1;
+	var->vari = ft_substr(str, 0, len);
+	if (!list_check(ev, var->vari))
+			ft_lstadd_back_exec(ev, ft_lstnew_exec(NULL, var->vari, 0));
+
+}
+void	ft_export(t_command **command, t_env **envex)
 {
 	t_command	*exp;
-	static t_env *envex = NULL ;
-	t_env		*envexeex;
 	t_exec		var;
-	static int 	i ;
+	int			f;
+	int			j;
 
 	ft_memset(&var, 0, sizeof(var));
 	exp = *command;
-
-	
-	if(!envex)
+	f = 1;
+	while (exp->args[f])
 	{
-		
-		while(exp->evr[var.i])
+		j = 0;
+		if (v_check(exp->args[f]))
 		{
-			var.value = ft_strstr(exp->evr[var.i], "=") + 1;
-			var.len = ft_strlen(exp->evr[var.i]) - ft_strlen(var.value) - 1;
-			var.variable = ft_substr(exp->evr[var.i], 0 ,var.len);
-			if(i == 0)
-			{
-				envex = ft_lstnew_exec(var.value, var.variable);
-				i = 1;
-			}
+			if (!ps(exp->args[f]))
+				ft_ps_fill(exp->args[f], &var, envex);
 			else
-				ft_lstadd_back_exec(&envex, ft_lstnew_exec(var.value, var.variable));
-
-			var.i++;
+				ft_ex_filler(exp->args[f], &var, envex);
 		}
-		
-	}
-	int f =1;
-	int s =0;
-	
-	
-	while(exp->args[f])
-	{
-		if(string_chcker(exp->args[f]) )
-		{
-			
-			 s = 0;
-			if(ft_strstr(exp->args[f], "="))
-			{	
-				var.value = ft_strstr(exp->args[f], "=") + 1;
-				var.len = ft_strlen(exp->args[f]) - ft_strlen(var.value) - 1;
-				var.variable = ft_substr(exp->args[f], 0 ,var.len);
-				if(var.variable[ft_strlen(var.variable) - 1] == '+')
-				{
-					var.variable = ft_substr(exp->args[f], 0 ,ft_strlen(var.variable) - 1);
-					if(list_check(&envex, var.variable))
-						var.value = ft_strjoin(list_check(&envex, var.variable), var.value);
-					
-				}
-				if(!list_check(&envex, var.variable))
-					ft_lstadd_back_exec(&envex, ft_lstnew_exec(var.value, var.variable));
-				else
-				{
-					envexeex = envex;
-					while(envexeex)
-					{
-						if (ft_strncmp(exp->args[f], envexeex->variable, ft_strlen( envexeex->variable)) == 0)
-						{
-							envexeex->value = var.value;
-						}
-							envexeex = envexeex->next;
-					}
-				}
-					
-			}
-			else
-			{
-				envexeex = envex;
-				while(envexeex)
-				{
-					if (ft_strncmp(exp->args[f], envexeex->variable, ft_strlen( envexeex->variable)) == 0)
-					{
-						break ;
-						s =1;
-					}
-						envexeex = envexeex->next;
-				}
-				if(s == 0)
-				{
-					var.variable = exp->args[f];
-					if(!list_check(&envex, var.variable))
-						ft_lstadd_back_exec(&envex, ft_lstnew_exec("", var.variable));
-					
-				}
-			}
 		f++;
-		}
-		else
-		{
-			printf("export: `%s': not a valid identifier\n", exp->args[f]);
-			break ;
-		}
 	}
-	
-	if(!exp->args[1])
-	{
-		
-		envexeex = envex;
-		while(envexeex)
-		{
-			if(envexeex->variable)
-				printf("%s=\"%s\"\n", envexeex->variable, envexeex->value);
-			envexeex = envexeex->next;
-		}
-	}
-	
+	if (!exp->args[1])
+		export_printer(envex);
 }
-
-
-

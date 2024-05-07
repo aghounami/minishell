@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zaki <zaki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/04/14 23:07:49 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/05 13:15:06 by zaki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,62 @@ void	ft_exit_fail(char *str)
 	perror(str);
 	exit(EXIT_FAILURE);
 }
+void pwd_update(t_env **env)
+{
+	t_env *envex;
+	
+	envex = *env;
+	char *tmp;
+	char *tmp2 = NULL;
+	while(envex)
+	{
+		if (ft_strncmp(envex->vari, "PWD", 4) == 0)
+		{
+			tmp =  ft_strdup(envex->value);
+			free(envex->value);
+			envex->value = ft_strdup(getcwd(tmp2, PATH_MAX));
+		}
+		else if (ft_strncmp(envex->vari, "OLDPWD", 4) == 0)
+		{
+			free(envex->value);
+			envex->value =  ft_strdup(tmp);
+		}
+		envex = envex->next;
+	}
+	free(tmp);
+	free(tmp2);
+	
+}
+void	ft_filler(t_env **env, char **envar)
+{
+	t_env *envex;
+	t_exec		var;
+	static int a ;
+	
+	envex = *env;
+	ft_memset(&var, 0, sizeof(var));
+	if(!envex && a == 0)
+	{
+		while(envar[var.i])
+		{
+			var.value = ft_strstr(envar[var.i], "=") + 1;
+			var.len = ft_strlen(envar[var.i]) - ft_strlen(var.value) - 1;
+			var.vari = ft_substr(envar[var.i], 0 ,var.len);
+			if(!envex)
+				envex = ft_lstnew_exec(var.value, var.vari, 1);
+			else
+				ft_lstadd_back_exec(&envex, ft_lstnew_exec(var.value, var.vari, 1));
+			var.i++;
+		}
 
-int	command_check(t_command **command)
+	a = 1;
+	*env = envex;
+	}
+	pwd_update(env);
+}
+int	command_check(t_command **command, t_env **envex)
 {
 	t_command	*exec;
-	// t_env		*env;
 	
 	exec = *command;
 	if (!ft_strncmp("cd", exec->args[0], 3))
@@ -73,20 +124,17 @@ int	command_check(t_command **command)
 	else if (!ft_strncmp("echo", exec->args[0], 5)
 		|| !ft_strncmp("ECHO", exec->args[0], 5))
 		return (ft_echo(command), 0);
-	else if (!ft_strncmp("export", exec->args[0], 7)
-		|| !ft_strncmp("EXPORT", exec->args[0], 7))
-		return (ft_export(command), 0);
+	else if (!ft_strncmp("export", exec->args[0], 7))
+		return (ft_export(command, envex), 0);
 	else if (!ft_strncmp("pwd", exec->args[0], 4)
 		|| !ft_strncmp("PWD", exec->args[0], 4))
 		return (ft_pwd(), 0);
-	else if (!ft_strncmp("unset", exec->args[0], 6)
-		|| !ft_strncmp("UNSET", exec->args[0], 6))
-		return (printf("it's unset\n"), 0);
+	else if (!ft_strncmp("unset", exec->args[0], 6))
+		return (ft_unset(command,envex), 0);
 	else if (!ft_strncmp("env", exec->args[0], 4)
 		|| !ft_strncmp("ENV", exec->args[0], 4))
-		return (ft_env(command), 0);
-	else if (!ft_strncmp("exit", exec->args[0], 5)
-		|| !ft_strncmp("EXIT", exec->args[0], 5))
+		return (ft_env(envex), 0);
+	else if (!ft_strncmp("exit", exec->args[0], 5))
 		return (ft_exit_mini(command), 0);
 	return (1);
 }

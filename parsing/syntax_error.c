@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:39:14 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/19 23:20:51 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/07 10:51:03 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,18 @@ void syntax_error(t_elem **elem , int *flag)
 	}
 	while (tmp)
 	{
-		if (/*tmp->token == PIPE_LINE*/ tmp->token == REDIR_IN || tmp->token == REDIR_OUT \
+		if (tmp->token == PIPE_LINE)
+		{
+			tmp2 = tmp->next;
+			while (tmp2 && tmp2->token == WHITE_SPACE)
+				tmp2 = tmp2->next;
+			if (!tmp2 || tmp2->token == PIPE_LINE)
+			{
+				error = 1;
+				break;
+			}
+		}
+		if (tmp->token == REDIR_IN || tmp->token == REDIR_OUT \
 			|| tmp->token == HERE_DOC || tmp->token == DREDIR_OUT)
 		{
 			tmp2 = tmp->next;
@@ -51,7 +62,6 @@ void syntax_error(t_elem **elem , int *flag)
 				|| tmp2->token == HERE_DOC || tmp2->token == DREDIR_OUT)
 			{
 				error = 1;
-				// printf("im here\n");
 				break;
 			}
 		}
