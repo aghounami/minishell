@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 10:22:58 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/07 14:12:01 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,14 @@ void	without_quote(t_elem **elem, t_command **command, char **env, t_cmd_utils *
 			while ((*elem) && (*elem)->token == WHITE_SPACE)
 				(*elem) = (*elem)->next;
 			if ((*elem) && (*elem)->token != PIPE_LINE)
-				(1) && ((*command)->rd_in[(*utils)->in] = ft_strdup((*elem)->content), \
-					(*elem) = (*elem)->next, (*utils)->in += 1);
-			// printf("rd_in[%d] = [%s]\n", (*utils)->in, (*command)->rd_in[(*utils)->in - 1]);
+			{
+				if ((*elem)->env_var != NULL && (*command)->here_doc == 1)
+					(1) && ((*command)->rd_in[(*utils)->in] = ft_strdup((*elem)->env_var), \
+						(*elem) = (*elem)->next, (*utils)->in += 1);
+				else
+					(1) && ((*command)->rd_in[(*utils)->in] = ft_strdup((*elem)->content), \
+						(*elem) = (*elem)->next, (*utils)->in += 1);
+			}
 		}
 		if ((*elem) && ((*elem)->token == REDIR_OUT || (*elem)->token == DREDIR_OUT))
 		{

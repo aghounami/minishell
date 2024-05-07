@@ -84,7 +84,10 @@ void printf_pars(t_elem *pars)
 	t_elem *tmp = pars;
 	while (tmp)
 	{
-		printf("content = [%s]\n", tmp->content);
+		if (tmp->env_var != NULL)
+			printf("env_var = [%s]\n", tmp->env_var);
+		else
+			printf("content = [%s]\n", tmp->content);
 		tmp = tmp->next;
 	}
 }

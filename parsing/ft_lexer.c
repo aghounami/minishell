@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/19 22:47:24 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/07 12:36:38 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type)
 	lexer->str[0] = line[lexer->i];
 	lexer->str[1] = '\0';
 	lexer->i += 1;
-	lstadd_back(elem, lstnew(ft_strdup(lexer->str), type, &lexer->prev));
+	lstadd_back(elem, lstnew(ft_strdup(lexer->str), type, NULL));
 }
 
 void	case_slash(t_lexer *lexer, t_elem **elem, char *line)
@@ -32,7 +32,7 @@ void	case_slash(t_lexer *lexer, t_elem **elem, char *line)
 		i += 1;
 		lexer->i += 1;
 	}
-	lstadd_back(elem, lstnew(ft_strdup(lexer->str), SLASH, &lexer->prev));
+	lstadd_back(elem, lstnew(ft_strdup(lexer->str), SLASH, NULL));
 }
 
 void	*lexer(char *line, t_elem **elem, char **env)

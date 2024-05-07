@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lexer_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zaki <zaki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:02:41 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/02 10:38:04 by zaki             ###   ########.fr       */
+/*   Updated: 2024/05/07 14:15:22 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	case_escape(char *line, t_elem **elem, t_lexer *lexer)
 		lexer->str[1] = '\0';
 		lexer->i += 1;
 	}
-	lstadd_back(elem, lstnew(ft_strdup(lexer->str), ESCAPE, &lexer->prev));
+	lstadd_back(elem, lstnew(ft_strdup(lexer->str), ESCAPE, NULL));
 }
 
 void	case_herdoc_or_redir(char *line, t_elem **elem, t_lexer *lexer)
@@ -38,7 +38,7 @@ void	case_herdoc_or_redir(char *line, t_elem **elem, t_lexer *lexer)
 		lexer->str[2] = '\0';
 		lexer->i += 2;
 		lstadd_back(elem, lstnew(ft_strdup(lexer->str), HERE_DOC, \
-			&lexer->prev));
+			NULL));
 	}
 	else
 		case_one_char(lexer, elem, line, REDIR_IN);
@@ -51,17 +51,15 @@ void	case_word(char *line, t_elem **elem, t_lexer *lexer)
 			&& line[lexer->i] != '\'' && line[lexer->i] != '\"' \
 				&& line[lexer->i] != '\0' && line[lexer->i] != '\n' \
 					&& line[lexer->i] != '\t' && line[lexer->i] != '\\' \
-						&& line[lexer->i] != '$')
+						&& line[lexer->i] != '$' && line[lexer->i] != '>' \
+							&& line[lexer->i] != '<')
 	{
 		lexer->str[lexer->j] = line[lexer->i];
 		lexer->j += 1;
 		lexer->i += 1;
-		if ((line[lexer->i] == '>' || line[lexer->i] == '<') \
-			&& (line[lexer->i - 1] != '='  && line[lexer->i + 1] != '='))
-			break ;
 	}
 	lexer->str[lexer->j] = '\0';
-	lstadd_back(elem, lstnew(ft_strdup(lexer->str), WORD, &lexer->prev));
+	lstadd_back(elem, lstnew(ft_strdup(lexer->str), WORD, NULL));
 }
 
 void	case_redirect(char *line, t_elem **elem, t_lexer *lexer)
@@ -73,7 +71,7 @@ void	case_redirect(char *line, t_elem **elem, t_lexer *lexer)
 		lexer->str[2] = '\0';
 		lexer->i += 2;
 		lstadd_back(elem, lstnew(ft_strdup(lexer->str), DREDIR_OUT, \
-			&lexer->prev));
+			NULL));
 	}
 	else
 		case_one_char(lexer, elem, line, REDIR_OUT);
@@ -108,7 +106,7 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 		lexer->str[1] = '$';
 		lexer->str[2] = '\0';
 		lexer->i += 1;
-		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV, &lexer->prev));
+		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV, NULL));
 		return ;
 	}
 	while ((line[lexer->i] >= 'a' && line[lexer->i] <= 'z') \
@@ -126,6 +124,7 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 	// if (lexer->str[0] == '$
 	lexer->str[lexer->j] = '\0';
 	value = get_env(lexer->str + 1, env);
+	lexer->var_name = ft_strdup(lexer->str);
 	if (value && count_worlds(value) > 1 && lexer->quote % 2 == 0)
 	{
 		int i = 0;
@@ -133,7 +132,7 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 		{
 			if (value[i] == ' ')
 			{
-				lstadd_back(elem, lstnew(ft_strdup(" "), WHITE_SPACE, &lexer->prev));
+				lstadd_back(elem, lstnew(ft_strdup(" "), WHITE_SPACE, NULL));
 				i++;
 			}
 			else
@@ -147,11 +146,11 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 					i++;
 				}
 				tmp[j] = '\0';
-				lstadd_back(elem, lstnew(ft_strdup(tmp), WORD, &lexer->prev));
+				lstadd_back(elem, lstnew(ft_strdup(tmp), WORD, lexer->var_name));
 				tmp = NULL;
 			}
 		}
 	}
 	else
-		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV, &lexer->prev));
+		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV, lexer->var_name));
 }

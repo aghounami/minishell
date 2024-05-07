@@ -6,11 +6,27 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 17:11:29 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/18 22:30:50 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/07 13:39:44 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+t_elem	*new_list_new(char *content, t_elem *tmp)
+{
+	t_elem	*new;
+
+	new = (t_elem *)malloc(sizeof(t_elem));
+	if (!new)
+		return (NULL);
+	new->content = ft_strdup(content);
+	new->token = tmp->token;
+	new->flag_env = tmp->flag_env;
+	new->env_var = ft_strdup(tmp->env_var);
+	new->state = tmp->state;
+	new->next = NULL;
+	return (new);
+}
 
 void	all_condition(char *str, t_elem *tmp, t_elem **list)
 {
@@ -21,14 +37,14 @@ void	all_condition(char *str, t_elem *tmp, t_elem **list)
 				&& tmp->next->token != DOUBLE_QUOTE)) || !tmp->next))
 		{
 			str = ft_strdup(tmp->content);
-			ft_lstadd_back_new_list(list, lst_new(str, tmp->token, tmp->state, tmp->flag_env));
+			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
 			str = NULL;
 			tmp = tmp->next;
 		}
 		else if (tmp->token == WHITE_SPACE)
 		{
 			str = ft_strdup(tmp->content);
-			ft_lstadd_back_new_list(list, lst_new(str, tmp->token, tmp->state, tmp->flag_env));
+			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
 			str = NULL;
 			tmp = tmp->next;
 		}
