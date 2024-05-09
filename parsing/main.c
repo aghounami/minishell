@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/09 15:24:07 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/09 18:37:55 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ int main(int argc, char **argv, char **env)
 				new_linked_list(&pars, &list);
 				// print_lex(list);
 				stack_command(list, &command, envp);
-				print_comand(command);
+				// print_comand(command);
 				// if (command && command->cmd)
 				// 	exec_check(&command, envp);
 			}

@@ -28,7 +28,6 @@ RED := \033[0;31m
 BLUE := \033[0;34m
 NC := \033[0m
 
-
 all: LIBFT $(NAME)
 
 LIBFT:
@@ -58,7 +57,7 @@ re: fclean all
 
 push :
 	@git add .
-	@git commit -m "update"
+	@git commit -m "new_update"
 	@git push
 
 .PHONY: all clean fclean re
