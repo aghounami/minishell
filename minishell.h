@@ -119,6 +119,8 @@ typedef struct s_lexer
 	int j;
 	char *str;
 	int				quote;
+	int				d_quote;
+	int 			here_doc;
 	t_elem *prev;
 	char *var_name;
 }	t_lexer;
@@ -159,7 +161,7 @@ void execution_cmd(t_command **commands, char **env, t_env **envex);
 // linked_list
 t_command	*lstnew_command(t_command **new, int pipe, t_redirection *redir);
 void		lstadd_back_command(t_command **lst, t_command *new);
-t_elem		*lstnew(void *content, int token , char *var_name);
+t_elem		*lstnew(void *content, int token);
 void		lstadd_back(t_elem **lst, t_elem *new);
 t_elem		*lst_new(char *content, int token, int state, int flag_env);
 void		ft_lstadd_back_new_list(t_elem **alst, t_elem *new);

@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:12:20 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 12:37:47 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/07 22:41:10 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ void	pid_env(t_elem *elem)
 	char	*pid;
 
 	pid = ft_itoa(getpid());
-	elem->env_var = ft_strdup(elem->content);
 	free((elem)->content);
 	elem->content = NULL;
 	elem->content = ft_strdup(pid);
+	free (pid);
 	elem->token = WORD;
 	elem = elem->next;
 }
@@ -56,13 +56,12 @@ void	find_env(t_elem *elem, char **env)
 	char	*str;
 
 	str = get_env(elem->content + 1, env);
-	elem->env_var = ft_strdup(elem->content);
 	free((elem)->content);
 	(elem)->content = NULL;
 	(elem)->content = ft_strdup(str);
 	(elem)->token = WORD;
 	elem = elem->next;
-	str = NULL;
+	free (str);
 }
 
 void	stack_env(t_elem *elem, char **env)
@@ -76,13 +75,12 @@ void	stack_env(t_elem *elem, char **env)
 		{
 			if (elem->content[1] && elem->content[1] == '0')
 			{
-				elem->env_var =  ft_strdup(elem->content);
 				free((elem)->content);
 				dst = ft_strdup("minishell");
-				elem->content = dst;
+				elem->content = ft_strdup(dst);
 				elem->token = WORD;
 				elem = elem->next;
-				dst = NULL;
+				free (dst);
 			}
 			else if (elem->content[1] && elem->content[1] == '$')
 				pid_env(elem);

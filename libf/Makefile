@@ -6,7 +6,7 @@
 #    By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/06 04:09:48 by hkchikec          #+#    #+#              #
-#    Updated: 2024/03/30 02:57:16 by aghounam         ###   ########.fr        #
+#    Updated: 2024/05/08 10:39:04 by aghounam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ $(NAME): $(OBJ)
 bonus: all $(BONUS_OBJ)
 	@$(LIBC) $(NAME) $(BONUS_OBJ)
 
-%.o: %.c
+%.o: %.c libft.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

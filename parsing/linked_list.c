@@ -6,13 +6,13 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 13:31:03 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/09 12:22:36 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_elem *lstnew(void *content, int token , char *var_name)
+t_elem *lstnew(void *content, int token)
 {
 	t_elem *new;
 
@@ -25,7 +25,8 @@ t_elem *lstnew(void *content, int token , char *var_name)
 		new->flag_env = YES;
 	else
 		new->flag_env = NO;
-	new->env_var = ft_strdup(var_name);
+	// new->env_var = ft_strdup(var_name);
+	// free (var_name);
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);

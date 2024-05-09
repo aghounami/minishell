@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:39:14 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 10:51:03 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/07 22:44:18 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void syntax_error(t_elem **elem , int *flag)
 	if (error)
 	{
 		*flag = 1;
-		printf("syntax error\n");
+		printf("\033[0;31mminishell: syntax error\033[0m\n");
 		return;
 	}
 }

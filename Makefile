@@ -7,7 +7,7 @@ READLINE_L = /Users/aghounam/.brew/opt/readline/lib
 READLINE_I = /Users/aghounam/.brew/opt/readline/include
 
 # Flags 
-CFLAGS = -Wall -Wextra -g -I$(READLINE_I) -fsanitize=address -g
+CFLAGS = -Wall -Wextra -g -I$(READLINE_I)  -fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sourc parser
@@ -29,18 +29,18 @@ BLUE := \033[0;34m
 NC := \033[0m
 
 
-all: $(LIBF) $(NAME) 
+all: LIBFT $(NAME)
 
-$(LIBF):
+LIBFT:
 	@echo "$(RED)libf Compiling$(NC)"
 	@echo "$(RED)-----------------$(NC)"
 	@cd libf && make
 	@echo "$(RED)minishell Compiling$(NC)"
 
-$(NAME): $(obj)
+$(NAME): $(obj) $(LIBF)
 	@$(CC) $(CFLAGS) $(obj) $(LIBF) -o $(NAME)  $(LDFLAGS)
 
-%.o: %.c
+%.o: %.c minishell.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 	@echo "$(BLUE)✔︎$< Compiling $(NC)"
 

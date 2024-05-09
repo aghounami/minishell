@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 00:08:57 by aghounam          #+#    #+#             */
-/*   Updated: 2024/04/01 17:13:57 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/08 16:02:01 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void ft_free_lexer(t_elem **pars)
 	{
 		tmp2 = (*pars)->next;
 		free((*pars)->content);
+		// if ((*pars)->env_var)
+		// 	free((*pars)->env_var);
 		free(*pars);
 		*pars = tmp2;
 	}
@@ -42,6 +44,20 @@ void ft_free_command(t_command **command)
 			i++;
 		}
 		free((*command)->args);
+		i = 0;
+		while ((*command)->rd_in[i])
+		{
+			free((*command)->rd_in[i]);
+			i++;
+		}
+		free ((*command)->rd_in);
+		i = 0;
+		while ((*command)->rd_out[i])
+		{
+			free((*command)->rd_out[i]);
+			i++;
+		}
+		free ((*command)->rd_out);
 		(*command)->args = NULL;
 		free(*command);
 		*command = tmp;

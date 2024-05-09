@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 10:36:19 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/09 13:03:53 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,13 @@ void	command_add_back(t_command **command, t_command **new, char **env, t_cmd_ut
 		redir->here_doc = 1;
 	lstadd_back_command(command, \
 	lstnew_command(new, pipe, redir));
-	ft_free_2d((*new)->args);
+	// ft_free_2d((*new)->args);
+	ft_free_2d((*new)->rd_in);
+	ft_free_2d((*new)->rd_out);
 	free((*new)->cmd);
+	free(redir);
 	free((*new));
 	(*new) = NULL;
-	free(redir);
 }
 
 void	stack_command(t_elem *elem, t_command **command, char **env)
@@ -101,12 +103,7 @@ void	stack_command(t_elem *elem, t_command **command, char **env)
 		param_init(&new, &elem, &utils);
 		while (elem && elem->token != PIPE_LINE)
 		{
-			if (elem->token == QOUTE)
-				with_quote(&elem, &new, &utils->i);
-			else if (elem->token == DOUBLE_QUOTE)
-				with_d_quote(&elem, &new, &utils->i, env);
-			else
-				without_quote(&elem, &new, env, &utils);
+			without_quote(&elem, &new, env, &utils);
 			if (utils->i > 0)
 				new->cmd = ft_strdup(new->args[0]);
 			else
@@ -116,4 +113,5 @@ void	stack_command(t_elem *elem, t_command **command, char **env)
 			(1) && (new->pipe = 1, (elem) = (elem)->next);
 		command_add_back(command, &new, env, utils);
 	}
+	free (utils);
 }

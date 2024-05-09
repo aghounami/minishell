@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
+/*   Updated: 2024/05/09 15:24:07 by aghounam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char *check_state(t_elem *elem)
@@ -84,10 +96,10 @@ void printf_pars(t_elem *pars)
 	t_elem *tmp = pars;
 	while (tmp)
 	{
-		if (tmp->env_var != NULL)
-			printf("env_var = [%s]\n", tmp->env_var);
-		else
-			printf("content = [%s]\n", tmp->content);
+		// if (tmp->env_var != NULL)
+		// 	printf("env_var = [%s]\n", tmp->env_var);
+		// else
+		printf("content = [%s]\n", tmp->content);
 		tmp = tmp->next;
 	}
 }
@@ -126,10 +138,10 @@ void sig_handler(int signo)
 	}
 }
 
-void	f()
-{
-	system("lsof -c minishell");
-}
+// void	f()
+// {
+// 	system("lsof -c minishell");
+// }
 char **strdup_deuble_araay(char **env)
 {
 	int i;
@@ -176,13 +188,16 @@ int main(int argc, char **argv, char **env)
 			syntax_error(&pars, &flag);
 			if (flag == 0)
 			{
+				// print_lex(pars);
 				new_linked_list(&pars, &list);
-				// printf_pars(list);
+				// print_lex(list);
 				stack_command(list, &command, envp);
 				print_comand(command);
 				// if (command && command->cmd)
 				// 	exec_check(&command, envp);
 			}
+			else
+				ft_free_lexer(&pars);
 			flag = 0;
 		}
 		else if (!line)
@@ -198,8 +213,9 @@ int main(int argc, char **argv, char **env)
 	// 	printf("%s\n", envp[i]);
 	// 	i++;
 	// }
-		// ft_free_lexer(&pars);
-		// ft_free_command(&command);
+		ft_free_lexer(&list);
+		ft_free_command(&command);
 	}
+	free (envp);
 	return (0);
 }

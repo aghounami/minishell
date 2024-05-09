@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 17:11:29 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 13:39:44 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/09 12:53:07 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_elem	*new_list_new(char *content, t_elem *tmp)
 	new->content = ft_strdup(content);
 	new->token = tmp->token;
 	new->flag_env = tmp->flag_env;
-	new->env_var = ft_strdup(tmp->env_var);
+	// new->env_var = ft_strdup(tmp->env_var);
 	new->state = tmp->state;
 	new->next = NULL;
 	return (new);
@@ -36,9 +36,11 @@ void	all_condition(char *str, t_elem *tmp, t_elem **list)
 			&& ((tmp->next && (tmp->next->token != QOUTE \
 				&& tmp->next->token != DOUBLE_QUOTE)) || !tmp->next))
 		{
+			// if (tmp->env_var)
+			// 	printf("tmp->content: %s\n", tmp->env_var);
 			str = ft_strdup(tmp->content);
 			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
-			str = NULL;
+			free(str);
 			tmp = tmp->next;
 		}
 		else if (tmp->token == WHITE_SPACE)
@@ -62,10 +64,10 @@ void	new_linked_list(t_elem **pars, t_elem **list)
 	t_elem	*tmp;
 	char	*str;
 
-	str = NULL;
+	str = ft_strdup("");
 	tmp = *pars;
 	while (tmp && tmp->token == WHITE_SPACE)
 		tmp = tmp->next;
 	all_condition(str, tmp, list);
-	ft_free_lexer(pars);
+	// ft_free_lexer(pars);
 }
