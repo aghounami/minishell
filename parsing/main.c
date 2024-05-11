@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/09 18:37:55 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/11 12:09:51 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ int print_lex(t_elem *elem)
 		char *token = find_token(elem);
 		char *state = check_state(elem);
 		elem->len = strlen(elem->content);
-		printf("|   '%s'     |    %d    |            %s          |           %s            \n", elem->content, elem->len, state, token);
+		printf("|   '%s'     |    %d    |            %s          |           %s            \n", \
+			elem->content, elem->len, state, token);
 		printf("-------------------------------------------------------------------------------------\n");
 		elem = elem->next;
 	}
@@ -192,7 +193,7 @@ int main(int argc, char **argv, char **env)
 				new_linked_list(&pars, &list);
 				// print_lex(list);
 				stack_command(list, &command, envp);
-				// print_comand(command);
+				print_comand(command);
 				// if (command && command->cmd)
 				// 	exec_check(&command, envp);
 			}
