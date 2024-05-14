@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:12:20 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 22:41:10 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/14 12:45:45 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ void	find_env(t_elem *elem, char **env)
 	free((elem)->content);
 	(elem)->content = NULL;
 	(elem)->content = ft_strdup(str);
-	(elem)->token = WORD;
+	if (ft_strlen(str) == 0)
+		(elem)->token = BACK_SLASH;
+	else
+		(elem)->token = NEW_WORD;
 	elem = elem->next;
 	free (str);
 }

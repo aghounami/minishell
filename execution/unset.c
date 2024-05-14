@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 11:00:02 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/04/30 11:27:10 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/12 11:48:56 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,35 @@ void ft_unset(t_command **command, t_env **envexx)
 	{
 		prev = NULL;
 		env = *envexx;
-		while (env)
+		if (string_chcker(unset->args[f]))
 		{
-			var.vari = unset->args[f];
-			if (ft_strncmp(env->vari, var.vari, ft_strlen(var.vari)) == 0)
+			
+		
+			while (env)
 			{
-				if (prev == NULL)
-					*envexx = env->next;
+				var.vari = unset->args[f];
+				if (ft_strncmp(env->vari, var.vari, ft_strlen(env->vari)) == 0)
+				{
+					if (prev == NULL)
+						*envexx = env->next;
+					else
+						prev->next = env->next;
+					free(env->vari);
+					free(env->value);
+					tmp = env;
+					env = env->next;
+					free(tmp);
+					tmp = NULL;
+				}
 				else
-					prev->next = env->next;
-				free(env->vari);
-				free(env->value);
-				tmp = env;
-				env = env->next;
-				free(tmp);
-				tmp = NULL;
-			}
-			else
-			{
-				prev = env;
-				env = env->next;
+				{
+					prev = env;
+					env = env->next;
+				}
 			}
 		}
+		else 
+			printf("unset: `%s': not a valid identifier\n", unset->args[f]);
 		f++;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zaki <zaki@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/05 13:15:06 by zaki             ###   ########.fr       */
+/*   Updated: 2024/05/09 09:15:24 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,12 +114,21 @@ void	ft_filler(t_env **env, char **envar)
 	}
 	pwd_update(env);
 }
+int ret(t_command **command)
+{
+	t_command	*exec;
+	
+	exec = *command;
+	return(exec->redir_out ||exec->dredir_out ||exec->redir_in);
+}
 int	command_check(t_command **command, t_env **envex)
 {
 	t_command	*exec;
 	
 	exec = *command;
-	if (!ft_strncmp("cd", exec->args[0], 3))
+	if (!exec->args[0])
+		return(0);
+	else if (!ft_strncmp("cd", exec->args[0], 3))
 		return (cd_checker(command), 0);
 	else if (!ft_strncmp("echo", exec->args[0], 5)
 		|| !ft_strncmp("ECHO", exec->args[0], 5))

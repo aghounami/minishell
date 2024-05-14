@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:47:12 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/09 12:59:23 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:35:11 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ t_elem	*lst_new(char *content, int token, int state, int flag_env)
 	new->token = token;
 	new->flag_env = flag_env;
 	new->state = state;
+	new->expand = 1;
 	new->next = NULL;
 	return (new);
 }

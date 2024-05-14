@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 00:08:57 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/08 16:02:01 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/13 13:15:47 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,12 @@ void ft_free_command(t_command **command)
 		}
 		free((*command)->args);
 		i = 0;
-		while ((*command)->rd_in[i])
+		while ((*command)->redirection[i])
 		{
-			free((*command)->rd_in[i]);
+			free((*command)->redirection[i]);
 			i++;
 		}
-		free ((*command)->rd_in);
-		i = 0;
-		while ((*command)->rd_out[i])
-		{
-			free((*command)->rd_out[i]);
-			i++;
-		}
-		free ((*command)->rd_out);
+		free((*command)->redirection);
 		(*command)->args = NULL;
 		free(*command);
 		*command = tmp;

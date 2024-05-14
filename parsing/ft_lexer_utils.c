@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:02:41 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/09 15:21:50 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/11 21:01:39 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,9 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 {
 	char *value;
 	char *tmp;
+	// int c = 0;
+	// if (lexer->i > 0 && (line[lexer->i -1] == '\'' || line[lexer->i -1] == '\"'))
+	// 	c = 1;
 	(void)env;
 	lexer->j = 1;
 	lexer->str[0] = '$';

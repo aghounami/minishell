@@ -5,9 +5,8 @@ CC = gcc
 # Explicitly specify the paths to Readline library and include directory
 READLINE_L = /Users/aghounam/.brew/opt/readline/lib
 READLINE_I = /Users/aghounam/.brew/opt/readline/include
-
 # Flags 
-CFLAGS = -Wall -Wextra -g -I$(READLINE_I)  -fsanitize=address -g
+CFLAGS = -Wall -Wextra -g -I$(READLINE_I) -fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 
 # Sourc parser

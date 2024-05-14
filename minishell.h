@@ -37,6 +37,8 @@ enum e_token
 	REDIR_OUT = '>',
 	HERE_DOC,
 	DREDIR_OUT,
+	BACK_SLASH,
+	NEW_WORD,
 };
 
 enum e_new_token
@@ -57,8 +59,7 @@ typedef struct s_command
 {
 	char	*cmd;
 	char	**args;
-	char	**rd_in;
-	char	**rd_out;
+	char	**redirection;
 	int		redir_in;
 	int		redir_out;
 	int		here_doc;
@@ -69,6 +70,7 @@ typedef struct s_command
 	char	*content;
 	char	**evr;
 	struct s_command	*next;
+	int					check_expand;
 }	t_command;
 
 typedef struct s_env
@@ -111,6 +113,7 @@ typedef struct s_elem
 	struct s_elem	*prev;
 	enum e_new_token	flag_env;
 	char			*env_var;
+	int					expand;
 }	t_elem;
 
 typedef struct s_lexer
@@ -128,8 +131,7 @@ typedef struct s_lexer
 typedef struct s_cmd_utils
 {
 	int i;
-	int out;
-	int in;
+	int index;
 }	t_cmd_utils;
 
 // lexer
@@ -155,7 +157,6 @@ void		ft_free_command(t_command **command);
 void		case_single_quote(t_elem **tmp, char *str, t_elem **list);
 void		case_double_quote(t_elem **tmp, char *str, t_elem **list);
 
-void execution_cmd(t_command **commands, char **env, t_env **envex);
 // --------------------------------
 
 // linked_list
@@ -170,7 +171,7 @@ t_elem		*lstlast(t_elem *lst);
 
 
 // executers
-void exec_check(t_command **command, char **av);
+char **exec_check(t_command **command, char **av);
 void exec_path(t_command **command);
 void cd_checker(t_command **command);
 void ft_exit_fail(char *str);
@@ -190,10 +191,15 @@ t_env	*ft_lstlast_exec(t_env *lst);
 void	ft_lstdelone_exec(t_env *lst);
 char	*ft_strstr(const char *s1, const char *s2);
 void	search_exec(t_command **command, t_exec *execution);
-void	one_cmd(t_command **commands, int pid, int status, t_env **envex);
+void	one_cmd(t_command **commands, int pid, t_env **envex, char **env);
 void	ft_unset(t_command **command, t_env **envexx);
 void	ft_filler(t_env **env, char **envar);
-void	redire_in(t_command **command);
-void	redire_out(t_command **command);
+void execution_cmd(t_command **commands, char **env, t_env **envex, int fd);
+int	redire(t_command **command);
+int	string_chcker(char *str);
+int	terrible(char c);
+int	equal(char c);
+int	plus(char c);
+
 
 #endif

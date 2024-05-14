@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zaki <zaki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:12:26 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/06 22:09:05 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:52:11 by zaki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_numeric(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (ft_isdigit(str[i]) == 0 && str[i] != '-' && str[i] != '+')
+		if (ft_isdigit(str[i]) == 0)
 			return (0);
 		i++;
 	}
@@ -38,10 +38,7 @@ void	case_too_many_args(t_command *my_exit)
 		else
 		{
 			printf("minishell: exit: too many arguments\n");
-			if (ft_atoi(my_exit->args[1]) == -1)
-				exit(0);
-			else
-				return ;
+			return ;
 		}
 	}
 }

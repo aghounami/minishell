@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/09 12:22:36 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/13 16:33:27 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,13 +91,13 @@ t_command *lstnew_command(t_command **node, int pipe, t_redirection *redir)
 		return (NULL);
 	new->cmd = ft_strdup((*node)->cmd);
 	new->args = ft_strdup_2d((*node)->args);
-	new->rd_in = ft_strdup_2d((*node)->rd_in);
-	new->rd_out = ft_strdup_2d((*node)->rd_out);
+	new->redirection = ft_strdup_2d((*node)->redirection);
 	new->pipe = pipe;
 	new->redir_in = redir->redir_in;
 	new->dredir_out = redir->dredir_out;
 	new->here_doc = redir->here_doc;
 	new->redir_out = redir->redir_out;
+	new->check_expand = (*node)->check_expand;
 	new->next = NULL;
 	return (new);
 }

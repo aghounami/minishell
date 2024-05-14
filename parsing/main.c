@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/11 12:09:51 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/14 13:06:30 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ char *find_token(t_elem *elem)
 		str = "HERE_DOC";
 	else if (elem->token == DREDIR_OUT)
 		str = "DREDIR_OUT";
+	else if (elem->token == BACK_SLASH)
+		str = "BACK_SLASH";
+	else if (elem->token == NEW_WORD)
+		str = "NEW_WORD";
 	return (str);
 }
 
@@ -69,20 +73,15 @@ void print_comand(t_command *command)
 			i++;
 			j++;
 		}
-		if ((tmp->redir_in == 1) || (tmp->here_doc == 1))
-			printf("\033[0;32m---rd_in----\033[0m \n");
 		int k = 0;
-		while (tmp->rd_in && tmp->rd_in[k] != NULL)
+		if (tmp->redirection && tmp->redirection[k] != NULL)
+			printf("\033[0;32m----redirection----\033[0m\n");
+		while (tmp->redirection && tmp->redirection[k] != NULL)
 		{
-			printf("rd_in[%d] = [%s]\n", k, tmp->rd_in[k]);
-			k++;
-		}
-		if ((tmp->redir_out == 1 || tmp->dredir_out == 1))
-			printf("\033[0;32m---rd_out----\033[0m \n");
-		k = 0;
-		while (tmp->rd_out && tmp->rd_out[k] != NULL)
-		{
-			printf("rd_out[%d] = [%s]\n", k, tmp->rd_out[k]);
+			if (k % 2 == 0)
+				printf("redirection ➜ [%s]\n", tmp->redirection[k]);
+			else if (k % 2 != 0)
+				printf("file ➜ [%s]\n", tmp->redirection[k]);
 			k++;
 		}
 		if (tmp->pipe == 1)
@@ -118,6 +117,7 @@ int print_lex(t_elem *elem)
 		printf("|   '%s'     |    %d    |            %s          |           %s            \n", \
 			elem->content, elem->len, state, token);
 		printf("-------------------------------------------------------------------------------------\n");
+		// printf("%d\n", elem->expand);
 		elem = elem->next;
 	}
 	return (0);
@@ -160,10 +160,65 @@ char **strdup_deuble_araay(char **env)
 	new[i] = NULL;
 	return (new);
 }
+
+void init_shlvl(char **env)
+{
+	int i;
+	char *shlvl;
+	char *new_shlvl;
+	char *tmp;
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], "SHLVL=", 6) == 0)
+		{
+			shlvl = ft_strdup(env[i]);
+			tmp = ft_strchr(shlvl, '=');
+			tmp++;
+			if (ft_atoi(tmp) == 999)
+				new_shlvl = ft_strdup("");
+			else if (tmp[0] == '\0')
+				new_shlvl = ft_strdup("1");
+			else
+				new_shlvl = ft_itoa(ft_atoi(tmp) + 1);
+			free(env[i]);
+			env[i] = ft_strjoin("SHLVL=", new_shlvl);
+			free(shlvl);
+			free(new_shlvl);
+			break;
+		}
+		i++;
+	}
+}
+
+void	here_doc(t_command *command)
+{
+	char *line;
+	
+	line = NULL;
+	while (1)
+	{
+		if (command->check_expand)
+			printf("\033[0;35m expand\n \033[0m");
+		line = readline("\033[0;36m> \033[0m");
+		if (line && line[0] != '\0')
+		{
+			if (ft_strncmp(line, command->redirection[1],\
+				ft_strlen(command->redirection[1])) == 0 && ft_strlen(command->redirection[1]) == ft_strlen(line))
+			{
+				free(line);
+				break;
+			}
+			else
+				free(line);
+		}
+		else if (!line)
+			return ;
+	}
+}
+
 int main(int argc, char **argv, char **env)
 {
-	// atexit(f);
-
 	char *line;
 	t_command *command;
 	t_elem *pars;
@@ -177,6 +232,7 @@ int main(int argc, char **argv, char **env)
 	if (isatty(0) == 0)
 		return (0);
 	char **envp = strdup_deuble_araay(env);
+	init_shlvl(envp);
 	while (1)
 	{
 		(1) && (pars = NULL, command = NULL, list = NULL);
@@ -194,8 +250,16 @@ int main(int argc, char **argv, char **env)
 				// print_lex(list);
 				stack_command(list, &command, envp);
 				print_comand(command);
-				// if (command && command->cmd)
-				// 	exec_check(&command, envp);
+				// if (command && command->redirection \
+				// 	&& command->redirection[0] != NULL \
+				// 		&& ft_strncmp(command->redirection[0], "<<", 2) == 0)
+				// 	here_doc(command);
+				int j = dup(1);
+				int n = dup(0);
+				if (command && command->cmd)
+					envp = exec_check(&command, envp);
+				dup2(j, 1);
+				dup2(n, 0);
 			}
 			else
 				ft_free_lexer(&pars);
@@ -220,3 +284,4 @@ int main(int argc, char **argv, char **env)
 	free (envp);
 	return (0);
 }
+// 3

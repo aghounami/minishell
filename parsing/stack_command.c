@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/09 13:03:53 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/13 13:19:48 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,19 @@ void	ft_free_2d(char **str)
 
 void	param_init(t_command **new, t_elem **elem, t_cmd_utils **utils)
 {
-	int len_out = 0;
-	int len_in = 0;
-	(1) && ((*utils)->i = 0, (*utils)->out = 0, (*utils)->in = 0);
+	int len = 0;
+	(1) && ((*utils)->i = 0, (*utils)->index = 0);
 	*new = malloc(sizeof(t_command));
 	(*new)->args = malloc(sizeof(char *) * 100);
 	t_elem *tmp = *elem;
 	while(tmp)
 	{
-		if (tmp->token == REDIR_IN || tmp->token == HERE_DOC)
-			len_in++;
+		if (tmp->token == REDIR_OUT || tmp->token == DREDIR_OUT \
+			|| tmp->token == HERE_DOC || tmp->token == REDIR_IN)
+			len++;
 		tmp = tmp->next;
 	}
-	tmp = *elem;
-	while(tmp)
-	{
-		if (tmp->token == REDIR_OUT || tmp->token == DREDIR_OUT)
-			len_out++;
-		tmp = tmp->next;
-	}
-	(*new)->rd_in = malloc(sizeof(char *) * ((len_in * 2) + 1));
-	(*new)->rd_out = malloc(sizeof(char *) * ((len_out * 2) + 1));
+	(*new)->redirection = malloc(sizeof(char *) * ((len * 2) + 1));
 	(*new)->pipe = 0;
 	(*new)->redir_in = 0;
 	(*new)->redir_out = 0;
@@ -70,7 +62,7 @@ void	command_add_back(t_command **command, t_command **new, char **env, t_cmd_ut
 
 	pipe = 0;
 	(1) && ((*new)->evr = env, (*new)->args[utils->i] = NULL, \
-		(*new)->rd_in[utils->in] = NULL, (*new)->rd_out[utils->out] = NULL);
+		(*new)->redirection[utils->index] = NULL);
 	if ((*new) && (*new)->pipe == 1)
 		pipe = 1;
 	if ((*new) && (*new)->redir_in == 1)
@@ -84,8 +76,7 @@ void	command_add_back(t_command **command, t_command **new, char **env, t_cmd_ut
 	lstadd_back_command(command, \
 	lstnew_command(new, pipe, redir));
 	// ft_free_2d((*new)->args);
-	ft_free_2d((*new)->rd_in);
-	ft_free_2d((*new)->rd_out);
+	ft_free_2d((*new)->redirection);
 	free((*new)->cmd);
 	free(redir);
 	free((*new));
