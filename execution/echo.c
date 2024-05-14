@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 05:32:39 by aghounam          #+#    #+#             */
-/*   Updated: 2024/03/30 05:49:02 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:31:54 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,15 @@ void	ft_echo(t_command **command)
     {
         n = 1;
         i++;
-        while ((*command)->args[i] && ((ft_strncmp((*command)->args[i], "-n", 2) == 0 \
-            && check_n((*command)->args[i]) == 1) || (*command)->args[i][0] == ' '))
+        while ((*command)->args[i] && (ft_strncmp((*command)->args[i], "-n", 2) == 0 \
+            && check_n((*command)->args[i]) == 1))
             i++;
     }
     while ((*command)->args[i])
     {
         ft_putstr_fd((*command)->args[i], 1);
+        if ((*command)->args[i + 1])
+            ft_putstr_fd(" ", 1);
         i++;
     }
     if (!n)

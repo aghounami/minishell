@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/14 13:06:30 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:32:46 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ int main(int argc, char **argv, char **env)
 				// 	here_doc(command);
 				int j = dup(1);
 				int n = dup(0);
-				if (command && command->cmd)
+				if (command)
 					envp = exec_check(&command, envp);
 				dup2(j, 1);
 				dup2(n, 0);
