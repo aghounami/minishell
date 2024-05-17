@@ -6,15 +6,15 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/13 16:33:27 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/16 00:44:07 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_elem *lstnew(void *content, int token)
+t_elem	*lstnew(void *content, int token)
 {
-	t_elem *new;
+	t_elem	*new;
 
 	new = (t_elem *)malloc(sizeof(t_elem));
 	if (new == NULL)
@@ -25,14 +25,12 @@ t_elem *lstnew(void *content, int token)
 		new->flag_env = YES;
 	else
 		new->flag_env = NO;
-	// new->env_var = ft_strdup(var_name);
-	// free (var_name);
 	new->next = NULL;
 	new->prev = NULL;
 	return (new);
 }
 
-t_elem *lstlast(t_elem *lst)
+t_elem	*lstlast(t_elem *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -41,12 +39,12 @@ t_elem *lstlast(t_elem *lst)
 	return (lst);
 }
 
-void lstadd_back(t_elem **lst, t_elem *new)
+void	lstadd_back(t_elem **lst, t_elem *new)
 {
-	t_elem *last;
+	t_elem	*last;
 
 	if (!lst || !new)
-		return;
+		return ;
 	last = lstlast(*lst);
 	new->prev = last;
 	if (*lst)
@@ -57,14 +55,14 @@ void lstadd_back(t_elem **lst, t_elem *new)
 		*lst = new;
 }
 
-char **ft_strdup_2d(char **str)
+char	**ft_strdup_2d(char **str)
 {
-	int i;
-	char **new;
+	int		i;
+	char	**new;
 
 	i = 0;
 	if (str == NULL)
-		return NULL;
+		return (NULL);
 	while (str[i])
 		i++;
 	new = malloc(sizeof(char *) * (i + 1));
@@ -74,24 +72,25 @@ char **ft_strdup_2d(char **str)
 	while (str[i])
 	{
 		new[i] = ft_strdup(str[i]);
-		// free (str[i]);
 		i++;
 	}
 	new[i] = NULL;
-	// free(str);
 	return (new);
 }
 
-t_command *lstnew_command(t_command **node, int pipe, t_redirection *redir)
+t_command	*lstnew_command(t_command **node, int pipe, t_redirection *redir)
 {
-	t_command *new;
+	t_command	*new;
 
 	new = malloc(sizeof(t_command));
 	if (!new)
 		return (NULL);
-	new->cmd = ft_strdup((*node)->cmd);
+	if ((*node)->args[0])
+		new->cmd = ft_strdup((*node)->args[0]);
+	else
+		new->cmd = NULL;
 	new->args = ft_strdup_2d((*node)->args);
-	new->redirection = ft_strdup_2d((*node)->redirection);
+	new->rdrect = ft_strdup_2d((*node)->rdrect);
 	new->pipe = pipe;
 	new->redir_in = redir->redir_in;
 	new->dredir_out = redir->dredir_out;
@@ -102,9 +101,9 @@ t_command *lstnew_command(t_command **node, int pipe, t_redirection *redir)
 	return (new);
 }
 
-void lstadd_back_command(t_command **lst, t_command *new)
+void	lstadd_back_command(t_command **lst, t_command *new)
 {
-	t_command *last;
+	t_command	*last;
 
 	if (!new)
 		return ;
@@ -115,6 +114,6 @@ void lstadd_back_command(t_command **lst, t_command *new)
 	}
 	last = *lst;
 	while (last->next)
-		last = last->next;  
+		last = last->next;
 	last->next = new;
 }

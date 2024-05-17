@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/14 10:34:32 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/16 20:06:00 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,9 +215,9 @@ void one_cmd(t_command **commands, int pid,  t_env **envex , char ** env)
 //     int i = 0;
 
     
-//     while (cmd->redirection[i])
+//     while (cmd->redirect[i])
 //      {
-//          if (ft_strncmp(cmd->redirection[i], "<", 2) == 0)
+//          if (ft_strncmp(cmd->redirect[i], "<", 2) == 0)
 // 		 	return(1);
 // 		i++;
 //     }
@@ -234,8 +234,6 @@ void execution_cmd(t_command **commands, char **env, t_env **envex, int fd) {
 	{
         
         (n = dup(STDIN_FILENO), j = dup(STDOUT_FILENO));
-
-        
         if ((*commands)->next != NULL && pipe(next_pipe) == -1) 
 		{
             perror("pipe");
@@ -258,7 +256,7 @@ void execution_cmd(t_command **commands, char **env, t_env **envex, int fd) {
             if ((*commands)->next != NULL) 
                 (dup2(next_pipe[1], STDOUT_FILENO), close(next_pipe[0]), close(next_pipe[1]));
 
-            if ((*commands)->redirection) 
+            if ((*commands)->rdrect) 
 			{
                 fd = redire(commands);
                 if (fd < 0) 
@@ -290,6 +288,7 @@ void execution_cmd(t_command **commands, char **env, t_env **envex, int fd) {
     (close(prev_pipe[0]), close(prev_pipe[1]));
 
     while (wait(&status) > 0);
+	
 }
 
 
@@ -345,12 +344,12 @@ char	**exec_check(t_command **command, char **env)
 	(*command)->evr = env;
 	int fd = 0;
 
+		// printf("here\n");
 	if ((*command)->next ==NULL)
 	{
 		// if ((*command)->redir_in)
 		// 		fd[0] = redire_in(command);
-		
-		if ((*command)->redirection)
+		if ((*command)->rdrect)
 				fd = redire(command);
 		if (fd < 0 )
 			return (refiller(env,  &envex));

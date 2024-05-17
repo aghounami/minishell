@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:50:52 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/09 18:37:46 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/14 22:48:31 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_strlcpy(res, s1, total);
 	ft_strlcpy(res + lens1, s2, total);
 	// if (s1)
-	// 	free ((char *)s1);
+	// 	free((char *)s1);
 	// if (s2)
 	// 	free ((char *)s2);
 

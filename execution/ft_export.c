@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 13:52:51 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/12 11:51:00 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:29:12 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,6 @@ void	problem(char *str)
 	printf("export: `%s': not a valid identifier\n", str);
 }
 
-void fc(char **value, char **vari, int *len, char *str)
-{
-	(*value) = ft_strdup(ft_strstr(str, "=") + 1);
-	(*len) =  ft_strlen(str) - ft_strlen((*value)) - 1;
-	(*vari) = ft_substr(str, 0, (*len));
-}
 int	v_check(char *str)
 {
 	t_exec	var;
@@ -165,43 +159,24 @@ int	v_check(char *str)
 	if ((string_chcker(var.vari) && double_check(var.vari)))
 	{
 		if (i)
-			free(var.vari);
+			(free(var.vari), var.vari = NULL);
 		return (1);
 	}
-	free(var.vari);
+	(free(var.vari), var.vari = NULL);
 	return (problem(str), 0);
 }
-// char *value_add(char *str)
-// {
-// 	int i;
-// 	int j;
-// 	char *d;
 
-// 	(1) && (i = -1, j = 0);
-// 	while(str[++i])
-// 	{
-// 		if (str[i] == '"')
-// 			j++;
-// 	}
-// 	d = malloc(sizeof(char) * (i+j+1));
-// 	if (!d)
-// 		return(NULL);
-// 	(1) && (i = -1, j = 0);
-// 	while(str[++i])
-// 	{
-// 		if (str[i] == '"')
-// 			d[j++] ='\\';
-// 		d[j++] = str[i];
-// 	}
-// 	d[j] = '\0';
-// 	return(d);
-// }
+void fc(char **value, char **vari, int *len, char *str)
+{
+	(*value) = ft_strdup(ft_strstr(str, "=") + 1);
+	(*len) =  ft_strlen(str) - ft_strlen((*value)) - 1;
+	(*vari) = ft_substr(str, 0, (*len));
+}
 void	ft_ex_filler(char *str, t_exec *var, t_env **ev)
 {
 	if (ft_strchr(str, '='))
 	{
 		fc(&var->value, &var->vari, &var->len, str);
-		// var->value = value_add(ft_strstr(str, "=") + 1);
 		if (var->vari[ft_strlen(var->vari) - 1] == '+')
 		{
 			var->vari = ft_substr(str, 0, ft_strlen(var->vari) - 1);
@@ -221,7 +196,7 @@ void	ft_ex_filler(char *str, t_exec *var, t_env **ev)
 		if (!list_check(ev, var->vari))
 			ft_lstadd_back_exec(ev, ft_lstnew_exec("", var->vari, 0));
 	}
-		(free(var->value), free(var->vari));
+   	(free(var->value), var->value = NULL, free(var->vari), var->vari = NULL);
 }
 
 void	ft_export(t_command **command, t_env **envex)

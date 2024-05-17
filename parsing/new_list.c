@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 17:11:29 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/14 12:47:11 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/15 17:00:33 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,22 @@ void	all_condition(char *str, t_elem *tmp, t_elem **list)
 {
 	while (tmp)
 	{
-		if (tmp->next && (tmp->next->token == BACK_SLASH || tmp->next->token == NEW_WORD))
-			case_single_quote(&tmp, str, list);
-		if ((tmp && tmp->token != QOUTE && tmp->token != DOUBLE_QUOTE) \
+		if (tmp && (tmp->token == REDIR_IN || tmp->token == REDIR_OUT \
+			|| tmp->token == DREDIR_OUT || tmp->token == HERE_DOC))
+		{
+			str = ft_strdup(tmp->content);
+			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
+			free(str);
+			str = NULL;
+			tmp = tmp->next;
+		}
+		else if (tmp->next && (tmp->next->token == BACK_SLASH || tmp->next->token == NEW_WORD) \
+			&& tmp->token != QOUTE && tmp->token != DOUBLE_QUOTE)
+			special_case(&tmp, str, list, 0);
+		else if ((tmp && tmp->token != QOUTE && tmp->token != DOUBLE_QUOTE) \
 			&& ((tmp->next && (tmp->next->token != QOUTE \
 				&& tmp->next->token != DOUBLE_QUOTE)) || !tmp->next))
 		{
-			// if (tmp->env_var)
-			// 	printf("tmp->content: %s\n", tmp->env_var);
 			str = ft_strdup(tmp->content);
 			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
 			free(str);
@@ -49,15 +57,16 @@ void	all_condition(char *str, t_elem *tmp, t_elem **list)
 		{
 			str = ft_strdup(tmp->content);
 			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
+			free(str);
 			str = NULL;
 			tmp = tmp->next;
 		}
 		else if (tmp && (tmp->token == QOUTE || (tmp->next && tmp->next->token == QOUTE \
 			&& tmp->next->state == GENERAL)))
-			case_single_quote(&tmp, str, list);
+			case_single_quote(&tmp, str, list ,0);
 		else if (tmp && (tmp->token == DOUBLE_QUOTE || (tmp->next \
 			&& tmp->next->token == DOUBLE_QUOTE && tmp->next->state == GENERAL)))
-			case_double_quote(&tmp, str, list);
+			case_double_quote(&tmp, str, list, 0);	
 	}
 }
 
@@ -66,10 +75,10 @@ void	new_linked_list(t_elem **pars, t_elem **list)
 	t_elem	*tmp;
 	char	*str;
 
-	str = ft_strdup("");
+	str = NULL;
 	tmp = *pars;
 	while (tmp && tmp->token == WHITE_SPACE)
 		tmp = tmp->next;
 	all_condition(str, tmp, list);
-	// ft_free_lexer(pars);
+	ft_free_lexer(pars);
 }

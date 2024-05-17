@@ -59,7 +59,7 @@ typedef struct s_command
 {
 	char	*cmd;
 	char	**args;
-	char	**redirection;
+	char	**rdrect;
 	int		redir_in;
 	int		redir_out;
 	int		here_doc;
@@ -144,18 +144,28 @@ void		case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env);
 void		case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type);
 void		state(t_elem **elem, char **env);
 void		new_linked_list(t_elem **pars, t_elem **list);
+char		*ft_join(char const *s1, char const *s2);
+
+// print pars
+int		print_lex(t_elem *elem);
+void	printf_pars(t_elem *pars);
+void	print_comand(t_command *command);
+char	*find_token(t_elem *elem);
+char	*check_state(t_elem *elem);
+
 // utils
 void		syntax_error(t_elem **elem , int *flag);
 void		stack_command(t_elem *elem, t_command **command, char **env);
-void		without_quote(t_elem **elem, t_command **command, char **env, t_cmd_utils **utils);
+void		without_quote(t_elem **elem, t_command **command, t_cmd_utils **utils);
 void		with_d_quote(t_elem **elem, t_command **command, int *i, char **env);
 void		with_quote(t_elem **elem, t_command **command, int *i);
 void		stack_env(t_elem *elem, char **env);
 char		*get_env(char *str, char **env);
 void		ft_free_lexer(t_elem **pars);
 void		ft_free_command(t_command **command);
-void		case_single_quote(t_elem **tmp, char *str, t_elem **list);
-void		case_double_quote(t_elem **tmp, char *str, t_elem **list);
+void		case_single_quote(t_elem **tmp, char *str, t_elem **list, int n);
+void		case_double_quote(t_elem **tmp, char *str, t_elem **list, int n);
+void		special_case(t_elem **tmp, char *str, t_elem **list, int n);
 
 // --------------------------------
 
@@ -167,7 +177,7 @@ void		lstadd_back(t_elem **lst, t_elem *new);
 t_elem		*lst_new(char *content, int token, int state, int flag_env);
 void		ft_lstadd_back_new_list(t_elem **alst, t_elem *new);
 t_elem		*lstlast(t_elem *lst);
-
+char		**ft_strdup_2d(char **str);
 
 
 // executers

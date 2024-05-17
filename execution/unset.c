@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 11:00:02 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/12 11:48:56 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/14 14:38:22 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void ft_unset(t_command **command, t_env **envexx)
 		env = *envexx;
 		if (string_chcker(unset->args[f]))
 		{
-			
-		
 			while (env)
 			{
 				var.vari = unset->args[f];

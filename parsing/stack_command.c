@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/13 13:19:48 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/16 00:19:07 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	param_init(t_command **new, t_elem **elem, t_cmd_utils **utils)
 			len++;
 		tmp = tmp->next;
 	}
-	(*new)->redirection = malloc(sizeof(char *) * ((len * 2) + 1));
+	(*new)->rdrect = malloc(sizeof(char *) * ((len * 2) + 1));
 	(*new)->pipe = 0;
 	(*new)->redir_in = 0;
 	(*new)->redir_out = 0;
@@ -62,7 +62,7 @@ void	command_add_back(t_command **command, t_command **new, char **env, t_cmd_ut
 
 	pipe = 0;
 	(1) && ((*new)->evr = env, (*new)->args[utils->i] = NULL, \
-		(*new)->redirection[utils->index] = NULL);
+		(*new)->rdrect[utils->index] = NULL);
 	if ((*new) && (*new)->pipe == 1)
 		pipe = 1;
 	if ((*new) && (*new)->redir_in == 1)
@@ -75,9 +75,8 @@ void	command_add_back(t_command **command, t_command **new, char **env, t_cmd_ut
 		redir->here_doc = 1;
 	lstadd_back_command(command, \
 	lstnew_command(new, pipe, redir));
-	// ft_free_2d((*new)->args);
-	ft_free_2d((*new)->redirection);
-	free((*new)->cmd);
+	ft_free_2d((*new)->args);
+	ft_free_2d((*new)->rdrect);
 	free(redir);
 	free((*new));
 	(*new) = NULL;
@@ -93,13 +92,7 @@ void	stack_command(t_elem *elem, t_command **command, char **env)
 	{
 		param_init(&new, &elem, &utils);
 		while (elem && elem->token != PIPE_LINE)
-		{
-			without_quote(&elem, &new, env, &utils);
-			if (utils->i > 0)
-				new->cmd = ft_strdup(new->args[0]);
-			else
-				new->cmd = NULL;
-		}
+			without_quote(&elem, &new, &utils);
 		if ((elem) && (elem)->token == PIPE_LINE)
 			(1) && (new->pipe = 1, (elem) = (elem)->next);
 		command_add_back(command, &new, env, utils);
