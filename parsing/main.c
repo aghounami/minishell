@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/16 19:57:39 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/23 10:37:01 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,14 +114,14 @@ int main(int argc, char **argv, char **env)
 		{
 			lexer(line, &pars, envp);
 			state(&pars, envp);
-			syntax_error(&pars, &flag);
+			flag = syntax_error(&pars);
 			if (flag == 0)
 			{
 				// print_lex(pars);
 				new_linked_list(&pars, &list);
 				// printf_pars(list);
 				stack_command(list, &command, envp);
-				// print_comand(command);
+				print_comand(command);
 				// if (command && command->redirection \
 				// 	&& command->redirection[0] != NULL \
 				// 		&& ft_strncmp(command->redirection[0], "<<", 2) == 0)
@@ -134,12 +134,15 @@ int main(int argc, char **argv, char **env)
 				dup2(n, 0);
 			}
 			else
+			{
 				ft_free_lexer(&pars);
+				printf("\033[0;31mminishell: syntax error\033[0m\n");
+			}
 			flag = 0;
 		}
 		else if (!line)
 		{
-			printf("exits\n");
+			printf("exit\n");
 			exit(0);
 		}
 		add_history(line);

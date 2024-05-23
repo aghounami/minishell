@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/16 00:44:07 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/17 15:33:16 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,29 +53,6 @@ void	lstadd_back(t_elem **lst, t_elem *new)
 	}
 	else
 		*lst = new;
-}
-
-char	**ft_strdup_2d(char **str)
-{
-	int		i;
-	char	**new;
-
-	i = 0;
-	if (str == NULL)
-		return (NULL);
-	while (str[i])
-		i++;
-	new = malloc(sizeof(char *) * (i + 1));
-	if (!new)
-		return (NULL);
-	i = 0;
-	while (str[i])
-	{
-		new[i] = ft_strdup(str[i]);
-		i++;
-	}
-	new[i] = NULL;
-	return (new);
 }
 
 t_command	*lstnew_command(t_command **node, int pipe, t_redirection *redir)

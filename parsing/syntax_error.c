@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:39:14 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/07 22:44:18 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/17 23:52:05 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,38 @@ int	check_if_pipe_line_first(t_elem **elem)
 	while (tmp && tmp->token == WHITE_SPACE)
 		tmp = tmp->next;
 	if (tmp && tmp->token == PIPE_LINE)
-	{
-		printf("syntax error\n");
 		return 1;
-	}
 	return 0;
 }
 
-void syntax_error(t_elem **elem , int *flag)
+void	check_quote_dquote(t_elem **tmp, int token, int *error)
 {
-	t_elem *tmp;
-	t_elem *tmp2;
+	*tmp = (*tmp)->next;
+	while (*tmp && (*tmp)->token != token)
+		*tmp = (*tmp)->next;
+	if (!*tmp)
+		*error = 1;
+}
 
-	tmp = *elem;
-	int error = 0;
+void	check_redirection(t_elem **tmp, int *error)
+{
+	*error = ((*tmp)->token == REDIR_IN && (*tmp)->next->token == REDIR_OUT);
+	*error = ((*tmp)->token == REDIR_OUT && (*tmp)->next->token == REDIR_IN);
+	*error = ((*tmp)->token == HERE_DOC && (*tmp)->next->token == DREDIR_OUT);
+	*error = ((*tmp)->token == DREDIR_OUT && (*tmp)->next->token == HERE_DOC);
+	*error = ((*tmp)->token == REDIR_IN && (*tmp)->next->token == DREDIR_OUT);
+	*error = ((*tmp)->token == REDIR_OUT && (*tmp)->next->token == REDIR_IN);
+}
+
+int syntax_error(t_elem **elem)
+{
+	t_elem	*tmp;
+	t_elem	*tmp2;
+	int	error;
+
+	(1) && (error = 0, tmp = *elem);
 	if (check_if_pipe_line_first(elem))
-	{
-		*flag = 1;
-		return ;
-	}
+		return 1;
 	while (tmp)
 	{
 		if (tmp->token == PIPE_LINE)
@@ -47,10 +60,7 @@ void syntax_error(t_elem **elem , int *flag)
 			while (tmp2 && tmp2->token == WHITE_SPACE)
 				tmp2 = tmp2->next;
 			if (!tmp2 || tmp2->token == PIPE_LINE)
-			{
-				error = 1;
-				break;
-			}
+				return 1;
 		}
 		if (tmp->token == REDIR_IN || tmp->token == REDIR_OUT \
 			|| tmp->token == HERE_DOC || tmp->token == DREDIR_OUT)
@@ -58,66 +68,29 @@ void syntax_error(t_elem **elem , int *flag)
 			tmp2 = tmp->next;
 			while (tmp2 && tmp2->token == WHITE_SPACE)
 				tmp2 = tmp2->next;
-			if (!tmp2 || tmp2->token == PIPE_LINE || tmp2->token == REDIR_IN || tmp2->token == REDIR_OUT \
-				|| tmp2->token == HERE_DOC || tmp2->token == DREDIR_OUT)
-			{
-				error = 1;
-				break;
-			}
+			if (!tmp2 || tmp2->token == PIPE_LINE || tmp2->token == REDIR_IN \
+				|| tmp2->token == REDIR_OUT || tmp2->token == HERE_DOC \
+					|| tmp2->token == DREDIR_OUT)
+				return 1;
 		}
-		error = (tmp->token == REDIR_IN && tmp->next->token == REDIR_OUT);
-		error = (tmp->token == REDIR_OUT && tmp->next->token == REDIR_IN);
-		error = (tmp->token == HERE_DOC && tmp->next->token == DREDIR_OUT);
-		error = (tmp->token == DREDIR_OUT && tmp->next->token == HERE_DOC);
-		error = (tmp->token == REDIR_IN && tmp->next->token == DREDIR_OUT);
-		error = (tmp->token == REDIR_OUT && tmp->next->token == REDIR_IN);
+		check_redirection(&tmp, &error);
 		if (error)
-		{
-			break;
-			// printf("im here1\n");
-		}
+			return 1;
 		else if (tmp->token == ESCAPE && tmp->content[1] == '\0')
 		{
 			tmp = tmp->next;
 			while (tmp && tmp->token == WHITE_SPACE)
 				tmp = tmp->next;
 			if (!tmp)
-			{
-				error = 1;
-				// printf("im here2\n");
-				break;
-			}
+				return 1;
 		}
-		if (tmp->token == DOUBLE_QUOTE)
+		if (tmp->token == DOUBLE_QUOTE || tmp->token == QOUTE)
 		{
-			tmp = tmp->next;
-			while (tmp && tmp->token != DOUBLE_QUOTE)
-				tmp = tmp->next;
-			if (!tmp)
-			{
-				error = 1;
-				// printf("im here3\n");
-				break;
-			}
-		}
-		else if (tmp->token == QOUTE)
-		{
-			tmp = tmp->next;
-			while (tmp && tmp->token != QOUTE)
-				tmp = tmp->next;
-			if (!tmp)
-			{
-				error = 1;
-				// printf("im here4\n");
-				break;
-			}
+			check_quote_dquote(&tmp, tmp->token, &error);
+			if (error)
+				return 1;
 		}
 		tmp = tmp->next;
 	}
-	if (error)
-	{
-		*flag = 1;
-		printf("\033[0;31mminishell: syntax error\033[0m\n");
-		return;
-	}
+	return 0;
 }

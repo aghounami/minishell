@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/09 09:15:24 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:10:53 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,10 @@ void pwd_update(t_env **env)
 		}
 		envex = envex->next;
 	}
-	free(tmp);
-	free(tmp2);
+	if (tmp)
+		free(tmp);
+	if (tmp2)
+		free(tmp2);
 	
 }
 void	ft_filler(t_env **env, char **envar)

@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:47:12 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/15 19:05:48 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/21 18:02:22 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ void	special_case(t_elem **tmp, char *str, t_elem **list, int n)
 				{
 					ft_lstadd_back_new_list(list, lst_new(" ", WHITE_SPACE, \
 						GENERAL, NO));
-					(*tmp) = (*tmp)->next;
-					free(tmp_str);
+					(1) && (free(tmp_str), (*tmp) = (*tmp)->next);
 					return;
 				}
 				else
@@ -112,8 +111,7 @@ void	case_single_quote(t_elem **tmp, char *str, t_elem **list, int n)
 				{
 					ft_lstadd_back_new_list(list, lst_new(" ", WHITE_SPACE, \
 						GENERAL, NO));
-					(*tmp) = (*tmp)->next;
-					free(tmp_str);
+					(1) && (free(tmp_str), (*tmp) = (*tmp)->next);
 					return;
 				}
 				else
@@ -158,8 +156,7 @@ void	case_double_quote(t_elem **tmp, char *str, t_elem **list, int n)
 				{
 					ft_lstadd_back_new_list(list, lst_new(" ", WHITE_SPACE, \
 						GENERAL, NO));
-					(*tmp) = (*tmp)->next;
-					free(tmp_str);
+					(1) && (free(tmp_str), (*tmp) = (*tmp)->next);
 					return;
 				}
 				else

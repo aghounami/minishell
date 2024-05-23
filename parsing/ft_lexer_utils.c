@@ -6,43 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:02:41 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/16 19:55:50 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/17 15:28:04 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	case_escape(char *line, t_elem **elem, t_lexer *lexer)
-{
-	lexer->str[0] = '\\';
-	if (line[lexer->i + 1] != '\0')
-	{
-		lexer->str[1] = line[lexer->i + 1];
-		lexer->str[2] = '\0';
-		lexer->i += 2;
-	}
-	else
-	{
-		lexer->str[1] = '\0';
-		lexer->i += 1;
-	}
-	lstadd_back(elem, lstnew(ft_strdup(lexer->str), ESCAPE));
-}
-
-void	case_herdoc_or_redir(char *line, t_elem **elem, t_lexer *lexer)
-{
-	if (line[lexer->i + 1] == '<')
-	{
-		lexer->str[0] = '<';
-		lexer->str[1] = '<';
-		lexer->str[2] = '\0';
-		lexer->i += 2;
-		lstadd_back(elem, lstnew(ft_strdup(lexer->str), HERE_DOC));
-		lexer->here_doc = 1;
-	}
-	else
-		case_one_char(lexer, elem, line, REDIR_IN);
-}
 
 void	case_word(char *line, t_elem **elem, t_lexer *lexer)
 {
@@ -63,20 +31,6 @@ void	case_word(char *line, t_elem **elem, t_lexer *lexer)
 	lexer->here_doc = 0;
 }
 
-void	case_redirect(char *line, t_elem **elem, t_lexer *lexer)
-{
-	if (line[lexer->i + 1] == '>')
-	{
-		lexer->str[0] = '>';
-		lexer->str[1] = '>';
-		lexer->str[2] = '\0';
-		lexer->i += 2;
-		lstadd_back(elem, lstnew(ft_strdup(lexer->str), DREDIR_OUT));
-	}
-	else
-		case_one_char(lexer, elem, line, REDIR_OUT);
-}
-
 int	count_worlds(char *str)
 {
 	int	i;
@@ -93,14 +47,51 @@ int	count_worlds(char *str)
 	return (count + 1);
 }
 
-void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
+void	special_dolar_case(char *value, t_elem **elem)
 {
-	char	*value;
 	char	*tmp;
 	int		i;
 	int		j;
 
-	(void)env;
+	i = 0;
+	while (value[i])
+	{
+		if (value[i] == ' ')
+			(1) && (lstadd_back(elem, lstnew(ft_strdup(" "), WHITE_SPACE)), \
+				i++);
+		else if (value[i] == '\t')
+			(1) && (lstadd_back(elem, lstnew(ft_strdup("\t"), WHITE_SPACE)),
+				i++);
+		else
+		{
+			j = 0;
+			tmp = malloc(sizeof(char) * 100);
+			while (value[i] != '\0' && value[i] != ' ' && value[i] != '\t')
+				(1) && (tmp[j] = value[i], j++, i++);
+			tmp[j] = '\0';
+			lstadd_back(elem, lstnew(ft_strdup(tmp), WORD));
+			(1) && (free (tmp), tmp = NULL);
+		}
+	}
+}
+
+void	case_dollar_utils(t_lexer *lexer, t_elem **elem, char **env)
+{
+	char	*value;
+
+	(1) && (lexer->str[lexer->j] = '\0', value = get_env(lexer->str + 1, env));
+	if (value && count_worlds(value) > 1 && lexer->quote % 2 == 0 \
+		&& lexer->here_doc != 1)
+		special_dolar_case(value, elem);
+	else if (lexer->here_doc == 1)
+		lstadd_back(elem, lstnew(ft_strdup(lexer->str), WORD));
+	else
+		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV));
+	(1) && (free(value), lexer->here_doc = 0);
+}
+
+void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
+{
 	(1) && (lexer->j = 1, lexer->str[0] = '$', lexer->i += 1);
 	if (line[lexer->i] && line[lexer->i] == '$')
 	{
@@ -123,34 +114,5 @@ void	case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env)
 			&& !(lexer->str[1] >= 'A' && lexer->str[1] <= 'Z')))
 			break ;
 	}
-	(1) && (lexer->str[lexer->j] = '\0', value = get_env(lexer->str + 1, env));
-	if (value && count_worlds(value) > 1 && lexer->quote % 2 == 0 \
-		&& lexer->here_doc != 1)
-	{
-		i = 0;
-		while (value[i])
-		{
-			if (value[i] == ' ')
-				(1) && (lstadd_back(elem, lstnew(ft_strdup(" "), WHITE_SPACE)), \
-					i++);
-			else if (value[i] == '\t')
-				(1) && (lstadd_back(elem, lstnew(ft_strdup("\t"), WHITE_SPACE)),
-					i++);
-			else
-			{
-				j = 0;
-				tmp = malloc(sizeof(char) * 100);
-				while (value[i] != '\0' && value[i] != ' ' && value[i] != '\t')
-					(1) && (tmp[j] = value[i], j++, i++);
-				tmp[j] = '\0';
-				lstadd_back(elem, lstnew(ft_strdup(tmp), WORD));
-				(1) && (free (tmp), tmp = NULL);
-			}
-		}
-	}
-	else if (lexer->here_doc == 1)
-		lstadd_back(elem, lstnew(ft_strdup(lexer->str), WORD));
-	else
-		lstadd_back(elem, lstnew(ft_strdup(lexer->str), ENV));
-	(1) && (free(value), lexer->here_doc = 0);
+	case_dollar_utils(lexer, elem, env);
 }

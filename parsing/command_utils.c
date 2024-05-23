@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/16 00:21:44 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/17 11:43:14 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,20 @@ void	redeirection(t_command **command, t_elem **elem, t_cmd_utils **utils)
 	}
 }
 
+void	utils_stack(t_elem **elem, t_command **command, t_cmd_utils **utils)
+{
+	if ((*elem) && ((*elem)->token == REDIR_IN \
+		|| (*elem)->token == HERE_DOC || (*elem)->token == REDIR_OUT \
+			|| (*elem)->token == DREDIR_OUT))
+		redeirection(command, elem, utils);
+	else if ((*elem) && (*elem)->token != WHITE_SPACE \
+		&& (*elem)->token != BACK_SLASH)
+	{
+		(*command)->args[(*utils)->i] = ft_strdup((*elem)->content);
+		(1) && ((*utils)->i += 1, (*elem) = (*elem)->next);
+	}
+}
+
 void	without_quote(t_elem **elem, t_command **command, t_cmd_utils **utils)
 {
 	if (*elem && (*elem)->token == BACK_SLASH)
@@ -46,18 +60,7 @@ void	without_quote(t_elem **elem, t_command **command, t_cmd_utils **utils)
 		(1) && ((*utils)->i += 1, (*elem) = (*elem)->next);
 	}
 	else
-	{
-		if ((*elem) && ((*elem)->token == REDIR_IN \
-			|| (*elem)->token == HERE_DOC || (*elem)->token == REDIR_OUT \
-				|| (*elem)->token == DREDIR_OUT))
-			redeirection(command, elem, utils);
-		else if ((*elem) && (*elem)->token != WHITE_SPACE \
-			&& (*elem)->token != BACK_SLASH)
-		{
-			(*command)->args[(*utils)->i] = ft_strdup((*elem)->content);
-			(1) && ((*utils)->i += 1, (*elem) = (*elem)->next);
-		}
-	}
+		utils_stack(elem, command, utils);
 }
 
 	// if ((*elem) && ((*elem)->token == WHITE_SPACE && (*utils)->i > 1 \

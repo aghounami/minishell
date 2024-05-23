@@ -154,7 +154,7 @@ char	*find_token(t_elem *elem);
 char	*check_state(t_elem *elem);
 
 // utils
-void		syntax_error(t_elem **elem , int *flag);
+int			syntax_error(t_elem **elem);
 void		stack_command(t_elem *elem, t_command **command, char **env);
 void		without_quote(t_elem **elem, t_command **command, t_cmd_utils **utils);
 void		with_d_quote(t_elem **elem, t_command **command, int *i, char **env);
@@ -166,6 +166,7 @@ void		ft_free_command(t_command **command);
 void		case_single_quote(t_elem **tmp, char *str, t_elem **list, int n);
 void		case_double_quote(t_elem **tmp, char *str, t_elem **list, int n);
 void		special_case(t_elem **tmp, char *str, t_elem **list, int n);
+void		next_case(char *line, t_elem **elem, t_lexer *lexer);
 
 // --------------------------------
 
