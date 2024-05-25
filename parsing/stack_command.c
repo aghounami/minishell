@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/16 00:19:07 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/23 23:28:48 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,14 @@ void	ft_free_2d(char **str)
 
 void	param_init(t_command **new, t_elem **elem, t_cmd_utils **utils)
 {
-	int len = 0;
-	(1) && ((*utils)->i = 0, (*utils)->index = 0);
+	int		len;
+	t_elem	*tmp;
+
+	(1) && ((*utils)->i = 0, (*utils)->index = 0, len = 0);
 	*new = malloc(sizeof(t_command));
 	(*new)->args = malloc(sizeof(char *) * 100);
-	t_elem *tmp = *elem;
-	while(tmp)
+	tmp = *elem;
+	while (tmp)
 	{
 		if (tmp->token == REDIR_OUT || tmp->token == DREDIR_OUT \
 			|| tmp->token == HERE_DOC || tmp->token == REDIR_IN)
@@ -50,17 +52,15 @@ void	param_init(t_command **new, t_elem **elem, t_cmd_utils **utils)
 		(*elem) = (*elem)->next;
 }
 
-void	command_add_back(t_command **command, t_command **new, char **env, t_cmd_utils *utils)
+void	command_add_back(t_command **command, t_command **new, char **env, \
+	t_cmd_utils *utils)
 {
+	int				pipe;
 	t_redirection	*redir;
-	redir = malloc(sizeof(t_redirection));
-	redir->dredir_out = 0;
-	redir->here_doc = 0;
-	redir->redir_out = 0;
-	redir->redir_in = 0;
-	int pipe;
 
-	pipe = 0;
+	redir = malloc(sizeof(t_redirection));
+	(1) && (redir->dredir_out = 0, redir->here_doc = 0, redir->redir_out = 0, \
+		redir->redir_in = 0, pipe = 0);
 	(1) && ((*new)->evr = env, (*new)->args[utils->i] = NULL, \
 		(*new)->rdrect[utils->index] = NULL);
 	if ((*new) && (*new)->pipe == 1)
@@ -84,7 +84,7 @@ void	command_add_back(t_command **command, t_command **new, char **env, t_cmd_ut
 
 void	stack_command(t_elem *elem, t_command **command, char **env)
 {
-	t_cmd_utils *utils;
+	t_cmd_utils	*utils;
 	t_command	*new;
 
 	utils = malloc(sizeof(t_cmd_utils));

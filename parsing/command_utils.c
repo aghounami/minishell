@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/17 11:43:14 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/24 16:16:58 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	redeirection(t_command **command, t_elem **elem, t_cmd_utils **utils)
 {
+	int	here_doc;
+
+	here_doc = 0;
+	if ((*elem) && (*elem)->token == HERE_DOC)
+		here_doc = 1;
 	(*command)->rdrect[(*utils)->index] = ft_strdup((*elem)->content);
 	(*utils)->index += 1;
 	(*elem) = (*elem)->next;
@@ -23,6 +28,8 @@ void	redeirection(t_command **command, t_elem **elem, t_cmd_utils **utils)
 	{
 		(*command)->rdrect[(*utils)->index] = ft_strdup((*elem)->content);
 		(*command)->check_expand = (*elem)->expand;
+		// if (here_doc == 1)
+		// 	here_doc_content(command, elem, utils);
 		(*elem) = (*elem)->next;
 		(*utils)->index += 1;
 	}

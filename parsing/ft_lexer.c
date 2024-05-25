@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/21 17:59:13 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/25 19:23:16 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	*lexer(char *line, t_elem **elem, char **env)
 
 	(1) && (lexer = malloc(sizeof(t_lexer)), lexer->i = 0, \
 		lexer->j = 0, lexer->prev = NULL, lexer->quote = 0, \
-			lexer->here_doc = 0, lexer->d_quote = 0);
+			lexer->here_doc = 0, lexer->d_quote = 0, lexer->export = 0);
 	while (line[lexer->i])
 	{
 		lexer->str = ft_calloc(1000, sizeof(char));

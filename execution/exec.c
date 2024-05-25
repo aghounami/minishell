@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/16 20:06:00 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/24 11:12:25 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,10 +201,8 @@ void one_cmd(t_command **commands, int pid,  t_env **envex , char ** env)
 			
 		}
 		else
-		{
 			
 			waitpid(pid, 0, 0);
-		}
 	}
 	return;
 }
@@ -224,44 +222,38 @@ void one_cmd(t_command **commands, int pid,  t_env **envex , char ** env)
 // 	return(0);
 // }
 
-void execution_cmd(t_command **commands, char **env, t_env **envex, int fd) {
-    int prev_pipe[2], next_pipe[2], status, pid, n, j;
+void execution_cmd(t_command **commands, char **env, t_env **envex, int fd) 
+{
+    int fd2[2], status, f, pid;
 
-    prev_pipe[0] = -1;
-    prev_pipe[1] = -1;
-
+	f = 0;
+	int j = dup(1);
+	int n = dup(0);
     while (*commands != NULL) 
 	{
-        
-        (n = dup(STDIN_FILENO), j = dup(STDOUT_FILENO));
-        if ((*commands)->next != NULL && pipe(next_pipe) == -1) 
+		if ((*commands)->rdrect[f] != NULL) 
 		{
-            perror("pipe");
-            return;
-        }
-
+			write(2, "hello\n", 6);
+			fd = redire(commands);
+			if (fd < 0) 
+				exit(EXIT_FAILURE);
+		}
+		if ((*commands)->redir_out != 1 && (*commands)->dredir_out != 1)
+			dup2(j, 1);
+	    pipe(fd2);
         pid = fork();
         if (pid == -1)
 		{
             perror("fork");
             return;
         }
-
         if (pid == 0) 
-		{ 
-            if (prev_pipe[0] != -1) 
-                (dup2(prev_pipe[0], STDIN_FILENO), close(prev_pipe[0]), close(prev_pipe[1]));
-
-            
-            if ((*commands)->next != NULL) 
-                (dup2(next_pipe[1], STDOUT_FILENO), close(next_pipe[0]), close(next_pipe[1]));
-
-            if ((*commands)->rdrect) 
-			{
-                fd = redire(commands);
-                if (fd < 0) 
-                    exit(EXIT_FAILURE);
-            }
+		{
+			close(fd2[0]);
+			if ((*commands)->next && (*commands)->redir_out != 1 && (*commands)->dredir_out != 1)
+				dup2(fd2[1], 1);
+			close(fd2[1]);
+		
             if ((*commands)->args[0] != NULL && strncmp("exit", (*commands)->args[0], 4) != 0 && command_check(commands, envex) == 1) 
 			{
                 search_exec_2(commands, env);
@@ -270,26 +262,25 @@ void execution_cmd(t_command **commands, char **env, t_env **envex, int fd) {
                     perror("execve");
                     exit(EXIT_FAILURE);
                 }
-            } 
-			else 
-                exit(0);
-            
+            }
+            exit(0);
         } 
 		else 
-		{ 
-            if (prev_pipe[0] != -1) 
-                (close(prev_pipe[0]), close(prev_pipe[1]));
-            (prev_pipe[0] = next_pipe[0], prev_pipe[1] = next_pipe[1]);
-            (dup2(n, STDIN_FILENO), dup2(j, STDOUT_FILENO),  close(n), close(j));
-
-            *commands = (*commands)->next;
+		{
+            close(fd2[1]);
+			if ( (*commands)->next)
+				dup2(fd2[0], 0);
+			close(fd2[0]);
         }
+        *commands = (*commands)->next;
     }
-    (close(prev_pipe[0]), close(prev_pipe[1]));
-
-    while (wait(&status) > 0);
-	
+	dup2(j, 1);
+	dup2(n, 0);
+	close(j);
+	close(n);
+	while (wait(&status) != -1);
 }
+
 
 
 char **refiller(char **env, t_env **envex)
@@ -347,14 +338,12 @@ char	**exec_check(t_command **command, char **env)
 		// printf("here\n");
 	if ((*command)->next ==NULL)
 	{
-		// if ((*command)->redir_in)
-		// 		fd[0] = redire_in(command);
+		
 		if ((*command)->rdrect)
 				fd = redire(command);
 		if (fd < 0 )
 			return (refiller(env,  &envex));
 		one_cmd(command, 0, &envex, env);
-		close(fd);
 		return (refiller(env,  &envex));
 	}
 	execution_cmd(command, env, &envex, fd);

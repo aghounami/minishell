@@ -3,15 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/21 17:10:53 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/25 15:10:46 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+// char **env_hard(char **str)
+// {
+// 	char 
+// 	int i =0;
+// 	env = malloc(sizeof(char *) * (7 + 1));
+	
+// }
 char	*get_env_exec(t_command **command)
 {
 	t_exec		inv;

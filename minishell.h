@@ -69,6 +69,8 @@ typedef struct s_command
 	char 	*exec_path;
 	char	*content;
 	char	**evr;
+	int 	f;
+	int 	fd;
 	struct s_command	*next;
 	int					check_expand;
 }	t_command;
@@ -114,6 +116,7 @@ typedef struct s_elem
 	enum e_new_token	flag_env;
 	char			*env_var;
 	int					expand;
+	int		e_status;
 }	t_elem;
 
 typedef struct s_lexer
@@ -126,6 +129,7 @@ typedef struct s_lexer
 	int 			here_doc;
 	t_elem *prev;
 	char *var_name;
+	int export;
 }	t_lexer;
 
 typedef struct s_cmd_utils
@@ -142,7 +146,7 @@ void		case_word(char *line, t_elem **elem, t_lexer *lexer);
 void		case_redirect(char *line, t_elem **elem, t_lexer *lexer);
 void		case_dollar(t_lexer *lexer, t_elem **elem, char *line, char **env);
 void		case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type);
-void		state(t_elem **elem, char **env);
+void		state(t_elem **elem, char **env, int flag);
 void		new_linked_list(t_elem **pars, t_elem **list);
 char		*ft_join(char const *s1, char const *s2);
 
@@ -163,10 +167,14 @@ void		stack_env(t_elem *elem, char **env);
 char		*get_env(char *str, char **env);
 void		ft_free_lexer(t_elem **pars);
 void		ft_free_command(t_command **command);
-void		case_single_quote(t_elem **tmp, char *str, t_elem **list, int n);
-void		case_double_quote(t_elem **tmp, char *str, t_elem **list, int n);
-void		special_case(t_elem **tmp, char *str, t_elem **list, int n);
+void		case_single_quote(t_elem **tmp, t_elem **list);
+void		case_double_quote(t_elem **tmp, t_elem **list);
+void		special_case(t_elem **tmp, t_elem **list, int n);
 void		next_case(char *line, t_elem **elem, t_lexer *lexer);
+int			exit_status(int status);
+int			next_cnd_special(t_elem **tmp, char **tmp_str, int *k);
+int			next_cnd(t_elem **tmp, char **tmp_str);
+int			break_case(t_elem **tmp, t_elem **list, char **tmp_str, int k);
 
 // --------------------------------
 
@@ -205,12 +213,12 @@ void	search_exec(t_command **command, t_exec *execution);
 void	one_cmd(t_command **commands, int pid, t_env **envex, char **env);
 void	ft_unset(t_command **command, t_env **envexx);
 void	ft_filler(t_env **env, char **envar);
-void execution_cmd(t_command **commands, char **env, t_env **envex, int fd);
-int	redire(t_command **command);
-int	string_chcker(char *str);
-int	terrible(char c);
-int	equal(char c);
-int	plus(char c);
-
+void	execution_cmd(t_command **commands, char **env, t_env **envex, int fd);
+int		redire(t_command **command);
+int		string_chcker(char *str);
+int		terrible(char c);
+int		equal(char c);
+int		plus(char c);
+int		herdoc(t_command **command, char **envp);
 
 #endif

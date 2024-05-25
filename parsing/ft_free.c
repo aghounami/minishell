@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 00:08:57 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/16 00:26:56 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/25 21:22:51 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	ft_free_lexer(t_elem **pars)
 
 	while (*pars)
 	{
+		// printf("freeing");
 		tmp2 = (*pars)->next;
 		free((*pars)->content);
 		free(*pars);

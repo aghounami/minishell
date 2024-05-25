@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:29:51 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/21 17:59:17 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/23 23:02:29 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,30 @@ char	**ft_strdup_2d(char **str)
 	}
 	new[i] = NULL;
 	return (new);
+}
+
+char	*get_env(char *str, char **env)
+{
+	int		index;
+	int		j;
+	char	*env_name;
+	char	*env_value;
+
+	(1) && (index = 0, j = 0, env_value = NULL), env_name = ft_strdup(str);
+	while (env[index])
+	{
+		if (ft_strncmp(env[index], env_name, ft_strlen(env_name)) == 0 \
+			&& env[index][ft_strlen(env_name)] == '=')
+		{
+			while (env[index][j] != '=')
+				j++;
+			env_value = ft_strdup(env[index] + j + 1);
+			break ;
+		}
+		index++;
+	}
+	free(env_name);
+	if (env_value == NULL)
+		env_value = ft_strdup("");
+	return (env_value);
 }

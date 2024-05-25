@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 17:11:29 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/21 21:38:12 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/25 19:44:21 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,33 @@ t_elem	*new_list_new(char *content, t_elem *tmp)
 	return (new);
 }
 
+void	next_condition(t_elem **tmp, t_elem **list, char *str)
+{
+	if ((*tmp) && ((*tmp)->token == WORD \
+		|| (*tmp)->token == NEW_WORD) && (*tmp)->next \
+			&& ((*tmp)->next->token == BACK_SLASH \
+				|| (*tmp)->next->token == NEW_WORD || (*tmp)->next->token == WORD) \
+					&& (*tmp)->token != QOUTE && (*tmp)->token != DOUBLE_QUOTE)
+		special_case(tmp, list, 0);
+	else if (((*tmp) && (*tmp)->token != QOUTE \
+		&& (*tmp)->token != DOUBLE_QUOTE) \
+			&& (((*tmp)->next && ((*tmp)->next->token != QOUTE \
+				&& (*tmp)->next->token != DOUBLE_QUOTE)) || !(*tmp)->next))
+	{
+		str = ft_strdup((*tmp)->content);
+		ft_lstadd_back_new_list(list, new_list_new(str, (*tmp)));
+		(1) && (free(str), str = NULL, (*tmp) = (*tmp)->next);
+	}
+	else if ((*tmp) && ((*tmp)->token == QOUTE \
+		|| ((*tmp)->next && (*tmp)->next->token == QOUTE \
+			&& (*tmp)->next->state == GENERAL)))
+		case_single_quote(tmp, list);
+	else if ((*tmp) && ((*tmp)->token == DOUBLE_QUOTE \
+		|| ((*tmp)->next && (*tmp)->next->token == DOUBLE_QUOTE \
+			&& (*tmp)->next->state == GENERAL)))
+		case_double_quote(tmp, list);
+}
+
 void	all_condition(char *str, t_elem *tmp, t_elem **list)
 {
 	while (tmp)
@@ -45,24 +72,8 @@ void	all_condition(char *str, t_elem *tmp, t_elem **list)
 			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
 			(1) && (free(str), str = NULL, tmp = tmp->next);
 		}
-		else if (tmp && tmp->token == WORD && tmp->next \
-			&& (tmp->next->token == BACK_SLASH || tmp->next->token == NEW_WORD) \
-				&& tmp->token != QOUTE && tmp->token != DOUBLE_QUOTE)
-			special_case(&tmp, str, list, 0);
-		else if ((tmp && tmp->token != QOUTE && tmp->token != DOUBLE_QUOTE) \
-			&& ((tmp->next && (tmp->next->token != QOUTE \
-				&& tmp->next->token != DOUBLE_QUOTE)) || !tmp->next))
-		{
-			str = ft_strdup(tmp->content);
-			ft_lstadd_back_new_list(list, new_list_new(str, tmp));
-			(1) && (free(str), str = NULL, tmp = tmp->next);
-		}
-		else if (tmp && (tmp->token == QOUTE || (tmp->next && tmp->next->token == QOUTE \
-			&& tmp->next->state == GENERAL)))
-			case_single_quote(&tmp, str, list ,0);
-		else if (tmp && (tmp->token == DOUBLE_QUOTE || (tmp->next \
-			&& tmp->next->token == DOUBLE_QUOTE && tmp->next->state == GENERAL)))
-			case_double_quote(&tmp, str, list, 0);	
+		else
+			next_condition(&tmp, list, str);
 	}
 }
 

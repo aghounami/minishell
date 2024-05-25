@@ -6,37 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:12:20 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/16 00:22:04 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/23 23:02:21 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	*get_env(char *str, char **env)
-{
-	int		index;
-	int		j;
-	char	*env_name;
-	char	*env_value;
-
-	(1) && (index = 0, j = 0, env_value = NULL), env_name = ft_strdup(str);
-	while (env[index])
-	{
-		if (ft_strncmp(env[index], env_name, ft_strlen(env_name)) == 0 \
-			&& env[index][ft_strlen(env_name)] == '=')
-		{
-			while (env[index][j] != '=')
-				j++;
-			env_value = ft_strdup(env[index] + j + 1);
-			break ;
-		}
-		index++;
-	}
-	free(env_name);
-	if (env_value == NULL)
-		env_value = ft_strdup("");
-	return (env_value);
-}
 
 void	pid_env(t_elem *elem)
 {
@@ -47,7 +21,7 @@ void	pid_env(t_elem *elem)
 	elem->content = NULL;
 	elem->content = ft_strdup(pid);
 	free (pid);
-	elem->token = WORD;
+	elem->token = NEW_WORD;
 	elem = elem->next;
 }
 
@@ -67,26 +41,45 @@ void	find_env(t_elem *elem, char **env)
 	free (str);
 }
 
-void	stack_env(t_elem *elem, char **env)
+void	status_value(t_elem *elem)
 {
 	char	*dst;
 
+	(1) && (free((elem)->content), dst = ft_itoa(exit_status(-1)));
+	(1) && (exit_status(0), elem->content = ft_strdup(dst));
+	if (ft_strlen(dst) == 0)
+		(elem)->token = BACK_SLASH;
+	else
+		(elem)->token = NEW_WORD;
+	(1) && (free (dst), elem = elem->next);
+}
+
+void	process_name(t_elem *elem)
+{
+	char	*dst;
+
+	(1) && (free((elem)->content), dst = ft_strdup("minishell"));
+	elem->content = ft_strdup(dst);
+	if (ft_strlen(dst) == 0)
+		(elem)->token = BACK_SLASH;
+	else
+		(elem)->token = NEW_WORD;
+	(1) && (free (dst), elem = elem->next);
+}
+
+void	stack_env(t_elem *elem, char **env)
+{
 	while (elem)
 	{
 		if ((elem)->token == ENV && (elem->state == GENERAL \
 			|| elem->state == IN_DQUOTE))
 		{
 			if (elem->content[1] && elem->content[1] == '0')
-			{
-				free((elem)->content);
-				dst = ft_strdup("minishell");
-				elem->content = ft_strdup(dst);
-				elem->token = WORD;
-				elem = elem->next;
-				free (dst);
-			}
+				process_name(elem);
 			else if (elem->content[1] && elem->content[1] == '$')
 				pid_env(elem);
+			else if (elem->content[1] && elem->content[1] == '?')
+				status_value(elem);
 			else
 				find_env(elem, env);
 		}
