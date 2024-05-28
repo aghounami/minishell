@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/25 21:32:14 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:00:15 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,15 @@ void	sig_handler(int signo)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+}
+
+int	exit_status(int status)
+{
+	static int	e_status = 0;
+
+	if (status != -1)
+		e_status = status;
+	return (e_status);
 }
 
 void	init_shlvl(char **env)
@@ -57,162 +66,70 @@ void	init_shlvl(char **env)
 	}
 }
 
-int	exit_status(int status)
-{
-	static int	e_status = 0;
-
-	if (status != -1)
-		e_status = status;
-	return (e_status);
-}
-
-void	over_write(t_elem **elem, char **line)
-{
-	t_elem	*tmp;
-
-	tmp = *elem;
-	while (tmp)
-	{
-		*line = ft_join(*line, tmp->content);
-		tmp = tmp->next;	
-	}
-	ft_free_lexer(elem);
-}
-
-int herdoc(t_command **command, char **envp)
-{
-    t_command *cmd = *command;
-	t_elem *elem;
-	
-    int i = 0;
-    cmd->here_doc = 0;
-    char *temp_filename = "/tmp/here_doc.txt";
-    char *line;
-     
-    while(cmd->rdrect[i])
-    { 
-        if (ft_strncmp(cmd->rdrect[i], "<<", 3) == 0)
-        { 
-            i++;
-			if (cmd->rdrect[i] == NULL)
-				break ;
-            char *delimiter = cmd->rdrect[i];
-            unlink(temp_filename);
-            int fd2 = open(temp_filename, O_CREAT | O_WRONLY | O_TRUNC, 0600);
-            cmd->fd = open(temp_filename, O_RDONLY);
-            unlink(temp_filename);
-			int fd = fork();
-			if (fd == 0)
-			{
-            	while (1)
-            	{
-					elem = NULL;
-            	    line = readline("> ");
-            	    if (!line || (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0 && ft_strlen(line) == ft_strlen(delimiter)))
-            	    {
-            	       free(line);
-            	       break;
-            	    }
-					if (line && line[0] != '\0' && cmd->check_expand == 0)
-					{
-						lexer(line, &elem, envp);
-						state(&elem, envp, 1);
-						line = NULL;
-						over_write(&elem, &line);
-					}
-            	    write(fd2, line, ft_strlen(line));
-            	    write(fd2, "\n", 1);
-            	    free(line);
-            	}
-				exit(0);
-			}
-			waitpid(fd, NULL, 0);
-            close(fd2);
-            cmd->here_doc = 1;
-        }
-        i++;
-    }
-    return(0);
-}
-
-void	open_herdoc(t_command **command, char **envp)
-{
-	t_command	*cmd;
-
-	cmd = *command;
-	cmd->fd = 0;
-	while (cmd)
-	{
-		herdoc(&cmd, envp);
-		if (cmd->fd == -1)
-			break ;
-		cmd = cmd->next;
-	}
-}
-
 int	main(int argc, char **argv, char **env)
 {
-	char		**envp;
-	char		*line;
+	t_varr		*var;
 	t_command	*command;
 	t_elem		*pars;
 	t_elem		*list;
-	int			flag;
-	int			j;
-	int			n;
-
 	(void)argv;
 	(void)argc;
 	if (isatty(0) == 0)
 		return (0);
-	rl_catch_signals = 0;
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
-	exit_status(0);
-	envp = ft_strdup_2d(env);
-	init_shlvl(envp);
+	var = malloc(sizeof(t_varr));
+	if (env[0] == NULL)
+	{
+		env = malloc(sizeof(char *) * 5);
+		env[0] = ft_strdup("PWD=/Users/aghounam/Desktop/minishell");
+		env[1] = ft_strdup("SHLVL=1");
+		env[2] = ft_strdup("_=/usr/bin/env");
+		env[3] = ft_strdup("PATH=/Users/aghounam/.brew/bin:/usr/local/bin:"
+			"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:"
+			"/Library/Apple/usr/bin:/Users/aghounam/.brew/bin");
+		env[4] = NULL;
+	}
+	(1) && (exit_status(0), var->envp = ft_strdup_2d(env));
+	(1) && (init_shlvl(var->envp), rl_catch_signals = 0);
 	while (1)
 	{
-		(1) && (pars = NULL, command = NULL, list = NULL);
-		line = readline("\033[0;30m➜ minishell : \033[0m");
-		if (line && line[0] != '\0')
+		(1) && (pars = NULL, command = NULL, list = NULL, var->nbr_hdoc = 0);
+		var->line = readline("\033[0;30m➜ minishell : \033[0m");
+		if (var->line && var->line[0] != '\0')
 		{
-			lexer(line, &pars, envp);
-			state(&pars, envp, 0);
-			flag = syntax_error(&pars);
+			lexer(var->line, &pars, var->envp, 0);
+			state(&pars, var->envp, 0);
+			var->flag = syntax_error(&pars, &var->nbr_hdoc);
 			new_linked_list(&pars, &list);
-			// printf_pars(list);
-			stack_command(list, &command, envp);
-			// print_comand(command);
-			// printf("%d\n", command->fd);
-			(1) && (j = dup(1), n = dup(0));
-			open_herdoc(&command, envp);
-			if (flag == 0 && command)
-				flag = 0;
-				// envp = exec_check(&command, envp);
+			stack_command(list, &command, var->envp);
+			print_comand(command);
+			(1) && (var->a = dup(1), var->b = dup(0));
+			open_herdoc(&command, var->envp, &var->nbr_hdoc);
+			if (var->flag == 0 && command)
+				var->envp = exec_check(&command, var->envp);
 			else
 			{
 				exit_status(258);
-				// ft_free_lexer(&pars);
 				printf("\033[0;31mminishell: syntax error\033[0m\n");
 			}
-			dup2(j, 1);
-			dup2(n, 0);
-			(1) && (close(j), close(n));
-			flag = 0;
+			dup2(var->a, 1);
+			dup2(var->b, 0);
+			(1) && (close(var->a), close(var->b));
+			(1) && (var->flag = 0, var->nbr_hdoc = 0);
 		}
-		else if (!line)
+		else if (!var->line)
 		{
 			printf("exit\n");
-			free(line);
-			free(envp);
+			free(var->line);
+			free(var->envp);
+			free(var);
 			exit(0);
 		}
-		add_history(line);
-		free(line);
+		add_history(var->line);
+		free(var->line);
 		ft_free_lexer(&list);
 		ft_free_command(&command);
 	}
-	free (envp);
 	return (0);
 }

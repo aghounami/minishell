@@ -73,6 +73,7 @@ typedef struct s_command
 	int 	fd;
 	struct s_command	*next;
 	int					check_expand;
+	int					hrdoc_nbr;
 }	t_command;
 
 typedef struct s_env
@@ -82,9 +83,18 @@ typedef struct s_env
 	char *vari;
 	int	i;
 	int q;
-
+	int					empty;
 }	t_env;
 
+typedef struct s_varr
+{
+	char		**envp;
+	char		*line;
+	int			a;
+	int			b;
+	int			flag;
+	int			nbr_hdoc;
+}	t_varr;
 
 typedef struct s_exec
 {
@@ -130,6 +140,7 @@ typedef struct s_lexer
 	t_elem *prev;
 	char *var_name;
 	int export;
+	int in_hrdc;
 }	t_lexer;
 
 typedef struct s_cmd_utils
@@ -139,7 +150,7 @@ typedef struct s_cmd_utils
 }	t_cmd_utils;
 
 // lexer
-void		*lexer(char *line, t_elem **elem, char **env);
+void		*lexer(char *line, t_elem **elem, char **env , int flag);
 void		case_escape(char *line, t_elem **elem, t_lexer *lexer);
 void		case_herdoc_or_redir(char *line, t_elem **elem, t_lexer *lexer);
 void		case_word(char *line, t_elem **elem, t_lexer *lexer);
@@ -158,12 +169,12 @@ char	*find_token(t_elem *elem);
 char	*check_state(t_elem *elem);
 
 // utils
-int			syntax_error(t_elem **elem);
+int			syntax_error(t_elem **elem, int *nbr_hdoc);
 void		stack_command(t_elem *elem, t_command **command, char **env);
 void		without_quote(t_elem **elem, t_command **command, t_cmd_utils **utils);
 void		with_d_quote(t_elem **elem, t_command **command, int *i, char **env);
 void		with_quote(t_elem **elem, t_command **command, int *i);
-void		stack_env(t_elem *elem, char **env);
+void		stack_env(t_elem *elem, char **env, int flag);
 char		*get_env(char *str, char **env);
 void		ft_free_lexer(t_elem **pars);
 void		ft_free_command(t_command **command);
@@ -175,6 +186,7 @@ int			exit_status(int status);
 int			next_cnd_special(t_elem **tmp, char **tmp_str, int *k);
 int			next_cnd(t_elem **tmp, char **tmp_str);
 int			break_case(t_elem **tmp, t_elem **list, char **tmp_str, int k);
+void		open_herdoc(t_command **command, char **envp, int *nbr_hdoc);
 
 // --------------------------------
 
@@ -187,6 +199,7 @@ t_elem		*lst_new(char *content, int token, int state, int flag_env);
 void		ft_lstadd_back_new_list(t_elem **alst, t_elem *new);
 t_elem		*lstlast(t_elem *lst);
 char		**ft_strdup_2d(char **str);
+int			count_worlds(char *str);
 
 
 // executers
@@ -219,6 +232,6 @@ int		string_chcker(char *str);
 int		terrible(char c);
 int		equal(char c);
 int		plus(char c);
-int		herdoc(t_command **command, char **envp);
+// int		herdoc(t_command **command, char **envp, int i, int j);
 
 #endif

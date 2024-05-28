@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 17:39:14 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/23 23:31:08 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/26 15:56:20 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	check_redirection(t_elem **tmp, int *error)
 	*error = ((*tmp)->token == REDIR_OUT && (*tmp)->next->token == REDIR_IN);
 }
 
-int	syntax_error(t_elem **elem)
+int	syntax_error(t_elem **elem, int *nbr_hdoc)
 {
 	t_elem	*tmp;
 	t_elem	*tmp2;
@@ -90,6 +90,8 @@ int	syntax_error(t_elem **elem)
 			if (error)
 				return (1);
 		}
+		if (tmp->token == HERE_DOC)
+			(*nbr_hdoc)++;
 		tmp = tmp->next;
 	}
 	return (0);

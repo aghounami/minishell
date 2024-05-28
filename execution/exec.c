@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/24 11:12:25 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/28 16:00:27 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,10 +233,10 @@ void execution_cmd(t_command **commands, char **env, t_env **envex, int fd)
 	{
 		if ((*commands)->rdrect[f] != NULL) 
 		{
-			write(2, "hello\n", 6);
 			fd = redire(commands);
-			if (fd < 0) 
-				exit(EXIT_FAILURE);
+			// if (fd < 0) 
+			// 	exit(EXIT_FAILURE);
+			close(fd);
 		}
 		if ((*commands)->redir_out != 1 && (*commands)->dredir_out != 1)
 			dup2(j, 1);
@@ -334,8 +334,7 @@ char	**exec_check(t_command **command, char **env)
 	ft_filler(&envex, env);
 	(*command)->evr = env;
 	int fd = 0;
-
-		// printf("here\n");
+	printf ("empty = %d\n", envex->empty);
 	if ((*command)->next ==NULL)
 	{
 		
@@ -344,9 +343,10 @@ char	**exec_check(t_command **command, char **env)
 		if (fd < 0 )
 			return (refiller(env,  &envex));
 		one_cmd(command, 0, &envex, env);
+		close(fd);
 		return (refiller(env,  &envex));
 	}
 	execution_cmd(command, env, &envex, fd);
+	
 	return (refiller(env,  &envex));
-	close(fd);
 }

@@ -6,37 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 00:08:57 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/25 21:22:51 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/26 16:24:47 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-char	*ft_join(char const *s1, char const *s2)
-{
-	size_t	lens1;
-	size_t	lens2;
-	size_t	total;
-	char	*res;
-
-	if (s1 == NULL && s2 == NULL)
-		return (NULL);
-	else if (s1 == NULL)
-		return (ft_strdup(s2));
-	else if (s2 == NULL)
-		return (ft_strdup(s1));
-	lens1 = ft_strlen(s1);
-	lens2 = ft_strlen(s2);
-	total = lens1 + lens2 + 1;
-	res = (char *)malloc(total);
-	if (res == NULL)
-		return (NULL);
-	ft_strlcpy(res, s1, total);
-	ft_strlcpy(res + lens1, s2, total);
-	if (s1)
-		free((char *)s1);
-	return (res);
-}
 
 void	ft_free_lexer(t_elem **pars)
 {
@@ -44,7 +18,6 @@ void	ft_free_lexer(t_elem **pars)
 
 	while (*pars)
 	{
-		// printf("freeing");
 		tmp2 = (*pars)->next;
 		free((*pars)->content);
 		free(*pars);
@@ -79,4 +52,51 @@ void	ft_free_command(t_command **command)
 		free(*command);
 		*command = tmp;
 	}
+}
+
+int	count_worlds(char *str)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == ' ' || str[i] == '\t')
+			count++;
+		i++;
+	}
+	return (count + 1);
+}
+
+t_elem	*lst_new(char *content, int token, int state, int flag_env)
+{
+	t_elem	*new;
+
+	new = (t_elem *)malloc(sizeof(t_elem));
+	if (!new)
+		return (NULL);
+	new->content = ft_strdup(content);
+	new->token = token;
+	new->flag_env = flag_env;
+	new->state = state;
+	new->expand = 1;
+	new->next = NULL;
+	return (new);
+}
+
+void	ft_lstadd_back_new_list(t_elem **lst, t_elem *new)
+{
+	t_elem	*tmp;
+
+	if (!*lst)
+	{
+		*lst = new;
+		return ;
+	}
+	tmp = *lst;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
 }

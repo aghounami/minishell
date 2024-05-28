@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:09:08 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/25 18:09:33 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/27 11:51:29 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,16 @@ void	case_2(t_elem **tmp)
 	}
 }
 
+void	state_2(t_elem **tmp, int *flag_quote, int *flag_d_quote, t_elem **prev)
+{
+	(1) && ((*tmp)->state = GENERAL, (*prev) = (*tmp));
+	if ((*prev)->token == DOUBLE_QUOTE)
+		*flag_d_quote = *flag_d_quote + 1;
+	if ((*prev)->token == QOUTE)
+		flag_quote = flag_quote + 1;
+	(*tmp) = (*tmp)->next;
+}
+
 void	state(t_elem **elem, char **env, int flag)
 {
 	t_elem	*tmp;
@@ -45,12 +55,7 @@ void	state(t_elem **elem, char **env, int flag)
 			case_1(&tmp);
 		else if (prev && prev->token == QOUTE \
 			&& tmp->token != QOUTE && flag_quote % 2 == 0)
-		{
-			if (flag == 1)
-				case_1(&tmp);
-			else
-				case_2(&tmp);
-		}
+			case_2(&tmp);
 		else
 		{
 			(1) && (tmp->state = GENERAL, prev = tmp);
@@ -61,36 +66,31 @@ void	state(t_elem **elem, char **env, int flag)
 			tmp = tmp->next;
 		}
 	}
-	stack_env(*elem, env);
+	stack_env(*elem, env, flag);
 }
 
-t_elem	*lst_new(char *content, int token, int state, int flag_env)
+char	*ft_join(char const *s1, char const *s2)
 {
-	t_elem	*new;
+	size_t	lens1;
+	size_t	lens2;
+	size_t	total;
+	char	*res;
 
-	new = (t_elem *)malloc(sizeof(t_elem));
-	if (!new)
+	if (s1 == NULL && s2 == NULL)
 		return (NULL);
-	new->content = ft_strdup(content);
-	new->token = token;
-	new->flag_env = flag_env;
-	new->state = state;
-	new->expand = 1;
-	new->next = NULL;
-	return (new);
-}
-
-void	ft_lstadd_back_new_list(t_elem **lst, t_elem *new)
-{
-	t_elem	*tmp;
-
-	if (!*lst)
-	{
-		*lst = new;
-		return ;
-	}
-	tmp = *lst;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
+	else if (s1 == NULL)
+		return (ft_strdup(s2));
+	else if (s2 == NULL)
+		return (ft_strdup(s1));
+	lens1 = ft_strlen(s1);
+	lens2 = ft_strlen(s2);
+	total = lens1 + lens2 + 1;
+	res = (char *)malloc(total);
+	if (res == NULL)
+		return (NULL);
+	ft_strlcpy(res, s1, total);
+	ft_strlcpy(res + lens1, s2, total);
+	if (s1)
+		free((char *)s1);
+	return (res);
 }

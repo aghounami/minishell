@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:47:12 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/25 19:39:16 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/26 11:02:27 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	special_case(t_elem **tmp, t_elem **list, int n)
 {
-	printf("special case\n");
 	int		j;
 	int		i;
 	int		k;

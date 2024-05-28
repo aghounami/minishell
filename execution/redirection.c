@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:20:11 by zaki              #+#    #+#             */
-/*   Updated: 2024/05/25 17:17:25 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:24:18 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int redire(t_command **command)
     {
       if (ft_strncmp(cmd->rdrect[i], "<<", 3) == 0)
       {
-        fprintf(stderr, "here ---> %d\n", cmd->fd);
+        i++;
+        // fprintf(stderr, "here ---> %d\n", cmd->fd);
         dup2(cmd->fd, 0); // ba3ed may9adha parsser;
         close(cmd->fd);
         // fd = herdoc(command);

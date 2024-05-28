@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 17:11:29 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/25 19:44:21 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/26 16:25:54 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,10 @@ t_elem	*new_list_new(char *content, t_elem *tmp)
 
 void	next_condition(t_elem **tmp, t_elem **list, char *str)
 {
-	if ((*tmp) && ((*tmp)->token == WORD \
-		|| (*tmp)->token == NEW_WORD) && (*tmp)->next \
-			&& ((*tmp)->next->token == BACK_SLASH \
-				|| (*tmp)->next->token == NEW_WORD || (*tmp)->next->token == WORD) \
-					&& (*tmp)->token != QOUTE && (*tmp)->token != DOUBLE_QUOTE)
+	if ((*tmp) && ((*tmp)->token == WORD || (*tmp)->token == NEW_WORD) \
+		&& (*tmp)->next && ((*tmp)->next->token == BACK_SLASH \
+			|| (*tmp)->next->token == NEW_WORD || (*tmp)->next->token == WORD) \
+				&& (*tmp)->token != QOUTE && (*tmp)->token != DOUBLE_QUOTE)
 		special_case(tmp, list, 0);
 	else if (((*tmp) && (*tmp)->token != QOUTE \
 		&& (*tmp)->token != DOUBLE_QUOTE) \

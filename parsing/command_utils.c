@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/24 16:16:58 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/26 10:12:54 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	redeirection(t_command **command, t_elem **elem, t_cmd_utils **utils)
 	{
 		(*command)->rdrect[(*utils)->index] = ft_strdup((*elem)->content);
 		(*command)->check_expand = (*elem)->expand;
-		// if (here_doc == 1)
-		// 	here_doc_content(command, elem, utils);
 		(*elem) = (*elem)->next;
 		(*utils)->index += 1;
 	}
@@ -69,13 +67,3 @@ void	without_quote(t_elem **elem, t_command **command, t_cmd_utils **utils)
 	else
 		utils_stack(elem, command, utils);
 }
-
-	// if ((*elem) && ((*elem)->token == WHITE_SPACE && (*utils)->i > 1 \
-	// 	&& strncmp((*command)->cmd, "echo", 4) == 0))
-	// {
-	// 	while ((*elem) && ((*elem)->token == WHITE_SPACE \
-	// 		|| (*elem)->token == BACK_SLASH || (*elem)->token == '\t'))
-	// 		(*elem) = (*elem)->next;
-	// 	if ((*elem) && (*elem)->token != PIPE_LINE)
-	// 		(1) && ((*command)->args[(*utils)->i] = ft_strdup(" "), (*utils)->i += 1);
-	// }

@@ -6,13 +6,13 @@ CC = gcc
 READLINE_L = /Users/aghounam/.brew/opt/readline/lib
 READLINE_I = /Users/aghounam/.brew/opt/readline/include
 # Flags 
-CFLAGS = -Wall -Wextra -g -I$(READLINE_I) #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -g -I$(READLINE_I) -fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 # Source parser
 src = parsing/main.c parsing/ft_lexer.c parsing/linked_list.c parsing/state.c parsing/syntax_error.c \
 	parsing/stack_command.c parsing/ft_lexer_utils.c parsing/ft_free.c parsing/new_list.c \
 	parsing/env_value.c parsing/command_utils.c parsing/new_list_utils.c parsing/linked_list_utils.c \
-	parsing/new_list_utils2.c \
+	parsing/new_list_utils2.c parsing/herdoc.c\
 # source utils parsing
 src += parsing/utils.c
 
@@ -57,7 +57,7 @@ re: fclean all
 
 push :
 	@git add .
-	@git commit -m "new_update"
+	@git commit -m "last_update"
 	@git push
 
 .PHONY: all clean fclean re
