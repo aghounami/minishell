@@ -14,20 +14,11 @@ Welcome to the Minishell project! This project involves creating a simple shell,
     <span style="font-weight: bold;">hel-magh</span>
   </a>
 
-
-
-=======
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 ## Table of Contents
 
 - [Introduction](#introduction)
 - [Common Instructions](#common-instructions)
 - [Mandatory Part](#mandatory-part)
-<<<<<<< HEAD
-=======
-- [Bonus Part](#bonus-part)
-- [Submission and Peer Evaluation](#submission-and-peer-evaluation)
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 
 ## Introduction
 
@@ -67,7 +58,4 @@ The existence of shells is intertwined with the very existence of IT. Initially,
 - Implement `env` to display the environment variables.
 - Implement `pwd` to display the current directory.
 - Handle `ctrl-C`, `ctrl-D`, and `ctrl-\` signals.
-<<<<<<< HEAD
-=======
 
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
