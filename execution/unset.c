@@ -3,16 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zaki <zaki@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 11:00:02 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/14 14:38:22 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/05/27 14:51:34 by zaki             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "../minishell.h"
 
+int	string_chcker_unset(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (ft_isalpha(str[i]) || terrible(str[i]))
+	{
+		while (str[i])
+		{
+			if (ft_isalpha(str[i]) || ft_isdigit(str[i])
+				|| terrible(str[i]))
+				i++;
+			else
+				return (0);
+		}
+	}
+	else
+		return (0);
+	return (1);
+}
 void ft_unset(t_command **command, t_env **envexx)
 {
     t_env *env;
@@ -30,7 +50,7 @@ void ft_unset(t_command **command, t_env **envexx)
 	{
 		prev = NULL;
 		env = *envexx;
-		if (string_chcker(unset->args[f]))
+		if (string_chcker_unset(unset->args[f]))
 		{
 			while (env)
 			{

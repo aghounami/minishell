@@ -6,11 +6,26 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 18:01:47 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/23 23:28:48 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/05/29 14:54:19 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	lstsize(t_elem *elem)
+{
+	int		i;
+	t_elem	*tmp;
+
+	i = 0;
+	tmp = elem;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
 
 void	ft_free_2d(char **str)
 {
@@ -33,7 +48,8 @@ void	param_init(t_command **new, t_elem **elem, t_cmd_utils **utils)
 
 	(1) && ((*utils)->i = 0, (*utils)->index = 0, len = 0);
 	*new = malloc(sizeof(t_command));
-	(*new)->args = malloc(sizeof(char *) * 100);
+	printf("%d\n", lstsize(*elem));
+	(*new)->args = malloc(sizeof(char *) * ((lstsize(*elem)) + 1));
 	tmp = *elem;
 	while (tmp)
 	{

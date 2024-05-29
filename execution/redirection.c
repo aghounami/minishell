@@ -3,25 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:20:11 by zaki              #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2024/05/29 20:15:31 by hel-magh         ###   ########.fr       */
+=======
 /*   Updated: 2024/05/27 14:24:18 by aghounam         ###   ########.fr       */
+>>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// void sig_handler_her(int signo)
-// {
-// 	if (signo == SIGINT)
-// 	{
-		
-// 			printf("\n");
-// 			exit(1);
-		
-// 	}
-// }
+
+void sig_handler_her(int signo)
+{
+	if (signo == SIGINT)
+	{
+		if (waitpid(-1, 0, WNOHANG) == 0)
+		{
+			printf("\n");
+			exit_status(1);
+			catch = 1;
+           return ;
+		}
+        else
+            exit(1);
+	}
+}
 int redire(t_command **command)
 {
     t_command *cmd = *command;
@@ -37,10 +47,13 @@ int redire(t_command **command)
       if (ft_strncmp(cmd->rdrect[i], "<<", 3) == 0)
       {
         i++;
+<<<<<<< HEAD
+        dup2(cmd->fd, 0);
+=======
         // fprintf(stderr, "here ---> %d\n", cmd->fd);
         dup2(cmd->fd, 0); // ba3ed may9adha parsser;
+>>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
         close(cmd->fd);
-        // fd = herdoc(command);
       }
       else if (ft_strncmp(cmd->rdrect[i], "<", 2) == 0)
         {
@@ -96,9 +109,7 @@ int redire(t_command **command)
                 close(fd);
             cmd->dredir_out = 1;
         }
-
         i++;
     }
-    // close(r);
     return (fd);
 }

@@ -6,20 +6,23 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:47:12 by aghounam          #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2024/05/29 16:35:06 by aghounam         ###   ########.fr       */
+=======
 /*   Updated: 2024/05/26 11:02:27 by aghounam         ###   ########.fr       */
+>>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	special_case(t_elem **tmp, t_elem **list, int n)
+void	special_case(t_elem **tmp, t_elem **list, int n, char	*tmp_str)
 {
 	int		j;
 	int		i;
 	int		k;
-	char	*tmp_str;
 
-	(1) && (k = 0, i = 0, tmp_str = ft_strdup(""));
+	(1) && (k = 0, i = 0);
 	while (*tmp)
 	{
 		if ((*tmp)->token == QOUTE && i == 0)

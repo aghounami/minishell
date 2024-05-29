@@ -16,6 +16,8 @@
 #include <dirent.h>
 # include "./libf/libft.h"
 
+int catch;
+
 enum e_state
 {
 	IN_DQUOTE,
@@ -71,6 +73,7 @@ typedef struct s_command
 	char	**evr;
 	int 	f;
 	int 	fd;
+	int		ex;
 	struct s_command	*next;
 	int					check_expand;
 	int					hrdoc_nbr;
@@ -93,6 +96,10 @@ typedef struct s_varr
 	int			a;
 	int			b;
 	int			flag;
+<<<<<<< HEAD
+	int			enp;
+=======
+>>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 	int			nbr_hdoc;
 }	t_varr;
 
@@ -180,7 +187,7 @@ void		ft_free_lexer(t_elem **pars);
 void		ft_free_command(t_command **command);
 void		case_single_quote(t_elem **tmp, t_elem **list);
 void		case_double_quote(t_elem **tmp, t_elem **list);
-void		special_case(t_elem **tmp, t_elem **list, int n);
+void		special_case(t_elem **tmp, t_elem **list, int n, char *tmp_str);
 void		next_case(char *line, t_elem **elem, t_lexer *lexer);
 int			exit_status(int status);
 int			next_cnd_special(t_elem **tmp, char **tmp_str, int *k);
@@ -203,9 +210,9 @@ int			count_worlds(char *str);
 
 
 // executers
-char **exec_check(t_command **command, char **av);
+char **exec_check(t_command **command, char **av, int enp);
 void exec_path(t_command **command);
-void cd_checker(t_command **command);
+void	cd_checker(t_command **command, t_env **envex);
 void ft_exit_fail(char *str);
 char *get_env_exec(t_command **command);
 void	ft_free_double(char **str);
@@ -232,6 +239,14 @@ int		string_chcker(char *str);
 int		terrible(char c);
 int		equal(char c);
 int		plus(char c);
+<<<<<<< HEAD
+int	herdoc(t_command **command, char **envp, int i, int pid);
+void	sig_handler_her(int signo);
+void	pwd_update(t_env **env, char *str);
+void	fill_ter(char **str, t_env **envex, int l);
+void	sig_handler(int signo);
+=======
 // int		herdoc(t_command **command, char **envp, int i, int j);
 
+>>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 #endif

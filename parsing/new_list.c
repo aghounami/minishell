@@ -6,7 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 17:11:29 by aghounam          #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2024/05/29 16:34:47 by aghounam         ###   ########.fr       */
+=======
 /*   Updated: 2024/05/26 16:25:54 by aghounam         ###   ########.fr       */
+>>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +38,11 @@ void	next_condition(t_elem **tmp, t_elem **list, char *str)
 		&& (*tmp)->next && ((*tmp)->next->token == BACK_SLASH \
 			|| (*tmp)->next->token == NEW_WORD || (*tmp)->next->token == WORD) \
 				&& (*tmp)->token != QOUTE && (*tmp)->token != DOUBLE_QUOTE)
+<<<<<<< HEAD
+		special_case(tmp, list, 0, ft_strdup(""));
+=======
 		special_case(tmp, list, 0);
+>>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 	else if (((*tmp) && (*tmp)->token != QOUTE \
 		&& (*tmp)->token != DOUBLE_QUOTE) \
 			&& (((*tmp)->next && ((*tmp)->next->token != QOUTE \
