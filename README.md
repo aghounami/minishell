@@ -49,16 +49,3 @@ The existence of shells is intertwined with the very existence of IT. Initially,
 - Implement `pwd` to display the current directory.
 - Handle `ctrl-C`, `ctrl-D`, and `ctrl-\` signals.
 
-## Bonus Part
-
-If you have completed the mandatory part, you can implement the following for extra credit:
-
-- Handle `&&` and `||` with parenthesis for precedence.
-- Implement `*` (wildcard) in the current working directory.
-- Implement advanced history features.
-
-## Submission and Peer Evaluation
-
-- Submit your project to the assigned git repository.
-- Ensure your repository contains all the necessary files and follows the project requirements.
-- Your peers will evaluate your project, and you will also participate in evaluating others. Ensure your work is well-documented and organized.
