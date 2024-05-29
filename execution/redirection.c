@@ -6,11 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/02 15:20:11 by zaki              #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2024/05/29 20:15:31 by hel-magh         ###   ########.fr       */
-=======
-/*   Updated: 2024/05/27 14:24:18 by aghounam         ###   ########.fr       */
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +43,7 @@ int redire(t_command **command)
       if (ft_strncmp(cmd->rdrect[i], "<<", 3) == 0)
       {
         i++;
-<<<<<<< HEAD
         dup2(cmd->fd, 0);
-=======
-        // fprintf(stderr, "here ---> %d\n", cmd->fd);
-        dup2(cmd->fd, 0); // ba3ed may9adha parsser;
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
         close(cmd->fd);
       }
       else if (ft_strncmp(cmd->rdrect[i], "<", 2) == 0)

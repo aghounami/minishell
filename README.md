@@ -2,7 +2,6 @@
 
 Welcome to the Minishell project! This project involves creating a simple shell, akin to your own little version of bash. Through this project, you will gain a deeper understanding of processes and file descriptors.
 
-<<<<<<< HEAD
 **Authors:**
 
 - <a href="https://profile.intra.42.fr/users/aghounam" style="display: inline-flex; align-items: center; text-decoration: none;">
@@ -13,6 +12,8 @@ Welcome to the Minishell project! This project involves creating a simple shell,
     <img src="images/helmagh.jpg" alt="Hamza's picture" width="50" height="50" style="border-radius: 50%; margin-right: 10px;">
     <span style="font-weight: bold;">hel-magh</span>
   </a>
+
+
 
 ## Table of Contents
 
@@ -58,4 +59,3 @@ The existence of shells is intertwined with the very existence of IT. Initially,
 - Implement `env` to display the environment variables.
 - Implement `pwd` to display the current directory.
 - Handle `ctrl-C`, `ctrl-D`, and `ctrl-\` signals.
-

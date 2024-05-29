@@ -96,10 +96,7 @@ typedef struct s_varr
 	int			a;
 	int			b;
 	int			flag;
-<<<<<<< HEAD
 	int			enp;
-=======
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 	int			nbr_hdoc;
 }	t_varr;
 
@@ -239,14 +236,9 @@ int		string_chcker(char *str);
 int		terrible(char c);
 int		equal(char c);
 int		plus(char c);
-<<<<<<< HEAD
 int	herdoc(t_command **command, char **envp, int i, int pid);
 void	sig_handler_her(int signo);
 void	pwd_update(t_env **env, char *str);
 void	fill_ter(char **str, t_env **envex, int l);
 void	sig_handler(int signo);
-=======
-// int		herdoc(t_command **command, char **envp, int i, int j);
-
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 #endif

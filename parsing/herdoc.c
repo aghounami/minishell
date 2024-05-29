@@ -6,11 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 14:47:57 by aghounam          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2024/05/29 12:43:47 by aghounam         ###   ########.fr       */
-=======
-/*   Updated: 2024/05/27 16:53:48 by aghounam         ###   ########.fr       */
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +37,8 @@ int	herdoc(t_command **command, char **envp, int i, int pid)
 	cmd->here_doc = 0;
 	while (cmd->rdrect[i] && cmd->hrdoc_nbr > 0)
 	{
-<<<<<<< HEAD
 		if (catch == 1)
 			break ;
-=======
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 		if (ft_strncmp(cmd->rdrect[i], "<<", 3) == 0)
 		{
 			cmd->hrdoc_nbr -= 1;
@@ -59,12 +52,9 @@ int	herdoc(t_command **command, char **envp, int i, int pid)
 			pid = fork();
 			if (pid == 0)
 			{
-<<<<<<< HEAD
 				rl_catch_signals = 1;
 				signal(SIGINT, sig_handler_her);
 				signal(SIGQUIT, SIG_IGN);
-=======
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 				while (1)
 				{
 					elem = NULL;
@@ -74,12 +64,8 @@ int	herdoc(t_command **command, char **envp, int i, int pid)
 							&& ft_strlen(line) == ft_strlen(cmd->rdrect[i])))
 					{
 						free(line);
-<<<<<<< HEAD
 						close(fd2);
 						exit(0);
-=======
-						break ;
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 					}
 					if (line && line[0] != '\0' && cmd->check_expand == 0)
 					{
@@ -92,7 +78,6 @@ int	herdoc(t_command **command, char **envp, int i, int pid)
 					write(fd2, "\n", 1);
 					free(line);
 				}
-<<<<<<< HEAD
 				close(fd2);
 			}
 			else
@@ -101,13 +86,6 @@ int	herdoc(t_command **command, char **envp, int i, int pid)
 				close(fd2);
 				cmd->here_doc = 1;
 			}
-=======
-				exit(0);
-			}
-			waitpid(pid, NULL, 0);
-			close(fd2);
-			cmd->here_doc = 1;
->>>>>>> b7f202203f5028a4ee0fa7d7f7650c343e1de6ba
 		}
 		i++;
 	}
