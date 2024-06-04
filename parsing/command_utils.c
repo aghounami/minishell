@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/04 13:11:30 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/04 23:08:56 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	redirect_fd(t_command **command, t_elem **elem, t_cmd_utils **utils)
 {
 	if ((*elem) && (*command)->redir_in)
 		(*utils)->fd = open((*elem)->content, O_RDONLY, 0644);
-	else if ((*elem) && ((*command)->redir_out || (*command)->dredir_out))
+	else if ((*elem) && ((*command)->redir_out || (*command)->dredir_out) \
+		&& access((*elem)->content, F_OK) == -1)
 	{
 		(*utils)->fd = open((*elem)->content, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if ((*utils)->fd != -1)

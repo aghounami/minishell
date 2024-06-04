@@ -3,8 +3,8 @@ LIBF = libf/libft.a
 CC = gcc
 
 # Explicitly specify the paths to Readline library and include directory
-READLINE_L = /Users/hel-magh/.brew/opt/readline/lib
-READLINE_I = /Users/hel-magh/.brew/opt/readline/include
+READLINE_L = /Users/aghounam/.brew/opt/readline/lib
+READLINE_I = /Users/aghounam/.brew/opt/readline/include
 # Flags 
 CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) -fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
