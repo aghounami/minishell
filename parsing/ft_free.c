@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 00:08:57 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/26 16:24:47 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:25:26 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_elem	*lst_new(char *content, int token, int state, int flag_env)
 
 	new = (t_elem *)malloc(sizeof(t_elem));
 	if (!new)
-		return (NULL);
+		malloc_fail();
 	new->content = ft_strdup(content);
 	new->token = token;
 	new->flag_env = flag_env;

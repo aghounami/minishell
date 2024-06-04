@@ -3,33 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   command_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/26 10:12:54 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/04 13:11:30 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void	rm_file(char *file)
+{
+	if (file)
+		unlink(file);
+}
+
+void	redirect_fd(t_command **command, t_elem **elem, t_cmd_utils **utils)
+{
+	if ((*elem) && (*command)->redir_in)
+		(*utils)->fd = open((*elem)->content, O_RDONLY, 0644);
+	else if ((*elem) && ((*command)->redir_out || (*command)->dredir_out))
+	{
+		(*utils)->fd = open((*elem)->content, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if ((*utils)->fd != -1)
+			rm_file((*elem)->content);
+	}
+	if ((*utils)->ambigous && (*elem) && (*elem)->token == BACK_SLASH \
+		&& (*utils)->fd == -1 && g_catch == 0)
+		er_print((*elem)->content, ": ambiguous redirect\n", 2);
+	else if ((*utils)->ambigous && (*utils)->fd == -1 && g_catch == 0)
+		er_print((*elem)->content, ": No such file or directory\n", 2);
+	if ((*utils)->fd != 0 && (*utils)->fd != -1)
+		close((*utils)->fd);
+	g_catch = 0;
+}
+
 void	redeirection(t_command **command, t_elem **elem, t_cmd_utils **utils)
 {
-	int	here_doc;
-
-	here_doc = 0;
-	if ((*elem) && (*elem)->token == HERE_DOC)
-		here_doc = 1;
+	(*utils)->fd = 0;
+	(*utils)->ambigous = 0;
+	if ((*elem) && (*elem)->token == REDIR_IN)
+		(1) && ((*command)->redir_in = 1, (*utils)->ambigous = 1);
+	else if ((*elem) && ((*elem)->token == REDIR_OUT \
+		|| (*elem)->token == DREDIR_OUT))
+		(1) && ((*command)->redir_out = 1, (*utils)->ambigous = 1);
 	(*command)->rdrect[(*utils)->index] = ft_strdup((*elem)->content);
-	(*utils)->index += 1;
-	(*elem) = (*elem)->next;
+	(1) && ((*elem) = (*elem)->next, (*utils)->index += 1);
 	while ((*elem) && (*elem)->token == WHITE_SPACE)
 		(*elem) = (*elem)->next;
+	redirect_fd(command, elem, utils);
 	if ((*elem) && (*elem)->token != PIPE_LINE)
 	{
 		(*command)->rdrect[(*utils)->index] = ft_strdup((*elem)->content);
 		(*command)->check_expand = (*elem)->expand;
-		(*elem) = (*elem)->next;
-		(*utils)->index += 1;
+		(1) && ((*elem) = (*elem)->next, (*utils)->index += 1);
 	}
 }
 

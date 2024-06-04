@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 17:46:12 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/08 10:54:38 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/04 16:59:23 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,3 @@ int	ft_atoi(const char *str)
 	}
 	return (final(result, sign));
 }
-
-// #include <stdio.h>
-// int main()
-// {
-// 	char str[] = "-92233720368547758054577";
-// 	printf("%d\n", atoi(str));
-// 	printf("%d\n", ft_atoi(str));
-// }

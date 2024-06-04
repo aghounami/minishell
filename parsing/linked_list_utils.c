@@ -6,11 +6,28 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:29:51 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/23 23:02:29 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:25:55 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	case_escape(char *line, t_elem **elem, t_lexer *lexer)
+{
+	lexer->str[0] = '\\';
+	if (line[lexer->i + 1] != '\0')
+	{
+		lexer->str[1] = line[lexer->i + 1];
+		lexer->str[2] = '\0';
+		lexer->i += 2;
+	}
+	else
+	{
+		lexer->str[1] = '\0';
+		lexer->i += 1;
+	}
+	lstadd_back(elem, lstnew(ft_strdup(lexer->str), ESCAPE));
+}
 
 void	next_case(char *line, t_elem **elem, t_lexer *lexer)
 {
@@ -44,7 +61,7 @@ char	**ft_strdup_2d(char **str)
 		i++;
 	new = malloc(sizeof(char *) * (i + 1));
 	if (!new)
-		return (NULL);
+		malloc_fail();
 	i = 0;
 	while (str[i])
 	{

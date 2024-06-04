@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 22:45:55 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/17 15:33:16 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:26:09 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_elem	*lstnew(void *content, int token)
 
 	new = (t_elem *)malloc(sizeof(t_elem));
 	if (new == NULL)
-		return (NULL);
+		malloc_fail();
 	new->content = content;
 	new->token = token;
 	if (token == ENV)
@@ -55,13 +55,13 @@ void	lstadd_back(t_elem **lst, t_elem *new)
 		*lst = new;
 }
 
-t_command	*lstnew_command(t_command **node, int pipe, t_redirection *redir)
+t_command	*lstnew_command(t_command **node, int pipe)
 {
 	t_command	*new;
 
 	new = malloc(sizeof(t_command));
 	if (!new)
-		return (NULL);
+		malloc_fail();
 	if ((*node)->args[0])
 		new->cmd = ft_strdup((*node)->args[0]);
 	else
@@ -69,10 +69,6 @@ t_command	*lstnew_command(t_command **node, int pipe, t_redirection *redir)
 	new->args = ft_strdup_2d((*node)->args);
 	new->rdrect = ft_strdup_2d((*node)->rdrect);
 	new->pipe = pipe;
-	new->redir_in = redir->redir_in;
-	new->dredir_out = redir->dredir_out;
-	new->here_doc = redir->here_doc;
-	new->redir_out = redir->redir_out;
 	new->check_expand = (*node)->check_expand;
 	new->next = NULL;
 	return (new);

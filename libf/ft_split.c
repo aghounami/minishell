@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 14:29:18 by aghounam          #+#    #+#             */
-/*   Updated: 2023/11/09 12:37:03 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/04 14:17:10 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	count_world(char const *s, char c)
 
 	count = 0;
 	in_word = 0;
-	while (*s)
+	while (s && *s)
 	{
 		if (*s == c)
 		{

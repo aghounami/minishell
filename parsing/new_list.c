@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 17:11:29 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/29 16:34:47 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:26:22 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_elem	*new_list_new(char *content, t_elem *tmp)
 
 	new = (t_elem *)malloc(sizeof(t_elem));
 	if (!new)
-		return (NULL);
+		malloc_fail();
 	new->content = ft_strdup(content);
 	new->token = tmp->token;
 	new->flag_env = tmp->flag_env;
@@ -34,7 +34,7 @@ void	next_condition(t_elem **tmp, t_elem **list, char *str)
 		&& (*tmp)->next && ((*tmp)->next->token == BACK_SLASH \
 			|| (*tmp)->next->token == NEW_WORD || (*tmp)->next->token == WORD) \
 				&& (*tmp)->token != QOUTE && (*tmp)->token != DOUBLE_QUOTE)
-		special_case(tmp, list, 0, ft_strdup(""));
+		special_case(tmp, list, ft_strdup(""));
 	else if (((*tmp) && (*tmp)->token != QOUTE \
 		&& (*tmp)->token != DOUBLE_QUOTE) \
 			&& (((*tmp)->next && ((*tmp)->next->token != QOUTE \

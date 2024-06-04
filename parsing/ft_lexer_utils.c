@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 17:02:41 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/29 12:27:21 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:25:34 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,9 @@ void	special_dolar_case(char *value, t_elem **elem)
 				i++);
 		else
 		{
-			j = 0;
-			tmp = malloc(sizeof(char) * (ft_strlen(value) + 1));
+			(1) && (j = 0, tmp = malloc(sizeof(char) * ft_strlen(value) + 1));
+			if (!tmp)
+				malloc_fail();
 			while (value[i] != '\0' && value[i] != ' ' && value[i] != '\t')
 				(1) && (tmp[j] = value[i], j++, i++);
 			tmp[j] = '\0';

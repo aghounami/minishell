@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 14:09:08 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/27 11:51:29 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:26:43 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	*ft_join(char const *s1, char const *s2)
 	total = lens1 + lens2 + 1;
 	res = (char *)malloc(total);
 	if (res == NULL)
-		return (NULL);
+		malloc_fail();
 	ft_strlcpy(res, s1, total);
 	ft_strlcpy(res + lens1, s2, total);
 	if (s1)

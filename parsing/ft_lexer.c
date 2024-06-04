@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/29 15:29:45 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:25:47 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,6 @@ void	case_redirect(char *line, t_elem **elem, t_lexer *lexer)
 	}
 	else
 		case_one_char(lexer, elem, line, REDIR_OUT);
-}
-
-void	case_escape(char *line, t_elem **elem, t_lexer *lexer)
-{
-	lexer->str[0] = '\\';
-	if (line[lexer->i + 1] != '\0')
-	{
-		lexer->str[1] = line[lexer->i + 1];
-		lexer->str[2] = '\0';
-		lexer->i += 2;
-	}
-	else
-	{
-		lexer->str[1] = '\0';
-		lexer->i += 1;
-	}
-	lstadd_back(elem, lstnew(ft_strdup(lexer->str), ESCAPE));
 }
 
 void	case_herdoc_or_redir(char *line, t_elem **elem, t_lexer *lexer)
@@ -61,9 +44,9 @@ void	case_herdoc_or_redir(char *line, t_elem **elem, t_lexer *lexer)
 
 void	case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type)
 {
-	if (line[lexer->i] == '\'')
+	if (line[lexer->i] == '\'' && lexer->d_quote % 2 == 0)
 		lexer->quote += 1;
-	if (line[lexer->i] == '\"')
+	if (line[lexer->i] == '\"' && lexer->quote % 2 == 0)
 		lexer->d_quote += 1;
 	if (line[lexer->i] == '\'' && lexer->quote % 2 == 0 && line[lexer->i + 1] \
 		&& (line[lexer->i + 1] == ' ' || line[lexer->i + 1] == '\t' \
@@ -81,17 +64,27 @@ void	case_one_char(t_lexer *lexer, t_elem **elem, char *line, int type)
 	lstadd_back(elem, lstnew(ft_strdup(lexer->str), type));
 }
 
+void	init(t_lexer **lexer, int flag)
+{
+	(*lexer) = malloc(sizeof(t_lexer));
+	if (!*lexer)
+		malloc_fail();
+	(1) && ((*lexer)->i = 0, (*lexer)->j = 0, \
+		(*lexer)->prev = NULL, (*lexer)->quote = 0, \
+			(*lexer)->here_doc = 0, (*lexer)->d_quote = 0, \
+				(*lexer)->export = 0, (*lexer)->in_hrdc = flag);
+}
+
 void	*lexer(char *line, t_elem **elem, char **env, int flag)
 {
 	t_lexer	*lexer;
 
-	(1) && (lexer = malloc(sizeof(t_lexer)), lexer->i = 0, \
-		lexer->j = 0, lexer->prev = NULL, lexer->quote = 0, \
-			lexer->here_doc = 0, lexer->d_quote = 0, lexer->export = 0, \
-				lexer->in_hrdc = flag);
+	init(&lexer, flag);
 	while (line[lexer->i])
 	{
-		lexer->str = ft_calloc(1000, sizeof(char));
+		lexer->str = malloc(sizeof(char) * ft_strlen(line) + 1);
+		if (!lexer->str)
+			exit(1);
 		if (line[lexer->i] == '$' && (line[lexer->i + 1] == ' ' \
 			|| line[lexer->i + 1] == '\t' || line[lexer->i + 1] == '\0'))
 			case_one_char(lexer, elem, line, WORD);
@@ -99,7 +92,7 @@ void	*lexer(char *line, t_elem **elem, char **env, int flag)
 			&& (lexer->quote % 2 != 0 || (flag == 1 && lexer->quote % 2 == 0))) \
 				|| (line[lexer->i + 1] == '\"' && (lexer->d_quote % 2 != 0 \
 					|| (flag == 1 && lexer->d_quote % 2 == 0)))))
-			case_dollar(lexer, elem, line, env);
+			case_one_char(lexer, elem, line, WORD);
 		else if (line[lexer->i] == '$' && line[lexer->i + 1] != '\0' \
 			&& line[lexer->i + 1] != ' ' && line[lexer->i + 1] != '\t')
 			case_dollar(lexer, elem, line, env);

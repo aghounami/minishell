@@ -3,23 +3,23 @@ LIBF = libf/libft.a
 CC = gcc
 
 # Explicitly specify the paths to Readline library and include directory
-READLINE_L = /Users/aghounam/.brew/opt/readline/lib
-READLINE_I = /Users/aghounam/.brew/opt/readline/include
+READLINE_L = /Users/hel-magh/.brew/opt/readline/lib
+READLINE_I = /Users/hel-magh/.brew/opt/readline/include
 # Flags 
-CFLAGS = -Wall -Wextra -g -I$(READLINE_I) -fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) -fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 # Source parser
 src = parsing/main.c parsing/ft_lexer.c parsing/linked_list.c parsing/state.c parsing/syntax_error.c \
 	parsing/stack_command.c parsing/ft_lexer_utils.c parsing/ft_free.c parsing/new_list.c \
 	parsing/env_value.c parsing/command_utils.c parsing/new_list_utils.c parsing/linked_list_utils.c \
-	parsing/new_list_utils2.c parsing/herdoc.c\
-# source utils parsing
-src += parsing/utils.c
+	parsing/new_list_utils2.c parsing/herdoc.c parsing/syntax_utils.c parsing/utils_herdoc.c \
+
 
 # sourece exec
 src += execution/exec.c execution/ft_cd.c execution/exec_utils.c execution/ft_export.c \
 	execution/ft_pwd.c execution/ft_exit.c execution/ft_env.c execution/echo.c  execution/linked_list_exec.c \
-	execution/unset.c execution/redirection.c\
+	execution/unset.c execution/redirection.c  execution/exec_utils_2.c execution/exec_utils_3.c execution/ft_export_utils.c\
+	execution/search_ex.c execution/pipe.c\
 
 obj = $(src:.c=.o)
 
@@ -28,7 +28,7 @@ RED := \033[0;31m
 BLUE := \033[0;34m
 NC := \033[0m
 
-all: LIBFT $(NAME) clean
+all: LIBFT $(NAME)
 
 LIBFT:
 	@echo "$(RED)libf Compiling$(NC)"
@@ -57,7 +57,7 @@ re: fclean all
 
 push :
 	@git add .
-	@git commit -m "ahmed_push"
+	@git commit -m "push"
 	@git push
 
 .PHONY: all clean fclean re

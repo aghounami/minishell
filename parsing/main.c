@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/29 22:15:47 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/04 16:53:20 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	sig_handler(int signo)
 		{
 			printf("\n");
 			exit_status(128 + signo);
-			catch = 1;
+			g_catch = 1;
 			return ;
 		}
 		exit_status(1);
@@ -35,19 +35,10 @@ void	sig_handler(int signo)
 		{
 			printf("Quit: 3\n");
 			exit_status(128 + signo);
-			catch = 1;
+			g_catch = 1;
 			return ;
 		}
 	}
-}
-
-int	exit_status(int status)
-{
-	static int	e_status = 0;
-
-	if (status != -1 && catch == 0)
-		e_status = status;
-	return (e_status);
 }
 
 void	init_shlvl(char **env)
@@ -79,6 +70,33 @@ void	init_shlvl(char **env)
 	}
 }
 
+void	pars_exec(t_elem **pars, t_elem **list, t_varr **var, \
+	t_command **command)
+{
+	(1) && (*pars = NULL, *command = NULL, *list = NULL,
+			(*var)->nbr_hdoc = 0, g_catch = 0);
+	(*var)->line = readline("➜ minishell : ");
+	if ((*var)->line && (*var)->line[0] != '\0')
+	{
+		lexer((*var)->line, pars, (*var)->envp, 0);
+		state(pars, (*var)->envp, 0);
+		(*var)->flag = syntax_error(pars, &(*var)->nbr_hdoc);
+		(1) && (new_linked_list(pars, list), g_catch = (*var)->flag);
+		(1) && (stack_command(*list, command, (*var)->envp), g_catch = 0);
+		(1) && ((*var)->a = dup(1), (*var)->b = dup(0));
+		open_herdoc(command, (*var)->envp, &(*var)->nbr_hdoc);
+		if ((*var)->flag == 0 && *command)
+			(*var)->envp = exec_check(command, (*var)->envp, (*var)->enp);
+		else if ((*var)->flag == 1)
+			er_print(":", "syntax error\n", 258);
+		(1) && (dup2((*var)->a, 1), dup2((*var)->b, 0), (*var)->flag = 0);
+		(1) && (close((*var)->a), close((*var)->b), (*var)->nbr_hdoc = 0);
+	}
+	else if (!(*var)->line)
+		empty_line(var);
+	free_all(list, command, var);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_varr		*var;
@@ -93,61 +111,15 @@ int	main(int argc, char **argv, char **env)
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	var = malloc(sizeof(t_varr));
-	var->enp =0;
+	if (!var)
+		malloc_fail();
+	var->enp = 0;
 	if (env[0] == NULL)
-	{
-		var->enp = 1;
-		env = malloc(sizeof(char *) * 5);
-		env[0] = ft_strdup("PWD=/Users/aghounam/Desktop/minishell");
-		env[1] = ft_strdup("SHLVL=1");
-		env[2] = ft_strdup("_=/usr/bin/env");
-		env[3] = ft_strdup("PATH=/Users/aghounam/.brew/bin:/usr/local/bin:"
-				"/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:"
-				"/Library/Apple/usr/bin:/Users/aghounam/.brew/bin");
-		env[4] = NULL;
-	}
-	(1) && (exit_status(0), var->envp = ft_strdup_2d(env));
-	(1) && (init_shlvl(var->envp), rl_catch_signals = 0);
+		empty_env(&var);
+	else
+		var->envp = ft_strdup_2d(env);
+	(1) && (init_shlvl(var->envp), exit_status(0), rl_catch_signals = 0);
 	while (1)
-	{
-		(1) && (pars = NULL, command = NULL, list = NULL, \
-			var->nbr_hdoc = 0, catch = 0);
-		var->line = readline("\033[0;30m➜ minishell : \033[0m");
-		if (var->line && var->line[0] != '\0')
-		{
-			lexer(var->line, &pars, var->envp, 0);
-			state(&pars, var->envp, 0);
-			var->flag = syntax_error(&pars, &var->nbr_hdoc);
-			new_linked_list(&pars, &list);
-			printf_pars(list);
-			stack_command(list, &command, var->envp);
-			print_comand(command);
-			(1) && (var->a = dup(1), var->b = dup(0));
-			open_herdoc(&command, var->envp, &var->nbr_hdoc);
-			if (var->flag == 0 && command)
-				var->envp = exec_check(&command, var->envp, var->enp);
-			else
-			{
-				exit_status(258);
-				printf("\033[0;31mminishell: syntax error\033[0m\n");
-			}
-			dup2(var->a, 1);
-			dup2(var->b, 0);
-			(1) && (close(var->a), close(var->b));
-			(1) && (var->flag = 0, var->nbr_hdoc = 0);
-		}
-		else if (!var->line)
-		{
-			printf("exit\n");
-			free(var->line);
-			free(var->envp);
-			free(var);
-			exit(0);
-		}
-		add_history(var->line);
-		free(var->line);
-		ft_free_lexer(&list);
-		ft_free_command(&command);
-	}
+		pars_exec(&pars, &list, &var, &command);
 	return (0);
 }

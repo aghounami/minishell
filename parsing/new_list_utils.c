@@ -6,42 +6,49 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:47:12 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/29 16:35:06 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/02 16:16:57 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	special_case(t_elem **tmp, t_elem **list, int n, char	*tmp_str)
+int	utils_special_case(t_elem **tmp, char **tmp_str, t_entier *ent)
 {
-	int		j;
-	int		i;
-	int		k;
+	if ((*tmp)->token == QOUTE && ent->i != 0 && ent->n == 1)
+		(1) && ((*tmp) = (*tmp)->next, ent->i = 0);
+	else if ((*tmp)->token == DOUBLE_QUOTE && ent->i != 0 && ent->n == 2)
+		(1) && ((*tmp) = (*tmp)->next, ent->i = 0);
+	else
+		if (next_cnd_special(tmp, tmp_str, &ent->k))
+			return (1);
+	return (0);
+}
 
-	(1) && (k = 0, i = 0);
+void	special_case(t_elem **tmp, t_elem **list, char	*tmp_str)
+{
+	t_entier	*ent;
+
+	ent = malloc(sizeof(t_entier));
+	(1) && (ent->i = 0, ent->j = 0, ent->k = 0, ent->n = 0);
 	while (*tmp)
 	{
-		if ((*tmp)->token == QOUTE && i == 0)
-			(1) && (i = i + 1, (*tmp) = (*tmp)->next, n = 1);
-		else if ((*tmp)->token == DOUBLE_QUOTE && i == 0)
-			(1) && (i = i + 1, (*tmp) = (*tmp)->next, n = 2);
+		if ((*tmp)->token == QOUTE && ent->i == 0)
+			(1) && (ent->i = ent->i + 1, (*tmp) = (*tmp)->next, ent->n = 1);
+		else if ((*tmp)->token == DOUBLE_QUOTE && ent->i == 0)
+			(1) && (ent->i = ent->i + 1, (*tmp) = (*tmp)->next, ent->n = 2);
 		else if ((*tmp)->token == WHITE_SPACE || (*tmp)->token == PIPE_LINE)
 		{
-			j = break_case(tmp, list, &tmp_str, k);
-			if (j == 1)
+			ent->j = break_case(tmp, list, &tmp_str, ent->k);
+			if (ent->j == 1)
 				break ;
-			else if (j == -1)
+			else if (ent->j == -1)
 				return ;
 		}
-		else if ((*tmp)->token == QOUTE && i != 0 && n == 1)
-			(*tmp) = (*tmp)->next;
-		else if ((*tmp)->token == DOUBLE_QUOTE && i != 0 && n == 2)
-			(*tmp) = (*tmp)->next;
 		else
-			if (next_cnd_special(tmp, &tmp_str, &k))
+			if (utils_special_case(tmp, &tmp_str, ent))
 				break ;
 	}
-	ft_lstadd_back_new_list(list, lst_new(tmp_str, WORD, IN_QUOTE, NO));
+	ft_lstadd_back_new_list(list, lst_new(tmp_str, WORD, IN_DQUOTE, NO));
 	free(tmp_str);
 }
 

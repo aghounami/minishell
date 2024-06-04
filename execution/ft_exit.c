@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:12:26 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/05/29 20:02:15 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/04 14:54:21 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	check_numeric(char *str)
 	while (str[i])
 	{
 		if (ft_isdigit(str[i]) == 0)
-			return (0);
+			if (str[0] != '+' && str[0] != '-')
+				return (0);
 		i++;
 	}
 	return (1);
@@ -31,13 +32,14 @@ void	case_too_many_args(t_command *my_exit)
 	{
 		if (check_numeric(my_exit->args[1]) == 0)
 		{
-			printf("minishell: exit: %s: numeric argument required\n", \
-				my_exit->args[1]);
+			ft_putstr_fd("minishell: exit:", 2);
+			ft_putstr_fd(" numeric argument required\n", 2);
 			exit(255);
 		}
 		else
 		{
-			printf("minishell: exit: too many arguments\n");
+			ft_putstr_fd("minishell: exit:", 2);
+			ft_putstr_fd("too many arguments\n", 2);
 			return ;
 		}
 	}
@@ -57,8 +59,8 @@ void	ft_exit_mini(t_command **command)
 	{
 		if (check_numeric(my_exit->args[1]) == 0)
 		{
-			printf("minishell: exit: %s: numeric argument required\n", \
-				my_exit->args[1]);
+			ft_putstr_fd("minishell: exit:", 2);
+			ft_putstr_fd(" numeric argument required\n", 2);
 			exit(255);
 		}
 		else
