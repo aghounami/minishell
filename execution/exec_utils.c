@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/01 18:15:08 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/05 18:16:07 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	ft_filler(t_env **env, char **envar)
 				rac(&v.value, &v.vari, &v.len, envar[v.i]);
 			else
 				v.vari = ft_substr(envar[v.i], 0, ft_strlen(envar[v.i]));
-			free(envar[v.i]);
 			if (!envex)
 				envex = ft_lstnew_exec(v.value, v.vari, 1);
 			else

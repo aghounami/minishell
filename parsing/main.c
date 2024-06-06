@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/04 16:53:20 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/06 18:41:59 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,35 @@ void	init_shlvl(char **env)
 	}
 }
 
+void	check_unclosed(t_elem *pars, int *i)
+{
+	int		quote_token;
+
+	while (pars)
+	{
+		if (pars->token == HERE_DOC)
+		{
+			pars = pars->next;
+			while (pars && pars->token == WHITE_SPACE)
+				pars = pars->next;
+			if (pars && (pars->token == QOUTE || pars->token == DOUBLE_QUOTE))
+			{
+				quote_token = pars->token;
+				pars = pars->next;
+				while (pars && pars->token != quote_token)
+					pars = pars->next;
+				if (!pars)
+				{
+					*i = -1;
+					break ;
+				}
+			}
+		}
+		if (pars)
+			pars = pars->next;
+	}
+}
+
 void	pars_exec(t_elem **pars, t_elem **list, t_varr **var, \
 	t_command **command)
 {
@@ -81,13 +110,15 @@ void	pars_exec(t_elem **pars, t_elem **list, t_varr **var, \
 		lexer((*var)->line, pars, (*var)->envp, 0);
 		state(pars, (*var)->envp, 0);
 		(*var)->flag = syntax_error(pars, &(*var)->nbr_hdoc);
+		check_unclosed(*pars, &(*var)->flag);
 		(1) && (new_linked_list(pars, list), g_catch = (*var)->flag);
 		(1) && (stack_command(*list, command, (*var)->envp), g_catch = 0);
 		(1) && ((*var)->a = dup(1), (*var)->b = dup(0));
-		open_herdoc(command, (*var)->envp, &(*var)->nbr_hdoc);
-		if ((*var)->flag == 0 && *command)
+		if ((*var)->flag != -1)
+			open_herdoc(command, (*var)->envp, &(*var)->nbr_hdoc);
+		if ((*var)->flag == 0 && *command && g_catch == 0)
 			(*var)->envp = exec_check(command, (*var)->envp, (*var)->enp);
-		else if ((*var)->flag == 1)
+		else if ((*var)->flag == 1 || (*var)->flag == -1)
 			er_print(":", "syntax error\n", 258);
 		(1) && (dup2((*var)->a, 1), dup2((*var)->b, 0), (*var)->flag = 0);
 		(1) && (close((*var)->a), close((*var)->b), (*var)->nbr_hdoc = 0);

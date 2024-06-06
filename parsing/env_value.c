@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:12:20 by aghounam          #+#    #+#             */
-/*   Updated: 2024/05/30 15:50:21 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/05 22:12:42 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	status_value(t_elem *elem)
 	char	*dst;
 
 	(1) && (free((elem)->content), dst = ft_itoa(exit_status(-1)));
-	(1) && (exit_status(0), elem->content = ft_strdup(dst));
+	elem->content = ft_strdup(dst);
 	if (ft_strlen(dst) == 0)
 		(elem)->token = BACK_SLASH;
 	else

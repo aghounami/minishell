@@ -6,28 +6,11 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 15:29:51 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/02 19:25:55 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/05 18:28:30 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	case_escape(char *line, t_elem **elem, t_lexer *lexer)
-{
-	lexer->str[0] = '\\';
-	if (line[lexer->i + 1] != '\0')
-	{
-		lexer->str[1] = line[lexer->i + 1];
-		lexer->str[2] = '\0';
-		lexer->i += 2;
-	}
-	else
-	{
-		lexer->str[1] = '\0';
-		lexer->i += 1;
-	}
-	lstadd_back(elem, lstnew(ft_strdup(lexer->str), ESCAPE));
-}
 
 void	next_case(char *line, t_elem **elem, t_lexer *lexer)
 {
@@ -39,9 +22,8 @@ void	next_case(char *line, t_elem **elem, t_lexer *lexer)
 		case_one_char(lexer, elem, line, QOUTE);
 	else if (line[lexer->i] == '\"')
 		case_one_char(lexer, elem, line, DOUBLE_QUOTE);
-	else if (line[lexer->i] == '\\')
-		case_escape(line, elem, lexer);
-	else if (line[lexer->i] == ' ' || line[lexer->i] == '\t')
+	else if (line[lexer->i] == ' ' || line[lexer->i] == '\t' \
+		|| line[lexer->i] == '\n')
 		case_one_char(lexer, elem, line, WHITE_SPACE);
 	else if (line[lexer->i] == '|')
 		case_one_char(lexer, elem, line, PIPE_LINE);

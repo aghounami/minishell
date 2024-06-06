@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/04 16:48:49 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/06 18:39:09 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,15 +74,13 @@ void	refiller2(t_env **envex, t_exec *ex, char **env, int a)
 	t_env	*enve;
 
 	enve = *envex;
-	if (a > 0)
+	a = 0;
+	ex->i = 0;
+	while (env[ex->i])
 	{
-		ex->i = 0;
-		while (env[ex->i])
-		{
-			free(env[ex->i]);
-			env[ex->i] = NULL;
-			ex->i++;
-		}
+		free(env[ex->i]);
+		env[ex->i] = NULL;
+		ex->i++;
 	}
 	while (enve)
 	{
@@ -119,7 +117,6 @@ char	**refiller(char **env, t_env **envex)
 		enve = enve->next;
 	}
 	ex.name2[ex.i] = NULL;
-	a = 1;
 	(free(env), env = NULL, env = ex.name2);
 	return (env);
 }

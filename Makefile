@@ -6,7 +6,7 @@ CC = gcc
 READLINE_L = /Users/aghounam/.brew/opt/readline/lib
 READLINE_I = /Users/aghounam/.brew/opt/readline/include
 # Flags 
-CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) -fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 # Source parser
 src = parsing/main.c parsing/ft_lexer.c parsing/linked_list.c parsing/state.c parsing/syntax_error.c \
@@ -28,7 +28,7 @@ RED := \033[0;31m
 BLUE := \033[0;34m
 NC := \033[0m
 
-all: LIBFT $(NAME)
+all: LIBFT $(NAME) clean
 
 LIBFT:
 	@echo "$(RED)libf Compiling$(NC)"
@@ -57,7 +57,7 @@ re: fclean all
 
 push :
 	@git add .
-	@git commit -m "push"
+	@git commit -m "all done"
 	@git push
 
 .PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/04 23:08:56 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/06 18:29:11 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,26 @@ void	rm_file(char *file)
 
 void	redirect_fd(t_command **command, t_elem **elem, t_cmd_utils **utils)
 {
-	if ((*elem) && (*command)->redir_in)
-		(*utils)->fd = open((*elem)->content, O_RDONLY, 0644);
-	else if ((*elem) && ((*command)->redir_out || (*command)->dredir_out) \
-		&& access((*elem)->content, F_OK) == -1)
+	if (g_catch == 0)
 	{
-		(*utils)->fd = open((*elem)->content, O_RDWR | O_CREAT | O_TRUNC, 0644);
-		if ((*utils)->fd != -1)
-			rm_file((*elem)->content);
+		if ((*elem) && (*command)->redir_in)
+			(*utils)->fd = open((*elem)->content, O_RDONLY, 0644);
+		else if ((*elem) && ((*command)->redir_out || (*command)->dredir_out) \
+			&& access((*elem)->content, F_OK) == -1)
+		{
+			(*utils)->fd = open((*elem)->content, O_RDWR | O_CREAT | O_TRUNC, \
+				0644);
+			if ((*utils)->fd != -1)
+				rm_file((*elem)->content);
+		}
+		if ((*utils)->ambigous && (*elem) && (*elem)->token == BACK_SLASH \
+			&& (*utils)->fd == -1 && g_catch == 0)
+			er_print((*elem)->content, ": ambiguous redirect\n", 2);
+		else if ((*utils)->ambigous && (*utils)->fd == -1 && g_catch == 0)
+			er_print((*elem)->content, ": No such file or directory\n", 2);
+		if ((*utils)->fd != 0 && (*utils)->fd != -1)
+			close((*utils)->fd);
 	}
-	if ((*utils)->ambigous && (*elem) && (*elem)->token == BACK_SLASH \
-		&& (*utils)->fd == -1 && g_catch == 0)
-		er_print((*elem)->content, ": ambiguous redirect\n", 2);
-	else if ((*utils)->ambigous && (*utils)->fd == -1 && g_catch == 0)
-		er_print((*elem)->content, ": No such file or directory\n", 2);
-	if ((*utils)->fd != 0 && (*utils)->fd != -1)
-		close((*utils)->fd);
 	g_catch = 0;
 }
 
@@ -52,7 +56,8 @@ void	redeirection(t_command **command, t_elem **elem, t_cmd_utils **utils)
 	(1) && ((*elem) = (*elem)->next, (*utils)->index += 1);
 	while ((*elem) && (*elem)->token == WHITE_SPACE)
 		(*elem) = (*elem)->next;
-	redirect_fd(command, elem, utils);
+	if (g_catch == 0)
+		redirect_fd(command, elem, utils);
 	if ((*elem) && (*elem)->token != PIPE_LINE)
 	{
 		(*command)->rdrect[(*utils)->index] = ft_strdup((*elem)->content);

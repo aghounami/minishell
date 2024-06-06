@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/01 16:35:01 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/02 19:25:47 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/05 22:05:14 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	*lexer(char *line, t_elem **elem, char **env, int flag)
 	{
 		lexer->str = malloc(sizeof(char) * ft_strlen(line) + 1);
 		if (!lexer->str)
-			exit(1);
+			malloc_fail();
 		if (line[lexer->i] == '$' && (line[lexer->i + 1] == ' ' \
 			|| line[lexer->i + 1] == '\t' || line[lexer->i + 1] == '\0'))
 			case_one_char(lexer, elem, line, WORD);
@@ -94,7 +94,8 @@ void	*lexer(char *line, t_elem **elem, char **env, int flag)
 					|| (flag == 1 && lexer->d_quote % 2 == 0)))))
 			case_one_char(lexer, elem, line, WORD);
 		else if (line[lexer->i] == '$' && line[lexer->i + 1] != '\0' \
-			&& line[lexer->i + 1] != ' ' && line[lexer->i + 1] != '\t')
+			&& line[lexer->i + 1] != ' ' && line[lexer->i + 1] != '\t' \
+				&& line[lexer->i + 1] != '+' && line[lexer->i + 1] != '=')
 			case_dollar(lexer, elem, line, env);
 		else
 			next_case(line, elem, lexer);
