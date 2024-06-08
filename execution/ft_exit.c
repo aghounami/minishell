@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 11:12:26 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/04 14:54:21 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/07 17:48:12 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	ft_exit_mini(t_command **command)
 	int			i;
 
 	(1) && (i = 0, my_exit = *command);
-	if (my_exit->ex == 0)
+	if (my_exit->ex == 0 && (*command)->next == NULL)
 		printf("exit\n");
 	if (my_exit->args[1] != NULL && my_exit->args[2] != NULL)
 		case_too_many_args(my_exit);

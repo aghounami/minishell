@@ -6,11 +6,24 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 11:51:13 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/04 12:01:54 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:17:30 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	close_herdoc(t_command **command)
+{
+	t_command	*tmp;
+
+	tmp = *command;
+	while (tmp)
+	{
+		if (tmp->fd != 0)
+			close(tmp->fd);
+		tmp = tmp->next;
+	}
+}
 
 void	expanding(char **line, char **envp, int *fd2, t_command *cmd)
 {

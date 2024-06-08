@@ -3,39 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 16:41:51 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/05 16:29:57 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:01:09 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_pwd(void)
+void	ft_pwd(t_env **env)
 {
-	char		*content;
-	static char	*path;
-	static int	i;
+	char	*path;
+	char	*content;
 
+	path = NULL;
 	content = (char *)malloc(PATH_MAX);
 	if (!content)
 		ft_exit_fail("pwd malloc");
 	if (getcwd(content, PATH_MAX) != NULL)
-	{
 		printf("%s\n", content);
-		path = content;
-		free(content);
-		i = 0;
-	}
 	else
 	{
-		if (i == 0)
-		{
-			i = 1 ;
+		path = get_envx("PWD", env);
+		if (path)
 			printf("%s\n", path);
-		}
 		else
-			perror("getcwd");
+			perror("pwd");
 	}
+	if (path)
+		(free(path), path = NULL);
+	if (content)
+		(free(content), content = NULL);
 }

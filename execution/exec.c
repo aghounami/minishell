@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:27:45 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/06 18:39:09 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/07 17:51:52 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,11 @@ void	fill_ter(char **str, t_env **envex, int l)
 	}
 }
 
-void	refiller2(t_env **envex, t_exec *ex, char **env, int a)
+void	refiller2(t_env **envex, t_exec *ex, char **env)
 {
 	t_env	*enve;
 
 	enve = *envex;
-	a = 0;
 	ex->i = 0;
 	while (env[ex->i])
 	{
@@ -98,10 +97,9 @@ char	**refiller(char **env, t_env **envex)
 {
 	t_env		*enve;
 	t_exec		ex;
-	static int	a = 0;
 
 	ft_memset(&ex, 0, sizeof(t_exec));
-	refiller2(envex, &ex, env, a);
+	refiller2(envex, &ex, env);
 	enve = *envex;
 	while (enve)
 	{

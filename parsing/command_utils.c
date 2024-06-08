@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:19:35 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/06 18:29:11 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:18:57 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	redirect_fd(t_command **command, t_elem **elem, t_cmd_utils **utils)
 		if ((*utils)->fd != 0 && (*utils)->fd != -1)
 			close((*utils)->fd);
 	}
-	g_catch = 0;
 }
 
 void	redeirection(t_command **command, t_elem **elem, t_cmd_utils **utils)

@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:07:43 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/06 18:41:59 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:17:25 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,28 @@
 
 void	sig_handler(int signo)
 {
+	int	pid;
+
 	if (signo == SIGINT)
 	{
-		if (waitpid(-1, 0, WNOHANG) == 0)
+		pid = wait(NULL);
+		if (pid <= 0)
 		{
+			exit_status(1);
 			printf("\n");
-			exit_status(128 + signo);
-			g_catch = 1;
-			return ;
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
 		}
-		exit_status(1);
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		else
+			(1) && (printf("\n"), exit_status(128 + signo), g_catch = 1);
 	}
 	else if (signo == SIGQUIT)
 	{
 		if (waitpid(-1, 0, WNOHANG) == 0)
 		{
 			printf("Quit: 3\n");
-			exit_status(128 + signo);
-			g_catch = 1;
-			return ;
+			(1) && (exit_status(128 + signo), g_catch = 1);
 		}
 	}
 }
@@ -76,7 +75,7 @@ void	check_unclosed(t_elem *pars, int *i)
 
 	while (pars)
 	{
-		if (pars->token == HERE_DOC)
+		if (pars->token == HERE_DOC && pars->state == GENERAL)
 		{
 			pars = pars->next;
 			while (pars && pars->token == WHITE_SPACE)
@@ -119,7 +118,8 @@ void	pars_exec(t_elem **pars, t_elem **list, t_varr **var, \
 		if ((*var)->flag == 0 && *command && g_catch == 0)
 			(*var)->envp = exec_check(command, (*var)->envp, (*var)->enp);
 		else if ((*var)->flag == 1 || (*var)->flag == -1)
-			er_print(":", "syntax error\n", 258);
+			(1) && (er_print(":", "s  yntax error\n", 258), \
+				close_herdoc(command), g_catch = 0);
 		(1) && (dup2((*var)->a, 1), dup2((*var)->b, 0), (*var)->flag = 0);
 		(1) && (close((*var)->a), close((*var)->b), (*var)->nbr_hdoc = 0);
 	}

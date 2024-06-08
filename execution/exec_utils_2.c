@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:14:30 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/04 16:25:57 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/06 10:55:43 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ char	*get_envx(char *str, t_env **env)
 	ft_memset(&ev, 0, sizeof(inv));
 	while (inv)
 	{
-		if (strncmp(str, inv->vari, ft_strlen(inv->vari)) == 0)
+		if (ft_strncmp(str, inv->vari, ft_strlen(inv->vari)) == 0 \
+			&& ft_strlen(str) == ft_strlen(inv->vari))
 		{
 			ev.tmp = ft_strdup(inv->value);
 			if (!ev.tmp)

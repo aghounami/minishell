@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 12:38:37 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/04 15:46:11 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:02:17 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ char	*list_check(t_env **envex, char *str)
 	check = *envex;
 	while (check)
 	{
-		if (check->vari \
-			&& ft_strncmp(check->vari, str, ft_strlen(check->vari)) == 0)
+		if (check->vari && (ft_strlen(check->vari) == ft_strlen(str)) \
+			&& ft_strncmp(check->vari, str, ft_strlen(str)) == 0)
 			return (check->value);
 		check = check->next;
 	}

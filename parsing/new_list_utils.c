@@ -6,7 +6,7 @@
 /*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 15:47:12 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/02 16:16:57 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/07 16:57:37 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ void	special_case(t_elem **tmp, t_elem **list, char	*tmp_str)
 			if (ent->j == 1)
 				break ;
 			else if (ent->j == -1)
-				return ;
+				return (free(ent));
 		}
 		else
 			if (utils_special_case(tmp, &tmp_str, ent))
 				break ;
 	}
 	ft_lstadd_back_new_list(list, lst_new(tmp_str, WORD, IN_DQUOTE, NO));
-	free(tmp_str);
+	(1) && (free(tmp_str), free(ent), tmp_str = NULL);
 }
 
 void	case_single_quote(t_elem **tmp, t_elem **list)

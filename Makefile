@@ -6,7 +6,7 @@ CC = gcc
 READLINE_L = /Users/aghounam/.brew/opt/readline/lib
 READLINE_I = /Users/aghounam/.brew/opt/readline/include
 # Flags 
-CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -g -I$(READLINE_I) 
 LDFLAGS = -L$(READLINE_L) -lreadline -lhistory
 # Source parser
 src = parsing/main.c parsing/ft_lexer.c parsing/linked_list.c parsing/state.c parsing/syntax_error.c \
@@ -23,25 +23,31 @@ src += execution/exec.c execution/ft_cd.c execution/exec_utils.c execution/ft_ex
 
 obj = $(src:.c=.o)
 
+TOTAL_FILES := $(words $(src))
+COMPILE_COUNT := 0
+
 # Colors
 RED := \033[0;31m
 BLUE := \033[0;34m
 NC := \033[0m
 
-all: LIBFT $(NAME) clean
+all: LIBFT $(NAME)
 
 LIBFT:
 	@echo "$(RED)libf Compiling$(NC)"
 	@echo "$(RED)-----------------$(NC)"
 	@cd libf && make
 	@echo "$(RED)minishell Compiling$(NC)"
+	@echo "$(RED)-----------------$(NC)"
 
 $(NAME): $(obj) $(LIBF)
-	@$(CC) $(CFLAGS) $(obj) $(LIBF) -o $(NAME)  $(LDFLAGS)
+	@$(CC) $(CFLAGS) $(obj) $(LIBF) -o $(NAME) $(LDFLAGS)
 
 %.o: %.c minishell.h
+	@$(eval COMPILE_COUNT=$(shell echo $$(($(COMPILE_COUNT)+1))))
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "$(BLUE)✔︎$< Compiling $(NC)"
+	@PERCENTAGE=$$(($(COMPILE_COUNT)*100/$(TOTAL_FILES))); \
+	printf "\r$(BLUE)Compiling: $$PERCENTAGE%% $(NC)"
 
 clean:
 	@rm -f $(obj)
@@ -55,9 +61,5 @@ fclean: clean
 
 re: fclean all
 
-push :
-	@git add .
-	@git commit -m "all done"
-	@git push
 
 .PHONY: all clean fclean re

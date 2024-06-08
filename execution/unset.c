@@ -6,7 +6,7 @@
 /*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 11:00:02 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/04 12:59:48 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:44:26 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,12 @@ void	ft_unset_2(t_env **ev, t_exec *var, t_env **envex, char *str)
 	t_env		*env;
 	t_env		*prev;
 
-	env = *ev;
-	prev = NULL;
+	(1) && (env = *ev, prev = NULL);
 	while (env)
 	{
 		var->vari = str;
-		if (ft_strncmp(env->vari, var->vari, ft_strlen(env->vari)) == 0)
+		if (ft_strncmp(env->vari, var->vari, ft_strlen(env->vari)) == 0 \
+			&& (ft_strlen(env->vari) == ft_strlen(var->vari)))
 		{
 			if (prev == NULL)
 				*envex = env->next;
@@ -77,10 +77,7 @@ void	ft_unset_2(t_env **ev, t_exec *var, t_env **envex, char *str)
 			(free(tmp), tmp = NULL);
 		}
 		else
-		{
-			prev = env;
-			env = env->next;
-		}
+			(1) && (prev = env, env = env->next);
 	}
 }
 

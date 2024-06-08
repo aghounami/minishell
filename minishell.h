@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 12:23:41 by aghounam          #+#    #+#             */
-/*   Updated: 2024/06/04 17:11:10 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/07 20:18:04 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ void		over_write(t_elem **elem, char **line);
 void		empty_line(t_varr **var);
 void		free_all(t_elem **list, t_command **command, t_varr **var);
 void		empty_env(t_varr **var);
+void		close_herdoc(t_command **command);
 
 // --------------------------------
 
@@ -246,7 +247,7 @@ char		*get_envx(char *str, t_env **env);
 void		ft_free_double(char **str);
 void		ft_exit_fail(char *str);
 int			command_check(t_command **command, t_env **envex);
-void		ft_pwd(void);
+void		ft_pwd(t_env **env);
 void		ft_exit_mini(t_command **command);
 void		ft_env(t_env **envex);
 void		ft_echo(t_command **command);
@@ -268,12 +269,12 @@ void		pwd_update(t_env **env, char *str);
 void		fill_ter(char **str, t_env **envex, int l);
 void		sig_handler(int signo);
 char		**refiller(char **env, t_env **envex);
-int			getcwd_check(t_command **command, t_exec *dir_cd, char *path, \
+int			getcwd_check(t_command **command, t_exec *dir_cd, \
 	t_env **envex);
 int			path_cheker_cd(char *path, t_env **envex);
 int			cd_dir(const char *path);
 void		error_printer(char *str, char *str2, int i);
-void		cd_changer(char **path, t_env **envex);
+void		cd_changer(char *path, t_env **envex);
 int			string_chcker(char *str);
 void		ft_adder(t_env **envex, char *str, char *value);
 char		*list_check(t_env **envex, char *str);
@@ -294,4 +295,6 @@ void		parent_ex(t_command **command, t_exec *ex, t_env **envex);
 void		waiter(t_exec *ex);
 void		execution_cmd(t_command **command, char **env, t_env **envex);
 void		er_print(char *str, char *str2, int i);
+void		cd_handler(char *str, t_env **ev, t_exec *cd);
+void		env_get(char *str, t_env **envex);
 #endif

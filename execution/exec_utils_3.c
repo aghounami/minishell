@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils_3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/01 18:29:36 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/05 16:36:15 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:21:23 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	cd_changer(char **path, t_env **envex)
+void	cd_changer(char *path, t_env **envex)
 {
 	pwd_update(envex, "OLDPWD");
-	chdir(*path);
+	chdir(path);
 	pwd_update(envex, "PWD");
 }
 
@@ -23,7 +23,8 @@ void	error_printer(char *str, char *str2, int i)
 {
 	exit_status(i);
 	ft_putstr_fd("minishell: `", 2);
-	ft_putstr_fd(str, 2);
+	if (str)
+		ft_putstr_fd(str, 2);
 	ft_putstr_fd(str2, 2);
 }
 
@@ -36,47 +37,18 @@ int	cd_dir(const char *path)
 	return (S_ISDIR(info.st_mode));
 }
 
-int	path_cheker_cd(char *path, t_env **envex)
+void	cd_handler(char *str, t_env **ev, t_exec *cd)
 {
-	int	i;
+	static int	a = 0;
 
-	i = 0;
-	if (path)
-	{
-		i = ft_strlen(path);
-		while (i > 0)
-		{
-			if (path[i] == '/')
-				break ;
-			i--;
-		}
-		if (path[i] == '/')
-			path[i] = '\0';
-		if (cd_dir(path))
-		{
-			pwd_update(envex, "OLDPWD");
-			pwd_update(envex, "PWD");
-		}
-		return (1);
-	}
-	return (0);
-}
-
-int	getcwd_check(t_command **command, t_exec *dir_cd, char *path, t_env **envex)
-{
-	t_command	*exec;
-	t_exec		*cd;
-
-	exec = *command;
-	cd = dir_cd;
-	if (getcwd(cd->current_dir, PATH_MAX) == NULL)
-	{
-		path_cheker_cd(path, envex);
-		if (!cd_dir(path))
-			error_printer(exec->args[1], ": No such file or directory\n", 1);
-		else
-			chdir(path);
-		return (1);
-	}
-	return (0);
+	(free(cd->current_dir));
+	env_get("PWD", ev);
+	chdir(str);
+	cd->current_dir = getcwd(cd->current_dir, PATH_MAX);
+	if (cd->current_dir == NULL && a > 0)
+		perror("getcwd");
+	else if (a == 0)
+		error_printer(NULL, ": No such file or directory\n", 0);
+	(free(cd->current_dir));
+	a = 1;
 }

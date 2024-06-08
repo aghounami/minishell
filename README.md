@@ -7,12 +7,11 @@ Welcome to the Minishell project! This project involves creating a simple shell,
 - <a href="https://profile.intra.42.fr/users/aghounam" style="display: inline-flex; align-items: center; text-decoration: none;">
     <img src="images/aghounam.jpg" alt="Ahmed's picture" width="50" height="50" style="border-radius: 50%; margin-right: 10px;">
     <span style="font-weight: bold;">aghounam</span>
-    </a>
-
+  </a>
 - <a href="https://profile.intra.42.fr/users/hel-magh" style="display: inline-flex; align-items: center; text-decoration: none;">
     <img src="images/helmagh.jpg" alt="Hamza's picture" width="50" height="50" style="border-radius: 50%; margin-right: 10px;">
     <span style="font-weight: bold;">hel-magh</span>
-    </a>
+  </a>
 
 
 

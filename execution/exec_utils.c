@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 14:52:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/05 18:16:07 by aghounam         ###   ########.fr       */
+/*   Updated: 2024/06/06 19:14:24 by hel-magh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	command_check(t_command **command, t_env **envex)
 		return (ft_export(command, envex), 0);
 	else if (!ft_strncmp("pwd", exec->args[0], 4)
 		|| !ft_strncmp("PWD", exec->args[0], 4))
-		return (ft_pwd(), 0);
+		return (ft_pwd(envex), 0);
 	else if (!ft_strncmp("unset", exec->args[0], 6))
 		return (ft_unset(command, envex), 0);
 	else if (!ft_strncmp("env", exec->args[0], 4)

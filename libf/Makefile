@@ -6,7 +6,7 @@
 #    By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/06 04:09:48 by hkchikec          #+#    #+#              #
-#    Updated: 2024/05/08 10:39:04 by aghounam         ###   ########.fr        #
+#    Updated: 2024/06/07 16:05:51 by aghounam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ RM = rm -f
 OBJ = $(MANDA_SRCS:.c=.o)
 BONUS_OBJ = $(BONUS_SRCS:.c=.o)
 
-GREEN := \033[0;32m
+BLUE := \033[0;34m
 RED := \033[0;31m
 NC := \033[0m
 
@@ -42,7 +42,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@$(LIBC) $(NAME) $(OBJ)
-	@echo "$(GREEN)libft Compiled ✔︎$(NC)"
+	@echo "$(BLUE)libft Compiled ✔︎$(NC)"
 
 bonus: all $(BONUS_OBJ)
 	@$(LIBC) $(NAME) $(BONUS_OBJ)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hel-magh <hel-magh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aghounam <aghounam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 15:35:06 by hel-magh          #+#    #+#             */
-/*   Updated: 2024/06/04 17:05:45 by hel-magh         ###   ########.fr       */
+/*   Updated: 2024/06/08 15:19:42 by aghounam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ex_cmd(t_command **command, t_exec *ex, t_env **envex)
 
 	cmd = *command;
 	i = 0;
+	cmd->ex = 1;
 	fill_ter(cmd->args, envex, 2);
 	if (cmd->rdrect[i] != NULL)
 	{
@@ -73,9 +74,9 @@ void	waiter(t_exec *ex)
 		waitpid(ex->pid[(ex->i)], &ex->status, 0);
 		ex->i++;
 	}
+	(exit_status(ex->status >> 8), g_catch = 1);
 	free(ex->pid);
 	ex->pid = NULL;
-	(exit_status(ex->status >> 8), g_catch = 1);
 }
 
 void	execution_cmd(t_command **command, char **env, t_env **envex)
